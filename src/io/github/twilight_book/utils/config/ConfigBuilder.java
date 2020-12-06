@@ -1,4 +1,4 @@
-package io.github.twilight_book.Utils.Config;
+package io.github.twilight_book.utils.config;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;

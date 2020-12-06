@@ -1,8 +1,6 @@
-package io.github.twilight_book.Utils.PAPI;
+package io.github.twilight_book.utils.PAPI;
 
 import io.github.twilight_book.Book;
-import io.github.twilight_book.Command.CommandImplement;
-import io.github.twilight_book.Utils.Config.ConfigAbstract;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 

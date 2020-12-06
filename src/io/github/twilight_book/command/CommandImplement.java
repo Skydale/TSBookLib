@@ -1,4 +1,4 @@
-package io.github.twilight_book.Command;
+package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
 import org.bukkit.command.Command;
@@ -37,7 +37,7 @@ public class CommandImplement implements CommandExecutor {
 			if (args.length == 1) {
 				switch (args[0].toLowerCase()) {
 					case "reload": return new Reload().call(sender);
-					case "player": return new io.github.twilight_book.Command.Player().call(sender);
+					case "player": return new io.github.twilight_book.command.Player().call(sender);
 					case "help": return new Help().call(sender);
 				}
 			}

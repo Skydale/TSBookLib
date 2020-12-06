@@ -1,14 +1,9 @@
-package io.github.twilight_book.Utils;
+package io.github.twilight_book.utils;
 
-import io.github.twilight_book.Command.Player;
-import io.github.twilight_book.Items.ItemAbstract;
-import io.github.twilight_book.Utils.Config.ConfigAbstract;
-import io.github.twilight_book.Utils.Config.ConfigBuilder;
+import io.github.twilight_book.items.ItemAbstract;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;

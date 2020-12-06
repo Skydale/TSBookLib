@@ -1,0 +1,22 @@
+prefix: '&7[&6匠師武器&7] &r'
+
+errors:
+   unknown_command: '&c未知指令"%fw_command%"!'
+   item_not_found: '%fw_prefix%&c未知道具!'
+   player_only: '%fw_prefix%&cThis command is for players only!'
+commands:
+   feedback:
+      fw: '&8[&7=>&8] &c/fw help &7- &aShow the Forger''s Weaponry help menu.'
+      get: '&8[&7=>&8] &c/fw get <item> &7- &aGet specified item.'
+      
+Items:
+   name:
+   anvil_iron: '&eForger''s Anvil'
+   lore:
+      anvil_iron: '&7An anvil excellent for forging. Capable of up to 1,500°C.'
+
+messages:
+   help: '%fw_prefix%&aHelp menu for the Forger''s Weaponry plugin.'
+   reload: '%fw_prefix%&9Plugin reloading...'
+   reloaded: '%fw_prefix%&9Plugin reloaded.'
+   get: '%fw_prefix%&9Gave %fw_player% "%fw_item%&9"'

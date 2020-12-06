@@ -1,4 +1,4 @@
-package io.github.twilight_book.Command;
+package io.github.twilight_book.command;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

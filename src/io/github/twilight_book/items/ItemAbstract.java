@@ -1,8 +1,7 @@
-package io.github.twilight_book.Items;
+package io.github.twilight_book.items;
 
-import com.sun.corba.se.impl.naming.cosnaming.TransientNameServer;
-import io.github.twilight_book.Utils.Config.Config;
-import io.github.twilight_book.Utils.Translate;
+import io.github.twilight_book.utils.config.Config;
+import io.github.twilight_book.utils.Translate;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;

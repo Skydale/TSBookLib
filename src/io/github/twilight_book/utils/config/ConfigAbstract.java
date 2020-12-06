@@ -1,6 +1,6 @@
-package io.github.twilight_book.Utils.Config;
+package io.github.twilight_book.utils.config;
 
-import io.github.twilight_book.Utils.Translate;
+import io.github.twilight_book.utils.Translate;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 

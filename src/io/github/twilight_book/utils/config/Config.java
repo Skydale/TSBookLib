@@ -1,4 +1,4 @@
-package io.github.twilight_book.Utils.Config;
+package io.github.twilight_book.utils.config;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -2,10 +2,10 @@ package io.github.twilight_book;
 
 import java.io.File;
 
-import io.github.twilight_book.Command.CommandImplement;
-import io.github.twilight_book.Command.CommandTabImplement;
-import io.github.twilight_book.Utils.Config.Config;
-import io.github.twilight_book.Utils.PAPI.tsbook;
+import io.github.twilight_book.command.CommandImplement;
+import io.github.twilight_book.command.CommandTabImplement;
+import io.github.twilight_book.utils.config.Config;
+import io.github.twilight_book.utils.PAPI.tsbook;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
