@@ -1,0 +1,23 @@
+prefix: '&7[&eTwilight''s Book&7] &r'
+
+errors:
+   unknown_command: '&cUnknown command "%tsbook_command%"!'
+
+commands:
+   feedback:
+
+messages:
+   help: |
+         &a%tsbook_prefix%&aBooks!
+         &8[&7=>&8] &c/tsbook reload &7- &aReload the plugin.
+         &8[&7=>&8] &c/tsbook player &7- &aGet player(command sender) name.
+   reload: '%tsbook_prefix%&9Plugin reloading...'
+   reloaded: '%tsbook_prefix%&9Plugin reloaded.'
+   player: '%tsbook_player%'
+
+items:
+  format:
+    name: "%item_name%"
+    lore: |
+          %item_rarity% %item_type%
+          %item_desc%
