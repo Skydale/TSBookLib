@@ -90,14 +90,7 @@ public class ConfigBuilder{
 
         List<YamlConfiguration> listYAML = new ArrayList<>();
         list.forEach(value -> {
-            try {
-                YamlConfiguration temp = new YamlConfiguration();
-                temp.load(value);
-                listYAML.add(temp);
-            } catch (IOException | InvalidConfigurationException e) {
-                e.printStackTrace();
-                Bukkit.getPluginManager().disablePlugin(plugin);
-            }
+            listYAML.add(YamlConfiguration.loadConfiguration(value));
         });
         return listYAML;
     }
