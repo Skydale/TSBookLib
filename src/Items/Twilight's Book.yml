@@ -1,4 +1,5 @@
 ID: 'TS_BOOK'
+MATERIAL: 'BOOK'
 
 FORMAT:
   NAME: '%item_NAME%'

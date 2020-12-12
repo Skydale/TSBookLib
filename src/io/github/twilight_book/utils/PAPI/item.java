@@ -40,6 +40,7 @@ public class item extends PlaceholderExpansion {
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier){
-        return config.getItemByID(identifier.replaceAll("\\..*", "")).getString(identifier.replaceAll(".*?\\.", ""));
+        return config.getItemByID(identifier.replaceAll("\\..*" , "")).
+                        getString(identifier.replaceAll(".*?\\.", ""));
     }
 }

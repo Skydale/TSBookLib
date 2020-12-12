@@ -1,6 +1,6 @@
 package io.github.twilight_book.utils;
 
-import io.github.twilight_book.items.ItemAbstract;
+import io.github.twilight_book.items.ItemTemplate;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -84,11 +84,11 @@ public class Translate {
         return s.replaceAll("item_", "item_" + ID + ".");
     }
 
-    public ItemMeta translateItem(ItemAbstract itemAbstract, ItemStack item){
+    public ItemMeta translateItem(ItemTemplate itemTemplate, ItemStack item){
         ItemMeta meta = item.getItemMeta();
 
-        meta.setDisplayName(transByString( transByString(replaceItem("FORMAT.NAME", itemAbstract.getID(), itemAbstract.getSetting()))));
-        meta.setLore(transListByString(transListByString(replaceItem("FORMAT.LORE", itemAbstract.getID(), itemAbstract.getSetting()))));
+        meta.setDisplayName(transByString( transByString(replaceItem("FORMAT.NAME", itemTemplate.getID(), itemTemplate.getSetting()))));
+        meta.setLore(transListByString(transListByString(replaceItem("FORMAT.LORE", itemTemplate.getID(), itemTemplate.getSetting()))));
         return meta;
     }
 }

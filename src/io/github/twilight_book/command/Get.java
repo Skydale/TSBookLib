@@ -1,7 +1,7 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
-import io.github.twilight_book.items.TS_BOOK;
+import io.github.twilight_book.items.ItemTemplate;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,9 +29,6 @@ public class Get extends CommandAbstract {
 	}
 
 	private static ItemStack getItem(String i) {
-		switch (i) {
-			case "TS_BOOK": return new TS_BOOK(Material.BOOK, Book.c, i).getItem();
-		}
-		return null;
+		return new ItemTemplate(Material.getMaterial(Book.c.getItemByID(i).getString("MATERIAL")), Book.c, i).getItem();
 	}
 }

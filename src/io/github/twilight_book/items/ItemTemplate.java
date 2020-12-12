@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 
-public abstract class ItemAbstract {
+public class ItemTemplate {
 	final Config CONFIG;
 	final String ID;
 
@@ -22,7 +22,7 @@ public abstract class ItemAbstract {
 	ItemStack ITEM;
 	ItemMeta META;
 
-	public ItemAbstract(Material m, Config config, String id){
+	public ItemTemplate(Material m, Config config, String id){
 		CONFIG = config;
 		ID = id;
 		SETTING = CONFIG.getItemByID(ID);
