@@ -6,9 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -85,12 +83,18 @@ public class ConfigBuilder{
         return list;
     }
 
-    public List<YamlConfiguration> createFolder(String directory){
+    public Map<String, YamlConfiguration> createFolder(String directory){
         List<File> list = loadJarContent(directory);
 
-        List<YamlConfiguration> listYAML = new ArrayList<>();
+        Map<String, YamlConfiguration> listYAML = new HashMap<>();
         list.forEach(value -> {
-            listYAML.add(YamlConfiguration.loadConfiguration(value));
+            YamlConfiguration temp = new YamlConfiguration();
+            try {
+                temp.load(value);
+            } catch (IOException | InvalidConfigurationException e) {
+                e.printStackTrace();
+            }
+            listYAML.put(temp.getString("ID"), temp);
         });
         return listYAML;
     }
@@ -99,7 +103,7 @@ public class ConfigBuilder{
         List<File> list = loadJarContent(directory);
 
         for (File entry : list){
-            if(entry.getName() == target){
+            if(entry.getName().equals(target)){
                 YamlConfiguration config = new YamlConfiguration();
                 try {
                     config.load(entry);

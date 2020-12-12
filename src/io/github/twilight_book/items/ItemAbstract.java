@@ -4,6 +4,8 @@ import io.github.twilight_book.utils.config.Config;
 import io.github.twilight_book.utils.Translate;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -13,26 +15,36 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Arrays;
 
 public abstract class ItemAbstract {
-	final ItemStack ITEM;
 	final Config CONFIG;
-	final Translate LANG;
+	final String ID;
+
+	YamlConfiguration SETTING;
+	ItemStack ITEM;
 	ItemMeta META;
 
-	public ItemAbstract(ItemStack i, Config config){
-		ITEM = i;
+	public ItemAbstract(Material m, Config config, String id){
 		CONFIG = config;
-		LANG = CONFIG.getLang();
-		META = ITEM.getItemMeta();
+		ID = id;
+		SETTING = CONFIG.getItemByID(ID);
+
+		ITEM = createItem(m);
 	}
+
 	public Config getConfig() { return CONFIG; }
 	public ItemStack getItem() {
 		return ITEM;
 	}
-	public ItemMeta getMeta() {
-		return META;
-	}
+
+	public String getID(){ return ID; }
 	public String getDataID(String k, JavaPlugin p){
 		return getDataID(ITEM, k, p);
+	}
+
+	public ItemStack createItem(Material m){
+		ItemStack item = new ItemStack(m);
+		item.setItemMeta(CONFIG.getLang().translateItem(this, item));
+
+		return item;
 	}
 
 	public static String getDataID(ItemStack i, String k, JavaPlugin p) {
@@ -49,16 +61,15 @@ public abstract class ItemAbstract {
 		return result;
 	}
 
-	protected void setMeta(String s){
-		META = LANG.translateItem(this);
-		ITEM.setItemMeta(META);
-	}
-
 	protected void setDataID(String s, String k, JavaPlugin p) {
 		NamespacedKey key = new NamespacedKey(p, k);
 
 		META.getPersistentDataContainer().set(key, PersistentDataType.STRING, s);
 		ITEM.setItemMeta(META);
+	}
+
+	public YamlConfiguration getSetting(){
+		return SETTING;
 	}
 
 	public static ItemStack createGuiItem(Material material, String name, String... lore) {

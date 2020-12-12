@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class ConfigAbstract {
     protected JavaPlugin plugin;
@@ -13,7 +15,7 @@ public abstract class ConfigAbstract {
     protected Translate lang;
     protected YamlConfiguration config;
     protected YamlConfiguration langFile;
-    protected List<YamlConfiguration> items;
+    protected Map<String, YamlConfiguration> items;
 
     public JavaPlugin getPlugin(){
         return plugin;
@@ -34,6 +36,10 @@ public abstract class ConfigAbstract {
     public Translate getLang(){
         return lang;
     }
+
+    public YamlConfiguration getItemByID(String ID){ return items.get(ID); }
+
+    public Set<String> getItems(){ return items.keySet(); }
 
     public abstract void setup(JavaPlugin p, File j);
 }

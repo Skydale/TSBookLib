@@ -1,5 +1,6 @@
 package io.github.twilight_book.utils.config;
 
+import io.github.twilight_book.utils.Translate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -20,9 +21,10 @@ public class Config extends ConfigAbstract {
 
         p.getLogger().info("Loading language file: " + config.getString("locale") + "...");
         langFile = cb.createFolder("lang", config.getString("locale") + ".yml");
+        lang = new Translate(langFile);
 
         p.getLogger().info("Loading item settings...");
-        items = cb.createFolder("items");
+        items = cb.createFolder("Items");
 
         p.getLogger().info("Took me... [" + (System.currentTimeMillis() - start) + "ms] to load!");
     }
