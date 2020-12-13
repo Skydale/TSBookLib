@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class Translate {
-    YamlConfiguration LANG;
+    final YamlConfiguration LANG;
 
     public Translate(YamlConfiguration lang){
         LANG = lang;
@@ -25,6 +25,7 @@ public class Translate {
     }
 
     public String translate(String s, OfflinePlayer p, YamlConfiguration lang){
+        System.out.println(s);
         return transByString(lang.getString(s), p);
     }
 
@@ -33,6 +34,7 @@ public class Translate {
     }
 
     public String transByString(String s, OfflinePlayer p) {
+
         return PlaceholderAPI.setPlaceholders(p, s);
     }
 

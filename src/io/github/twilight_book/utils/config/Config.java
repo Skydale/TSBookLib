@@ -26,6 +26,9 @@ public class Config extends ConfigAbstract {
         p.getLogger().info("Loading item settings...");
         items = cb.createFolder("Items");
 
+        p.getLogger().info("Loading MythicMobs settings...");
+        mmMobs = cb.createMap("MythicMobs/", "Elements.yml");
+
         p.getLogger().info("Took me... [" + (System.currentTimeMillis() - start) + "ms] to load!");
     }
 }

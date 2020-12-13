@@ -11,5 +11,14 @@ NAME: '&dTwilight''s Book'
 RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 DESC: |
-      &7&nA Mythical Book.
-      &7&nContains a Magical Tale of Six Ponies.
+      &7&oA Mythical Book.
+      &7&oContains a Magical Tale of Six Ponies.
+
+damage:
+  "physial": 10000.0
+  "terra": 10000.0
+  "aer": 10000.0
+  "ignis": 10000.0
+  "aqua": 10000.0
+  "lumen": 10000.0
+  "umbra": 10000.0

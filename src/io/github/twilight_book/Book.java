@@ -2,11 +2,12 @@ package io.github.twilight_book;
 
 import java.io.File;
 
-import io.github.twilight_book.command.CommandImplement;
-import io.github.twilight_book.command.CommandTabImplement;
-import io.github.twilight_book.utils.PAPI.item;
+import io.github.twilight_book.command.Commands;
+import io.github.twilight_book.command.CommandsTab;
+import io.github.twilight_book.event.EntityDamage;
+import io.github.twilight_book.utils.papi.item;
 import io.github.twilight_book.utils.config.Config;
-import io.github.twilight_book.utils.PAPI.tsbook;
+import io.github.twilight_book.utils.papi.tsbook;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,7 +15,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Book extends JavaPlugin implements Listener {
     private static Book i;
     private static File jar;
-    public static Config c = new Config();
+    private static Config config;
+    private static EntityDamage mmhook;
 
     @Override
     public void onEnable(){
@@ -30,15 +32,22 @@ public class Book extends JavaPlugin implements Listener {
     }
 
     public static void load() {
-        c.setup(i, jar);
+        config = new Config();
+        config.setup(i, jar);
+        mmhook = new EntityDamage();
     }
 
     private void reg() {
         Bukkit.getPluginManager().registerEvents(this, this);
-        new tsbook(i, c).register();
-        new item(i, c).register();
+        Bukkit.getPluginManager().registerEvents(new EntityDamage(), this);
+        new tsbook(i, config).register();
+        new item(i, config).register();
 
-        getCommand("tsbook").setExecutor(new CommandImplement());
-        getCommand("tsbook").setTabCompleter(new CommandTabImplement());
+        getCommand("tsbook").setExecutor    (new Commands());
+        getCommand("tsbook").setTabCompleter(new CommandsTab());
+    }
+
+    public static Config getCfg(){
+        return config;
     }
 }

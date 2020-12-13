@@ -1,15 +1,15 @@
-package io.github.twilight_book.utils.PAPI;
+package io.github.twilight_book.utils.papi;
 
-import io.github.twilight_book.Book;
-import io.github.twilight_book.command.CommandImplement;
+import io.github.twilight_book.command.Commands;
 import io.github.twilight_book.utils.config.Config;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class tsbook extends PlaceholderExpansion {
-    JavaPlugin plugin;
-    Config config;
+    final JavaPlugin plugin;
+    final Config config;
 
     public tsbook(JavaPlugin p, Config c){
         plugin = p;
@@ -26,16 +26,19 @@ public class tsbook extends PlaceholderExpansion {
         return true;
     }
 
+    @NotNull
     @Override
     public String getAuthor(){
         return plugin.getDescription().getAuthors().toString();
     }
 
+    @NotNull
     @Override
     public String getVersion(){
         return plugin.getDescription().getVersion();
     }
 
+    @NotNull
     @Override
     public String getIdentifier(){
         return "tsbook";
@@ -45,12 +48,12 @@ public class tsbook extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier){
         switch (identifier) {
             case "command":
-                return CommandImplement.getCommand();
+                return Commands.getCommand();
             case "player":
                 if(player == null) return "PLAYER_NOT_FOUND";
                 return player.getName();
             case "item":
-                return CommandImplement.getItem();
+                return Commands.getITEM();
             default:
                 return config.getLang().translate(identifier);
         }
