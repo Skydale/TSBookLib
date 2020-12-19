@@ -49,14 +49,16 @@ public class Commands implements CommandExecutor {
 					switch (args[0].toLowerCase()) {
 						case "reload":
 							return Reload.call(sender);
-						case "player":
-							return io.github.twilight_book.command.Player.call(sender);
 						case "help":
 							return Help.call(sender);
 						case "get":
 							return Get.call(sender);
 						case "give":
 							return Give.call(sender);
+						case "unidentified":
+							return Unidentified.call(sender);
+						case "identify":
+							return Identify.call(sender);
 					}
 
 				case 2:
@@ -64,12 +66,16 @@ public class Commands implements CommandExecutor {
 						case "get":
 							return Get.call(sender, args[1]);
 						case "give":
-							return Give.call(sender, args[1]);
+							return Give.call(sender);
+						case "unidentified":
+							return Unidentified.call(sender);
 					}
 				case 3:
 					switch (args[0].toLowerCase()) {
 						case "give":
 							return Give.call(sender, args[1], args[2]);
+						case "unidentified":
+							return Unidentified.call(sender, args[1], args[2]);
 					}
 			}
 

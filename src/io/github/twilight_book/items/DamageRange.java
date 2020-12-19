@@ -17,6 +17,7 @@ public class DamageRange {
     }
 
     public double calculate(){
+        if (max == min) return max;
         return new Random().nextDouble() * (max - min) + min;
     }
 }

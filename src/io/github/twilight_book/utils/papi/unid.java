@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class item extends PlaceholderExpansion {
+public class unid extends PlaceholderExpansion {
     final JavaPlugin plugin;
     final Config config;
 
-    public item(JavaPlugin p, Config c) {
+    public unid(JavaPlugin p, Config c) {
         plugin = p;
         config = c;
     }
@@ -44,27 +44,16 @@ public class item extends PlaceholderExpansion {
     @NotNull
     @Override
     public String getIdentifier() {
-        return "item";
+        return "unid";
     }
 
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         String item = identifier.replaceAll("\\..*", "");
         String path = identifier.replaceAll(".*?\\.", "").replaceAll("-", ".");
-        YamlConfiguration itemSetting = config.getItemByID(item);
+        YamlConfiguration itemSetting = config.getUnidentifiedByID(item);
 
         if (!itemSetting.contains(path)) return null;
-
-        if (path.startsWith("stat.damage.")) {
-            return String.valueOf(itemSetting.getInt(path));
-        }
-
-        if (path.startsWith("stat.")) {
-            int n = itemSetting.getInt(path);
-            if (n > 0) return (ChatColor.GREEN.toString() + n);
-            if (n == 0) return (ChatColor.GRAY.toString() + n);
-            return (ChatColor.RED.toString() + n);
-        }
 
         List<String> list = itemSetting.getStringList(path);
         if (list.isEmpty()) return itemSetting.getString(path);

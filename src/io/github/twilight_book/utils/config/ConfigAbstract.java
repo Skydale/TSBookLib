@@ -17,6 +17,7 @@ public abstract class ConfigAbstract {
     YamlConfiguration langFile;
     Map<String, YamlConfiguration> items;
     Map<String, YamlConfiguration> mmMobs;
+    Map<String, YamlConfiguration> unidentified;
 
     public JavaPlugin getPlugin(){
         return plugin;
@@ -39,9 +40,9 @@ public abstract class ConfigAbstract {
     }
 
     public Set<String> getItems() { return items.keySet(); }
-
+    public Set<String> getUnidentified() { return unidentified.keySet(); }
     public YamlConfiguration getItemByID(String ID) { return items.get(ID); }
-
+    public YamlConfiguration getUnidentifiedByID(String ID) { return unidentified.get(ID); }
     public ConfigurationSection getMMMob(String ID) { return mmMobs.get(ID); }
 
     public abstract void setup(JavaPlugin p, File j);
