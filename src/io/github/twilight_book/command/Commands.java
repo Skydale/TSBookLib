@@ -55,6 +55,8 @@ public class Commands implements CommandExecutor {
 							return Help.call(sender);
 						case "get":
 							return Get.call(sender);
+						case "getx":
+							return GetX.call(sender);
 						case "give":
 							return Give.call(sender);
 					}
@@ -63,6 +65,8 @@ public class Commands implements CommandExecutor {
 					switch (args[0].toLowerCase()) {
 						case "get":
 							return Get.call(sender, args[1]);
+						case "getx":
+							return GetX.call(sender,args[1]);
 						case "give":
 							return Give.call(sender, args[1]);
 					}
