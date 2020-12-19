@@ -5,21 +5,23 @@ FORMAT:
   NAME: '%item_TS_BOOK.NAME%'
   LORE: |
           %item_TS_BOOK.DAMAGE%
+          
           %item_TS_BOOK.DESC%
+          
           %item_TS_BOOK.RARITY% %item_TS_BOOK.TYPE%
 
 NAME: "&dTwilight's Book"
 RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 
-DAMAGE:
-   - "%tsbook_damage_physical% %item_TS_BOOK.stat-damage-physical%"
-   - "%tsbook_damage_terra% %item_TS_BOOK.stat-damage-terra%"
-   - "%tsbook_damage_aer% %item_TS_BOOK.stat-damage-aer%"
-   - "%tsbook_damage_ignis% %item_TS_BOOK.stat-damage-ignis%"
-   - "%tsbook_damage_aqua% %item_TS_BOOK.stat-damage-aqua%"
-   - "%tsbook_damage_lumen% %item_TS_BOOK.stat-damage-lumen%"
-   - "%tsbook_damage_umbra% %item_TS_BOOK.stat-damage-umbra%"
+DAMAGE: |
+    %tsbook_damage.physical% %item_TS_BOOK.stat-damage-physical-min% &7- &6%item_TS_BOOK.stat-damage-physical-max%
+    %tsbook_damage.terra% %item_TS_BOOK.stat-damage-terra-min% &7- &2%item_TS_BOOK.stat-damage-terra-max%
+    %tsbook_damage.aer% %item_TS_BOOK.stat-damage-aer-min% &7- &e%item_TS_BOOK.stat-damage-aer-max%
+    %tsbook_damage.ignis% %item_TS_BOOK.stat-damage-ignis-min% &7- &c%item_TS_BOOK.stat-damage-ignis-max%
+    %tsbook_damage.aqua% %item_TS_BOOK.stat-damage-aqua-min% &7- &b%item_TS_BOOK.stat-damage-aqua-max%
+    %tsbook_damage.lumen% %item_TS_BOOK.stat-damage-lumen-min% &7- &f%item_TS_BOOK.stat-damage-lumen-max%
+    %tsbook_damage.umbra% %item_TS_BOOK.stat-damage-umbra-min% &7- &8%item_TS_BOOK.stat-damage-umbra-max%
 
 DESC: |
       &7&oA Mythical Book.
@@ -27,10 +29,24 @@ DESC: |
 
 stat:
   damage:
-    physical: 10000.0
-    terra: 10000.0
-    aer: 10000.0
-    ignis: 10000.0
-    aqua: 10000.0
-    lumen: 10000.0
-    umbra: 10000.0
+    physical:
+        min: 1000
+        max: 1000
+    terra:
+        min: 1000
+        max: 10000
+    aer:
+        min: 1000
+        max: 10000
+    ignis:
+        min: 1000
+        max: 10000
+    aqua:
+        min: 1000
+        max: 10000
+    lumen:
+        min: 1000
+        max: 10000
+    umbra:
+        min: 1000
+        max: 10000

@@ -22,13 +22,23 @@ messages:
    player: '%tsbook_player%'
    get: '%tsbook_prefix% &9Gave %tsbook_player% "%tsbook_item%&9"'
 
-mythic: "&dMythic"
+mythic: "&d&lMythic"
 book: "Book"
 
-damage_physical: "&f⚔ &6物理傷害:"
-damage_terra:    "&f🌳 &2大地傷害:"
-damage_aer:      "&f🌪 &e狂風傷害:"
-damage_ignis:    "&f🔥 &c烈焰傷害:"
-damage_aqua:     "&f🌊 &b洪水傷害:"
-damage_lumen:    "&f✨ &f光明傷害:"
-damage_umbra:    "&f🌑 &8黑暗傷害:"
+damage:
+   physical: "&f⚔ &6物理傷害"
+   terra:    "&f⛰ &2大地傷害"
+   aer:      "&f💨 &e狂風傷害"
+   ignis:    "&f🔥 &c烈焰傷害"
+   aqua:     "&f🌊 &b洪水傷害"
+   lumen:    "&f✳ &f光明傷害"
+   umbra:    "&7❇ &8黑暗傷害"
+
+indicator:
+   physical: "&f⚔ &6"
+   terra:    "&f⛰ &2"
+   aer:      "&f💨 &e"
+   ignis:    "&f🔥 &c"
+   aqua:     "&f🌊 &b"
+   lumen:    "&f✳ "
+   umbra:    "&7❇ &8"
