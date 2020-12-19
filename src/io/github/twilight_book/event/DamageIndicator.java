@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class DamageIndicator {
     public static void displayDamage(double damage, String type, World world, Location loc) {
-        double r = Math.toRadians(new Random().nextInt(361));
+        double r = new Random().nextDouble() * Math.PI * 2;
         double x = Math.cos(r) / 6;
         double z = Math.sin(r) / 6;
 

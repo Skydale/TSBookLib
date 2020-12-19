@@ -2,6 +2,7 @@ package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class Get extends Give {
@@ -16,10 +17,11 @@ public class Get extends Give {
 			return false;
 		}
 
-		if (Book.getCfg().getItemByID(s) != null) {
+		YamlConfiguration item = Book.getCfg().getItemByID(s);
+		if (item != null) {
 			Commands.setITEM(s);
 			sender.sendMessage(Book.getCfg().getLang().translate("messages.get", (Player) sender));
-			((Player) sender).getInventory().addItem(getItem(s));
+			((Player) sender).getInventory().addItem(getItem(item, "item"));
 			return true;
 		}
 

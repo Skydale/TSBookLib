@@ -10,7 +10,7 @@ FORMAT:
           
           %item_TS_BOOK.RARITY% %item_TS_BOOK.TYPE%
 
-NAME: "&dTwilight's Book"
+NAME: "&d暮暮手書"
 RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 
@@ -24,8 +24,8 @@ DAMAGE: |
     %tsbook_damage.umbra% %item_TS_BOOK.stat-damage-umbra-min% &7- &8%item_TS_BOOK.stat-damage-umbra-max%
 
 DESC: |
-      &7&oA Mythical Book.
-      &7&oContains a Magical Tale of Six Ponies.
+      &7&o一本神話。
+      &7&o裡面講述著六隻小馬的故事。
 
 stat:
   damage:

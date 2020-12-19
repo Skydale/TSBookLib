@@ -1,0 +1,19 @@
+ID: "UNIDENTIFIED_BOOK_MYTHIC"
+MATERIAL: 'BOOK'
+
+FORMAT:
+  NAME: '%unid_UNIDENTIFIED_BOOK_MYTHIC.NAME%'
+  LORE: |
+          %unid_UNIDENTIFIED_BOOK_MYTHIC.DESC%
+
+          %unid_UNIDENTIFIED_BOOK_MYTHIC.RARITY% %unid_UNIDENTIFIED_BOOK_MYTHIC.TYPE%
+
+NAME: "&d未鑑定的%tsbook_book%"
+DESC: |
+    &7尚未經過鑑定的%tsbook_book%，
+    &7裡面似乎散發著無限的力量？
+RARITY: '%tsbook_mythic%'
+TYPE: '%tsbook_book%'
+
+ITEMS:
+  - "TS_BOOK"

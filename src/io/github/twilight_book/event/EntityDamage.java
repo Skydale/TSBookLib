@@ -11,10 +11,12 @@ import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,24 +29,29 @@ public class EntityDamage implements Listener {
     final BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();
 
     @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof ArmorStand) return;
+    public void onDamage(EntityDamageEvent event) {
+        Entity e = event.getEntity();
+        if (e instanceof ArmorStand) return;
 
-        if (helper.isMythicMob(event.getEntity())) {
-            ActiveMob mythicMob = helper.getMythicMobInstance(event.getEntity());
-            ConfigurationSection mob = Book.getCfg().getMMMob(mythicMob.getType().getInternalName());
+        if (event instanceof EntityDamageByEntityEvent) {
+            if (helper.isMythicMob(e)) {
+                ActiveMob mythicMob = helper.getMythicMobInstance(e);
+                ConfigurationSection mob = Book.getCfg().getMMMob(mythicMob.getType().getInternalName());
 
-            if (mob != null) {
-                Map<String, Double> map = new HashMap<>();
-                for (String key : mob.getConfigurationSection("defense").getKeys(false)) {
-                    map.put(key, mob.getDouble("defense." + key));
+                if (mob != null) {
+                    Map<String, Double> map = new HashMap<>();
+                    for (String key : mob.getConfigurationSection("defense").getKeys(false)) {
+                        map.put(key, mob.getDouble("defense." + key));
+                    }
+
+                    calculateDamage((EntityDamageByEntityEvent) event, map);
+                    return;
                 }
-
-                calculateDamage(event, map);
-                return;
             }
+            calculateDamage((EntityDamageByEntityEvent) event, Collections.emptyMap());
+            return;
         }
-        calculateDamage(event, Collections.emptyMap());
+        displayDamage(event.getFinalDamage(), "none", e.getWorld(), e.getLocation());
     }
 
     protected void calculateDamage(EntityDamageByEntityEvent event, Map<String, Double> def) {
@@ -73,7 +80,13 @@ public class EntityDamage implements Listener {
 
                         double temp = v.calculate();
                         if (def.containsKey(k)) {
-                            temp *= (1 - (def.get(k) / (def.get(k) + 70))); // 200 / ( 200 + 70) = ~0.75
+                            double d = def.get(k);
+                            if (d > 0) {
+                                temp *= (1 - (d / (d + 70)));
+                            } else if (d < 0) {
+                                d *= -1;
+                                temp *= (1 + (d / (d + 70)));
+                            }
                         }
                         damage += temp;
                         displayDamage(temp, k, world, loc);
@@ -83,7 +96,7 @@ public class EntityDamage implements Listener {
                     return;
                 }
             }
-            displayDamage(event.getFinalDamage(), "physical", damaged.getWorld(), damaged.getLocation());
+            displayDamage(event.getFinalDamage(), "none", damaged.getWorld(), damaged.getLocation());
         }
     }
 }

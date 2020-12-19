@@ -12,6 +12,7 @@ import io.github.twilight_book.items.ItemPacketListener;
 import io.github.twilight_book.utils.papi.item;
 import io.github.twilight_book.utils.config.Config;
 import io.github.twilight_book.utils.papi.tsbook;
+import io.github.twilight_book.utils.papi.unid;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -46,8 +47,9 @@ public class Book extends JavaPlugin implements Listener {
     }
 
     public void reg() {
-        new tsbook(inst, config).register();
-        new   item(inst, config).register();
+        new       tsbook(inst, config).register();
+        new         item(inst, config).register();
+        new unid(inst, config).register();
 
         DisableHeartParticle.register();
         ItemPacketListener.register();

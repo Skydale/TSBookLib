@@ -23,7 +23,7 @@ public class CommandsTab implements TabCompleter {
 
 				switch (args.length) {
 					case 1:
-						StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "player", "get", "help", "give"), s);
+						StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "player", "get", "help", "give", "unidentified", "identify"), s);
 						break;
 
 					case 2:
@@ -32,6 +32,7 @@ public class CommandsTab implements TabCompleter {
 								StringUtil.copyPartialMatches(args[1], Book.getCfg().getItems(), s);
 								break;
 							case "give":
+							case "unidentified":
 								StringUtil.copyPartialMatches(args[1], getPlayerNames(), s);
 								break;
 						}
@@ -40,6 +41,9 @@ public class CommandsTab implements TabCompleter {
 						switch (args[0].toLowerCase()) {
 							case "give":
 								StringUtil.copyPartialMatches(args[2], Book.getCfg().getItems(), s);
+								break;
+							case "unidentified":
+								StringUtil.copyPartialMatches(args[2], Book.getCfg().getUnidentified(), s);
 								break;
 						}
 						break;
