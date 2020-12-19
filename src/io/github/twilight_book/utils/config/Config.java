@@ -1,6 +1,6 @@
 package io.github.twilight_book.utils.config;
 
-import io.github.twilight_book.utils.Translate;
+import io.github.twilight_book.utils.lang.Translate;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -24,11 +24,17 @@ public class Config extends ConfigAbstract {
         lang = new Translate(langFile);
 
         p.getLogger().info("Loading item settings...");
-        items = cb.createFolder("Items");
+        items = cb.createMap("Items");
 
         p.getLogger().info("Loading MythicMobs settings...");
-        mmMobs = cb.createMap("MythicMobs/", "Elements.yml");
+        mmMobs = cb.createMap("MythicMobs");
 
         p.getLogger().info("Took me... [" + (System.currentTimeMillis() - start) + "ms] to load!");
+    }
+
+    @Override
+    public void unload(){
+        items.clear();
+        mmMobs.clear();
     }
 }

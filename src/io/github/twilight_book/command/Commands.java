@@ -11,22 +11,33 @@ public class Commands implements CommandExecutor {
 	protected static Player PLAYER;
 	protected static String ITEM;
 
-	public static String getCommand() { return CMD; }
-	public static Player getPlayer() { return PLAYER; }
-	public static String getITEM() { return ITEM; }
-	public static void	 setITEM(String s) { ITEM = s; }
+	public static String getCommand() {
+		return CMD;
+	}
+
+	public static Player getPlayer() {
+		return PLAYER;
+	}
+
+	public static String getITEM() {
+		return ITEM;
+	}
+
+	public static void setITEM(String s) {
+		ITEM = s;
+	}
 
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player) {
-        	PLAYER = (Player) sender;
-        } else PLAYER = null;
-		
-        if(args.length > 0){
-        	CMD = args[0];
+		if (sender instanceof Player) {
+			PLAYER = (Player) sender;
+		} else PLAYER = null;
+
+		if (args.length > 0) {
+			CMD = args[0];
 		} else CMD = "";
 
-        ITEM = null;
+		ITEM = null;
 
 		if (command.getName().equalsIgnoreCase("tsbook")) {
 			switch (args.length) {
@@ -44,12 +55,21 @@ public class Commands implements CommandExecutor {
 							return Help.call(sender);
 						case "get":
 							return Get.call(sender);
+						case "give":
+							return Give.call(sender);
 					}
 
 				case 2:
 					switch (args[0].toLowerCase()) {
 						case "get":
 							return Get.call(sender, args[1]);
+						case "give":
+							return Give.call(sender, args[1]);
+					}
+				case 3:
+					switch (args[0].toLowerCase()) {
+						case "give":
+							return Give.call(sender, args[1], args[2]);
 					}
 			}
 

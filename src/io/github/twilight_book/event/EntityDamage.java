@@ -1,54 +1,89 @@
 package io.github.twilight_book.event;
 
 import io.github.twilight_book.Book;
+import io.github.twilight_book.items.DamageRange;
 import io.github.twilight_book.items.ItemUtils;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import io.lumine.xikage.mythicmobs.mobs.ActiveMob;
-import org.bukkit.configuration.Configuration;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static io.github.twilight_book.event.DamageIndicator.displayDamage;
 
 public class EntityDamage implements Listener {
-    BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();;
+    final BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();
 
     @EventHandler
-    public boolean onDamage(EntityDamageByEntityEvent event){
-        if (helper.isMythicMob(event.getEntity())){
-            return mythicMobsDamage(event);
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof ArmorStand) return;
+
+        if (helper.isMythicMob(event.getEntity())) {
+            ActiveMob mythicMob = helper.getMythicMobInstance(event.getEntity());
+            ConfigurationSection mob = Book.getCfg().getMMMob(mythicMob.getType().getInternalName());
+
+            if (mob != null) {
+                Map<String, Double> map = new HashMap<>();
+                for (String key : mob.getConfigurationSection("defense").getKeys(false)) {
+                    map.put(key, mob.getDouble("defense." + key));
+                }
+
+                calculateDamage(event, map);
+                return;
+            }
         }
-        return vanillaDamage(event);
+        calculateDamage(event, Collections.emptyMap());
     }
 
-    public boolean vanillaDamage(EntityDamageByEntityEvent event){
-        if (event.getDamager() instanceof LivingEntity){
+    protected void calculateDamage(EntityDamageByEntityEvent event, Map<String, Double> def) {
+        if (event.getDamager() instanceof LivingEntity) {
             LivingEntity damager = (LivingEntity) event.getDamager();
-            if (damager.getEquipment() == null) return true;
+            LivingEntity damaged = (LivingEntity) event.getEntity();
 
-            YamlConfiguration item = Book.getCfg().getItemByID(
-                ItemUtils.getDataTag(
-                    Book.getCfg().getPlugin(), damager.getEquipment().getItemInMainHand(), "item"
-                )
-            );
+            if (damager.getEquipment() != null && damager.getEquipment().getItemInMainHand().getItemMeta() != null) {
+                YamlConfiguration item = Book.getCfg().getItemByID(
+                        ItemUtils.getDataTag(
+                                Book.getInst(), damager.getEquipment().getItemInMainHand(), "item"
+                        )
+                );
 
-            item.getMapList("damage").forEach(value -> System.out.println(value));
-        } else {
-            event.setDamage(0.0);
-            return true;
+                if (item != null) {
+                    double damage = 0.0;
+                    World world = damaged.getWorld();
+                    Location loc = damaged.getLocation();
+
+                    Set<String> config = item.getConfigurationSection("stat.damage").getKeys(false);
+                    for (String k : config) {
+                        DamageRange v = new DamageRange(
+                                item.getDouble("stat.damage." + k + ".max"),
+                                item.getDouble("stat.damage." + k + ".min")
+                        );
+
+                        double temp = v.calculate();
+                        if (def.containsKey(k)) {
+                            temp *= (1 - (def.get(k) / (def.get(k) + 70))); // 200 / ( 200 + 70) = ~0.75
+                        }
+                        damage += temp;
+                        displayDamage(temp, k, world, loc);
+                    }
+
+                    event.setDamage(damage);
+                    return;
+                }
+            }
+            displayDamage(event.getFinalDamage(), "physical", damaged.getWorld(), damaged.getLocation());
         }
-        return false;
-    }
-
-    public boolean mythicMobsDamage(EntityDamageByEntityEvent event){
-        ActiveMob mythicmob = helper.getMythicMobInstance(event.getEntity());
-        ConfigurationSection mob = Book.getCfg().getMMMob(mythicmob.getType().getInternalName());
-        if (mob == null) return vanillaDamage(event);
-
-        return false;
     }
 }

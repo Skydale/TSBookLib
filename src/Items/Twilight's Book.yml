@@ -2,23 +2,35 @@ ID: 'TS_BOOK'
 MATERIAL: 'BOOK'
 
 FORMAT:
-  NAME: '%item_NAME%'
+  NAME: '%item_TS_BOOK.NAME%'
   LORE: |
-          %item_RARITY% %item_TYPE%
-          %item_DESC%
+          %item_TS_BOOK.DAMAGE%
+          %item_TS_BOOK.DESC%
+          %item_TS_BOOK.RARITY% %item_TS_BOOK.TYPE%
 
-NAME: '&dTwilight''s Book'
+NAME: "&dTwilight's Book"
 RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
+
+DAMAGE:
+   - "%tsbook_damage_physical% %item_TS_BOOK.stat-damage-physical%"
+   - "%tsbook_damage_terra% %item_TS_BOOK.stat-damage-terra%"
+   - "%tsbook_damage_aer% %item_TS_BOOK.stat-damage-aer%"
+   - "%tsbook_damage_ignis% %item_TS_BOOK.stat-damage-ignis%"
+   - "%tsbook_damage_aqua% %item_TS_BOOK.stat-damage-aqua%"
+   - "%tsbook_damage_lumen% %item_TS_BOOK.stat-damage-lumen%"
+   - "%tsbook_damage_umbra% %item_TS_BOOK.stat-damage-umbra%"
+
 DESC: |
       &7&oA Mythical Book.
       &7&oContains a Magical Tale of Six Ponies.
 
-damage:
-  "physial": 10000.0
-  "terra": 10000.0
-  "aer": 10000.0
-  "ignis": 10000.0
-  "aqua": 10000.0
-  "lumen": 10000.0
-  "umbra": 10000.0
+stat:
+  damage:
+    physical: 10000.0
+    terra: 10000.0
+    aer: 10000.0
+    ignis: 10000.0
+    aqua: 10000.0
+    lumen: 10000.0
+    umbra: 10000.0

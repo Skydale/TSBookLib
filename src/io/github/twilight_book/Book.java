@@ -2,8 +2,11 @@ package io.github.twilight_book;
 
 import java.io.File;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import io.github.twilight_book.command.Commands;
 import io.github.twilight_book.command.CommandsTab;
+import io.github.twilight_book.event.DisableHeartParticle;
 import io.github.twilight_book.event.EntityDamage;
 import io.github.twilight_book.utils.papi.item;
 import io.github.twilight_book.utils.config.Config;
@@ -13,35 +16,41 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Book extends JavaPlugin implements Listener {
-    private static Book i;
+    private static Book inst;
     private static File jar;
-    private static Config config;
-    private static EntityDamage mmhook;
+    private static final Config config = new Config();
+    private ProtocolManager protocolManager;
 
     @Override
     public void onEnable(){
-        i = this;
-        jar = getFile();
+        inst = this;
+        jar = inst.getFile();
+        protocolManager = ProtocolLibrary.getProtocolManager();
 
-        reg();
         load();
+        reg();
     }
 
     @Override
     public void onDisable(){
+        unload();
     }
 
-    public static void load() {
-        config = new Config();
-        config.setup(i, jar);
-        mmhook = new EntityDamage();
+    public void unload(){
+        config.unload();
     }
 
-    private void reg() {
-        Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(new EntityDamage(), this);
-        new tsbook(i, config).register();
-        new item(i, config).register();
+    public void load() {
+        config.setup(inst, jar);
+    }
+
+    public void reg() {
+        new tsbook(inst, config).register();
+        new   item(inst, config).register();
+
+        DisableHeartParticle.register();
+
+        Bukkit.getPluginManager().registerEvents  (new EntityDamage(), inst);
 
         getCommand("tsbook").setExecutor    (new Commands());
         getCommand("tsbook").setTabCompleter(new CommandsTab());
@@ -49,5 +58,10 @@ public class Book extends JavaPlugin implements Listener {
 
     public static Config getCfg(){
         return config;
+    }
+    public static Book getInst() { return inst; }
+
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
     }
 }

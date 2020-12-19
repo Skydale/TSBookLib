@@ -1,6 +1,6 @@
 package io.github.twilight_book.utils.config;
 
-import io.github.twilight_book.utils.Translate;
+import io.github.twilight_book.utils.lang.Translate;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +16,7 @@ public abstract class ConfigAbstract {
     YamlConfiguration config;
     YamlConfiguration langFile;
     Map<String, YamlConfiguration> items;
-    Map<String, ConfigurationSection> mmMobs;
+    Map<String, YamlConfiguration> mmMobs;
 
     public JavaPlugin getPlugin(){
         return plugin;
@@ -45,4 +45,5 @@ public abstract class ConfigAbstract {
     public ConfigurationSection getMMMob(String ID) { return mmMobs.get(ID); }
 
     public abstract void setup(JavaPlugin p, File j);
+    public abstract void unload();
 }

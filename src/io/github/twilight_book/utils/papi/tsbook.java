@@ -11,46 +11,46 @@ public class tsbook extends PlaceholderExpansion {
     final JavaPlugin plugin;
     final Config config;
 
-    public tsbook(JavaPlugin p, Config c){
+    public tsbook(JavaPlugin p, Config c) {
         plugin = p;
         config = c;
     }
 
     @Override
-    public boolean persist(){
+    public boolean persist() {
         return true;
     }
 
     @Override
-    public boolean canRegister(){
+    public boolean canRegister() {
         return true;
     }
 
     @NotNull
     @Override
-    public String getAuthor(){
+    public String getAuthor() {
         return plugin.getDescription().getAuthors().toString();
     }
 
     @NotNull
     @Override
-    public String getVersion(){
+    public String getVersion() {
         return plugin.getDescription().getVersion();
     }
 
     @NotNull
     @Override
-    public String getIdentifier(){
+    public String getIdentifier() {
         return "tsbook";
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier){
+    public String onPlaceholderRequest(Player player, String identifier) {
         switch (identifier) {
             case "command":
                 return Commands.getCommand();
             case "player":
-                if(player == null) return "PLAYER_NOT_FOUND";
+                if (player == null) return "PLAYER_NOT_FOUND";
                 return player.getName();
             case "item":
                 return Commands.getITEM();
