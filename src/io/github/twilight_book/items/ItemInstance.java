@@ -30,7 +30,6 @@ public class ItemInstance { //represents a single ItemStack
         if(i.getType() == Material.AIR) return null;
         PersistentDataContainer container = Objects.requireNonNull(i.getItemMeta()).getPersistentDataContainer();
         String itemId = container.get(idKey,PersistentDataType.STRING);
-        Bukkit.broadcastMessage(itemId+"");
         if(itemId == null)return null;
         UUID uuid = getOrGenerateUUID(container);
         if(instances.containsKey(uuid)) return instances.get(uuid);

@@ -19,14 +19,14 @@ import java.util.List;
 
 public class ItemPacketListener {
     public static void register() {
-        /*Book.getInst().getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, PacketType.Play.Server.WINDOW_ITEMS) {
+        Book.getInst().getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, PacketType.Play.Server.WINDOW_ITEMS) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 PacketContainer packet = event.getPacket();
                 List<ItemStack> a = packet.getItemListModifier().read(0);
                 List<ItemStack> c = new ArrayList<>();
 
-                for(ItemStack b : a){
+                /*for(ItemStack b : a){
                     if(b!=null && b.getType() == Material.EGG) {
                         ItemMeta eggmeta = b.getItemMeta();
                         eggmeta.setLore(Arrays.asList("hi","bye"));
@@ -38,15 +38,21 @@ public class ItemPacketListener {
 
                 packet.getItemListModifier().write(0,c);
 
-                event.setPacket(packet);
+                event.setPacket(packet);*/
 
 
 
-                /*for(ItemStack b : a){
-                    ItemInstance.getFromExist(b);
+                for(ItemStack b : a){
+                    ItemInstance i =ItemInstance.getFromExist(b);
+                    if(i==null) return;
+                    ItemMeta meta = b.getItemMeta();
+                    meta.setLore(i.getLore());
+                    meta.setDisplayName(i.getDisplayName());
+                    b.setItemMeta(meta);
+
                 }
             }
-        });*/
+        });
         Book.getInst().getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, PacketType.Play.Server.SET_SLOT) {
             @Override
             public void onPacketSending(PacketEvent event) {
