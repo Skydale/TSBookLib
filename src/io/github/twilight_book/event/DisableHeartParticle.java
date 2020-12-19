@@ -12,10 +12,8 @@ public class DisableHeartParticle {
         Book.getInst().getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, PacketType.Play.Server.WORLD_PARTICLES) {
             @Override
             public void onPacketSending(PacketEvent event) {
-                if (event.getPacketType() == PacketType.Play.Server.WORLD_PARTICLES) {
-                    if (event.getPacket().getNewParticles().getValues().get(0).getParticle() == Particle.DAMAGE_INDICATOR) {
-                        event.setCancelled(true);
-                    }
+                if (event.getPacket().getNewParticles().getValues().get(0).getParticle() == Particle.DAMAGE_INDICATOR) {
+                    event.setCancelled(true);
                 }
             }
         });

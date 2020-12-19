@@ -1,4 +1,5 @@
 package io.github.twilight_book.utils.config;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,11 +38,11 @@ public class ConfigBuilder{
     }
 
     public YamlConfiguration createFolder(String path, String target){
-        List<File> listFile = loadJarContent(path);
+        List<File> files = loadJarContent(path);
 
         YamlConfiguration yaml = new YamlConfiguration();
 
-        listFile.forEach((value) -> {
+        files.forEach((value) -> {
             if (value.getName().equals(target)) {
                 try {
                     yaml.load(value);
@@ -55,32 +56,51 @@ public class ConfigBuilder{
     }
 
     public List<YamlConfiguration> createFolder(String path){
-        List<File> listFile = loadJarContent(path);
+        List<File> files = loadJarContent(path);
 
-        List<YamlConfiguration> yamlList = new ArrayList<>();
+        List<YamlConfiguration> YAMLs = new ArrayList<>();
 
-        for (File t : listFile){
-            yamlList.add(YamlConfiguration.loadConfiguration(t));
+        for (File t : files){
+            YAMLs.add(YamlConfiguration.loadConfiguration(t));
         }
 
-        return yamlList;
+        return YAMLs;
     }
 
-    public Map<String, YamlConfiguration> createMap(String path){
-        List<File> listFile = loadJarContent(path);
+    public Map<String, YamlConfiguration> createFileMap(String path){
+        List<File> files = loadJarContent(path);
 
-        Map<String, YamlConfiguration> yamlMap = new HashMap<>();
+        Map<String, YamlConfiguration> MappedYAML = new HashMap<>();
         try {
-            for (File t : listFile){
+            for (File file : files){
                 YamlConfiguration yaml = new YamlConfiguration();
-                yaml.load(t);
-                yamlMap.put(yaml.getString("ID"), yaml);
+                yaml.load(file);
+                MappedYAML.put(yaml.getString("ID"), yaml);
             }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace(); return null;
         }
 
-        return yamlMap;
+        return MappedYAML;
+    }
+
+    public Map<String, ConfigurationSection> createSectionMap(String path){
+        List<File> files = loadJarContent(path);
+
+        Map<String, ConfigurationSection> MappedYAML = new HashMap<>();
+        try {
+            for (File file : files){
+                YamlConfiguration yaml = new YamlConfiguration();
+                yaml.load(file);
+                for (String section: yaml.getKeys(false)) {
+                    MappedYAML.put(section, yaml.getConfigurationSection(section));
+                }
+            }
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace(); return null;
+        }
+
+        return MappedYAML;
     }
 
     List<File> loadJarContent(String directory){

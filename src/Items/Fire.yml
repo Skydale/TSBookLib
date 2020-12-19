@@ -15,7 +15,7 @@ RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 
 DAMAGE: |
-    %tsbook_damage.ignis% %item_FIRE_TEST.stat-damage-ignis-min% &7- %item_FIRE_TEST.stat-damage-ignis-max%
+    %tsbook_damage.ignis% %item_FIRE_TEST.stat-damage-ignis-min% &7- &c%item_FIRE_TEST.stat-damage-ignis-max%
 
 DESC: |
       &7&oA FUCKING FIRE WEAPON FOR TEST

@@ -16,8 +16,8 @@ public abstract class ConfigAbstract {
     YamlConfiguration config;
     YamlConfiguration langFile;
     Map<String, YamlConfiguration> items;
-    Map<String, YamlConfiguration> mmMobs;
     Map<String, YamlConfiguration> unidentified;
+    Map<String, ConfigurationSection> mmMobs;
 
     public JavaPlugin getPlugin(){
         return plugin;

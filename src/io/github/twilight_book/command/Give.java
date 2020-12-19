@@ -1,6 +1,7 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
+import io.github.twilight_book.items.ItemInstance;
 import io.github.twilight_book.items.ItemTemplate;
 import io.github.twilight_book.items.ItemUtils;
 import org.bukkit.Material;
@@ -10,19 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Give {
-    protected static ItemStack getItem(YamlConfiguration itemSetting, String ID) {
-        String mat = itemSetting.getString("MATERIAL");
-        if (mat == null) throw new IllegalArgumentException("Cannot get Material of the item.");
-
-        ItemTemplate item = new ItemTemplate(
-                Book.getInst(),
-                Material.getMaterial(mat),
-                Book.getCfg(),
-                itemSetting
-        );
-        item.setDataTag(Book.getInst(), ID, item.getID());
-
-        return item.getItem();
+    protected static ItemStack getItem(String s) {
+        return new ItemInstance(s).createItem();
     }
 
     public static boolean call(CommandSender sender) {
@@ -42,7 +32,7 @@ public class Give {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(item, "item"));
+            player.getInventory().addItem(getItem(i));
             return true;
         }
 

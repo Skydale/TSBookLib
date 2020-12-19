@@ -53,15 +53,8 @@ public class ItemPacketListener {
                 PacketContainer packet = event.getPacket();
                 ItemStack a = packet.getItemModifier().read(0);
 
-                /*if(a!=null && a.getType() == Material.EGG) {
-                    ItemMeta eggmeta = a.getItemMeta();
-                    eggmeta.setLore(Arrays.asList("hi","bye"));
-                    a.setItemMeta(eggmeta);
-                    event.getPlayer().sendMessage("EGG");
-                }*/
-
                 ItemInstance i = ItemInstance.getFromExist(a);
-                if(i==null) return;
+                if (i == null) return;
                 ItemMeta meta = a.getItemMeta();
                 meta.setLore(i.getLore());
                 meta.setDisplayName(i.getDisplayName());

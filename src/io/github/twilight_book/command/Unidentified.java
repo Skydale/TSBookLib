@@ -26,7 +26,7 @@ public class Unidentified {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(Give.getItem(item, "unid"));
+            player.getInventory().addItem(Give.getItem(i));
             return true;
         }
 

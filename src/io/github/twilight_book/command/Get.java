@@ -11,17 +11,17 @@ public class Get extends Give {
 		return true;
 	}
 
-	public static boolean call(CommandSender sender, String s) {
+	public static boolean call(CommandSender sender, String i) {
 		if (!(sender instanceof Player)) {
 			sender.sendMessage(Book.getCfg().getLang().translate("errors.player_only"));
 			return false;
 		}
 
-		YamlConfiguration item = Book.getCfg().getItemByID(s);
+		YamlConfiguration item = Book.getCfg().getItemByID(i);
 		if (item != null) {
-			Commands.setITEM(s);
+			Commands.setITEM(i);
 			sender.sendMessage(Book.getCfg().getLang().translate("messages.get", (Player) sender));
-			((Player) sender).getInventory().addItem(getItem(item, "item"));
+			((Player) sender).getInventory().addItem(getItem(i));
 			return true;
 		}
 

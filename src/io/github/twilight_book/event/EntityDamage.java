@@ -72,6 +72,7 @@ public class EntityDamage implements Listener {
                     Location loc = damaged.getLocation();
 
                     Set<String> config = item.getConfigurationSection("stat.damage").getKeys(false);
+
                     for (String k : config) {
                         DamageRange v = new DamageRange(
                                 item.getDouble("stat.damage." + k + ".max"),
@@ -82,10 +83,10 @@ public class EntityDamage implements Listener {
                         if (def.containsKey(k)) {
                             double d = def.get(k);
                             if (d > 0) {
-                                temp *= (1 - (d / (d + 70)));
+                                temp *= (1 - (d / (d + 100)));
                             } else if (d < 0) {
                                 d *= -1;
-                                temp *= (1 + (d / (d + 70)));
+                                temp *= (1 + (d / (d + 100)));
                             }
                         }
                         damage += temp;

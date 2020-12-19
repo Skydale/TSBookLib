@@ -24,11 +24,11 @@ public class Config extends ConfigAbstract {
         lang = new Translate(langFile);
 
         p.getLogger().info("Loading item settings...");
-        items = cb.createMap("Items");
-        unidentified = cb.createMap("Unidentified");
+        items = cb.createFileMap("Items");
+        unidentified = cb.createFileMap("Unidentified");
 
         p.getLogger().info("Loading MythicMobs settings...");
-        mmMobs = cb.createMap("MythicMobs");
+        mmMobs = cb.createSectionMap("MythicMobs");
 
         p.getLogger().info("Took me... [" + (System.currentTimeMillis() - start) + "ms] to load!");
     }
