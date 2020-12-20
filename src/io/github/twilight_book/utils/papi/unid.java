@@ -2,7 +2,6 @@ package io.github.twilight_book.utils.papi;
 
 import io.github.twilight_book.utils.config.Config;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

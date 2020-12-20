@@ -1,4 +1,4 @@
-package io.github.twilight_book.event;
+package io.github.twilight_book.listener.event;
 
 import io.github.twilight_book.Book;
 import io.github.twilight_book.items.DamageRange;
@@ -12,8 +12,10 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -21,17 +23,16 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import static io.github.twilight_book.event.DamageIndicator.displayDamage;
+import static io.github.twilight_book.listener.event.DamageIndicator.displayDamage;
 
 public class EntityDamage implements Listener {
     final BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDamage(EntityDamageEvent event) {
         Entity e = event.getEntity();
-        if (e instanceof ArmorStand) return;
+        if (e instanceof ArmorStand || e instanceof Item) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             if (helper.isMythicMob(e)) {
@@ -71,30 +72,31 @@ public class EntityDamage implements Listener {
                     World world = damaged.getWorld();
                     Location loc = damaged.getLocation();
 
-                    Set<String> config = item.getConfigurationSection("stat.damage").getKeys(false);
+                    ConfigurationSection config = item.getConfigurationSection("stat.damage");
+                    if (config != null) {
+                        for (String k : config.getKeys(false)) {
+                            DamageRange v = new DamageRange(
+                                    item.getDouble("stat.damage." + k + ".max"),
+                                    item.getDouble("stat.damage." + k + ".min")
+                            );
 
-                    for (String k : config) {
-                        DamageRange v = new DamageRange(
-                                item.getDouble("stat.damage." + k + ".max"),
-                                item.getDouble("stat.damage." + k + ".min")
-                        );
-
-                        double temp = v.calculate();
-                        if (def.containsKey(k)) {
-                            double d = def.get(k);
-                            if (d > 0) {
-                                temp *= (1 - (d / (d + 100)));
-                            } else if (d < 0) {
-                                d *= -1;
-                                temp *= (1 + (d / (d + 100)));
+                            double temp = v.calculate();
+                            if (def.containsKey(k)) {
+                                double d = def.get(k);
+                                if (d > 0) {
+                                    temp *= (1 - (d / (d + 100)));
+                                } else if (d < 0) {
+                                    d *= -1;
+                                    temp *= (1 + (d / (d + 100)));
+                                }
                             }
+                            damage += temp;
+                            displayDamage(temp, k, world, loc);
                         }
-                        damage += temp;
-                        displayDamage(temp, k, world, loc);
-                    }
 
-                    event.setDamage(damage);
-                    return;
+                        event.setDamage(damage);
+                        return;
+                    }
                 }
             }
             displayDamage(event.getFinalDamage(), "none", damaged.getWorld(), damaged.getLocation());

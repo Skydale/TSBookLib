@@ -1,18 +1,14 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
-import io.github.twilight_book.items.ItemTemplate;
+import io.github.twilight_book.items.ItemInstance;
 import io.github.twilight_book.items.ItemUtils;
-import io.github.twilight_book.utils.config.Config;
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -36,24 +32,15 @@ public class Identify {
             return false;
         }
 
-        ItemTemplate item = identify(Book.getCfg().getUnidentifiedByID(ID), Book.getCfg());
+        ItemInstance item = identify(Book.getCfg(), ID);
         hand.setAmount(hand.getAmount() - 1);
-        player.getInventory().addItem(item.getItem());
+        player.getInventory().addItem(item.createItem(Book.getInst()));
         return true;
     }
 
-    public static ItemTemplate identify(YamlConfiguration unidentified, ConfigAbstract config){
-        List<String> items = unidentified.getStringList("ITEMS");
-        YamlConfiguration itemSetting = config.getItemByID(items.get(new Random().nextInt(items.size())));
+    public static ItemInstance identify(ConfigAbstract config, String ID){
+        List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
 
-        String mat = itemSetting.getString("MATERIAL");
-        if (mat == null) throw new IllegalArgumentException("Cannot get Material of the item.");
-
-        return new ItemTemplate(
-                Book.getInst(),
-                Material.getMaterial(mat),
-                config,
-                itemSetting
-        );
+        return new ItemInstance(config, items.get(new Random().nextInt(items.size())), "item");
     }
 }

@@ -2,17 +2,15 @@ package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
 import io.github.twilight_book.items.ItemInstance;
-import io.github.twilight_book.items.ItemTemplate;
-import io.github.twilight_book.items.ItemUtils;
-import org.bukkit.Material;
+import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Give {
-    protected static ItemStack getItem(String s) {
-        return new ItemInstance(s).createItem();
+    protected static ItemStack getItem(ConfigAbstract config, String s, String path) {
+        return new ItemInstance(config, s, path).createItem(Book.getInst());
     }
 
     public static boolean call(CommandSender sender) {
@@ -32,7 +30,7 @@ public class Give {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(i));
+            player.getInventory().addItem(getItem(Book.getCfg(), i, "item"));
             return true;
         }
 

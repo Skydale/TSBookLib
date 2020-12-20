@@ -1,16 +1,13 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
-import io.github.twilight_book.items.ItemTemplate;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-public class Unidentified {
+public class Unidentified extends Give{
     public static boolean call(CommandSender sender) {
-        sender.sendMessage(Book.getCfg().getLang().translate("commands.feedback.unidentified"));
+        sender.sendMessage(Book.getCfg().getLang().translate("commands.feedback.unid"));
         return true;
     }
 
@@ -26,7 +23,7 @@ public class Unidentified {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(Give.getItem(i));
+            player.getInventory().addItem(getItem(Book.getCfg(), i, "unid"));
             return true;
         }
 

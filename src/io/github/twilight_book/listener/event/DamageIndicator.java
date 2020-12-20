@@ -1,20 +1,34 @@
-package io.github.twilight_book.event;
+package io.github.twilight_book.listener.event;
 
 import io.github.twilight_book.Book;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class DamageIndicator {
+    private static final List<ArmorStand> armorStands = new ArrayList<>();
+
+    public static void cleanArmorStands() {
+        if (armorStands.isEmpty()) return;
+
+        armorStands.forEach(Entity::remove);
+        armorStands.clear();
+    }
+
     public static void displayDamage(double damage, String type, World world, Location loc) {
         double r = new Random().nextDouble() * Math.PI * 2;
         double x = Math.cos(r) / 6;
         double z = Math.sin(r) / 6;
 
         ArmorStand armorStand = world.spawn(loc, ArmorStand.class, as -> {
+            armorStands.add(as);
             as.setInvulnerable(true);
             as.setVisible(false);
             as.setGravity(false);
@@ -49,6 +63,7 @@ public class DamageIndicator {
                     );
                 }
                 if (i >= 30) {
+                    armorStands.remove(armorStand);
                     armorStand.remove();
                     cancel();
                 }

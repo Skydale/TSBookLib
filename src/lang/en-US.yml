@@ -11,7 +11,7 @@ commands:
   feedback:
     get: '&8[&7=>&8] &c/tsbook get <item> &7- &aGet specified item.'
     give: '&8[&7=>&8] &c/tsbook give <player> <item> &7- &aGive the player specified item.'
-    unidentified: '&8[&7=>&8] &c/tsbook unidentified <player> <item> &7- &aGive the player specified unidentified item.'
+    unid: '&8[&7=>&8] &c/tsbook unid <player> <item> &7- &aGive the player specified unid item.'
 
 messages:
    help: |

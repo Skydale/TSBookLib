@@ -1,4 +1,4 @@
-package io.github.twilight_book.event;
+package io.github.twilight_book.listener;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;

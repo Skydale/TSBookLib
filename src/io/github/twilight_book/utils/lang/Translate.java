@@ -1,6 +1,6 @@
 package io.github.twilight_book.utils.lang;
 
-import io.github.twilight_book.items.ItemTemplate;
+import io.github.twilight_book.items.ItemInstance;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -81,13 +81,5 @@ public class Translate {
         }
 
         return r;
-    }
-
-    public ItemMeta translateItem(ItemTemplate itemTemplate, ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-
-        meta.setDisplayName(translate("FORMAT.NAME", null, itemTemplate.getSetting()));
-        meta.setLore(   translateList("FORMAT.LORE", null, itemTemplate.getSetting()));
-        return meta;
     }
 }

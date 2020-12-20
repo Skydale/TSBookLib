@@ -25,7 +25,7 @@ public class Config extends ConfigAbstract {
 
         p.getLogger().info("Loading item settings...");
         items = cb.createFileMap("Items");
-        unidentified = cb.createFileMap("Unidentified");
+        unid = cb.createFileMap("Unidentified");
 
         p.getLogger().info("Loading MythicMobs settings...");
         mmMobs = cb.createSectionMap("MythicMobs");

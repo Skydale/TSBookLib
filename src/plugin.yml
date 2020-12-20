@@ -9,6 +9,7 @@ commands:
    tsbook:
       description: "Just for testing."
       permission: tsbook.test
+      aliases: [ts, tb]
 permissions:
    tsbook.test:
       default: op

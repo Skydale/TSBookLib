@@ -39,50 +39,46 @@ public class Commands implements CommandExecutor {
 
 		ITEM = null;
 
-		if (command.getName().equalsIgnoreCase("tsbook")) {
-			switch (args.length) {
-				case 0:
-					sender.sendMessage(Book.getCfg().getLang().translate("messages.help"));
-					return true;
+		switch (args.length) {
+			case 0:
+				sender.sendMessage(Book.getCfg().getLang().translate("messages.help"));
+				return true;
 
-				case 1:
-					switch (args[0].toLowerCase()) {
-						case "reload":
-							return Reload.call(sender);
-						case "help":
-							return Help.call(sender);
-						case "get":
-							return Get.call(sender);
-						case "give":
-							return Give.call(sender);
-						case "unidentified":
-							return Unidentified.call(sender);
-						case "identify":
-							return Identify.call(sender);
-					}
+			case 1:
+				switch (args[0].toLowerCase()) {
+					case "reload":
+						return Reload.call(sender);
+					case "help":
+						return Help.call(sender);
+					case "get":
+						return Get.call(sender);
+					case "give":
+						return Give.call(sender);
+					case "unid":
+						return Unidentified.call(sender);
+					case "identify":
+						return Identify.call(sender);
+				}
 
-				case 2:
-					switch (args[0].toLowerCase()) {
-						case "get":
-							return Get.call(sender, args[1]);
-						case "give":
-							return Give.call(sender);
-						case "unidentified":
-							return Unidentified.call(sender);
-					}
-				case 3:
-					switch (args[0].toLowerCase()) {
-						case "give":
-							return Give.call(sender, args[1], args[2]);
-						case "unidentified":
-							return Unidentified.call(sender, args[1], args[2]);
-					}
-			}
-
-			sender.sendMessage(Book.getCfg().getLang().translate("errors.unknown_command"));
-			return false;
+			case 2:
+				switch (args[0].toLowerCase()) {
+					case "get":
+						return Get.call(sender, args[1]);
+					case "give":
+						return Give.call(sender);
+					case "unid":
+						return Unidentified.call(sender);
+				}
+			case 3:
+				switch (args[0].toLowerCase()) {
+					case "give":
+						return Give.call(sender, args[1], args[2]);
+					case "unid":
+						return Unidentified.call(sender, args[1], args[2]);
+				}
 		}
 
+		sender.sendMessage(Book.getCfg().getLang().translate("errors.unknown_command"));
 		return false;
 	}
 }
