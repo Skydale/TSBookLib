@@ -6,7 +6,6 @@ import io.github.twilight_book.items.ItemUtils;
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,15 +40,9 @@ public class Identify {
 
     public static ItemInstance identify(ConfigAbstract config, String ID){
         List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
-        String result = items.get(new Random().nextInt(items.size()));
 
-        YamlConfiguration setting = config.getItemByID(result);
-        for (String key : setting.getKeys(true)) {
-            Random rand = new Random();
-            if (key.startsWith("stat.")) {
-                setting.set(key, (setting.getDouble(key)) * (0.5 + rand.nextFloat()));
-            }
-        }
-        return new ItemInstance(config, setting, result, "item");
+        ItemInstance i = new ItemInstance(config, items.get(new Random().nextInt(items.size())), "item");
+        i.reIdentify();
+        return i;
     }
 }

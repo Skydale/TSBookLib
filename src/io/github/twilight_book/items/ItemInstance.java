@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,12 +79,12 @@ public class ItemInstance { //represents a single ItemStack
         LoreWithStats.clear();
         for(String s:LORE){
             String l = s.replaceAll("\\[item.damage-physical]",IDENTIFICATION.getStats(ItemUtils.StatsType.PHYSICAL)+"")
-                    .replaceAll("\\[item.damage-terra]",IDENTIFICATION.getStats(ItemUtils.StatsType.TERRA)+"")
-                    .replaceAll("\\[item.damage-aer]",IDENTIFICATION.getStats(ItemUtils.StatsType.AER)+"")
-                    .replaceAll("\\[item.damage-ignis]",IDENTIFICATION.getStats(ItemUtils.StatsType.IGNIS)+"")
-                    .replaceAll("\\[item.damage-aqua]",IDENTIFICATION.getStats(ItemUtils.StatsType.AQUA)+"")
-                    .replaceAll("\\[item.damage-lumen]",IDENTIFICATION.getStats(ItemUtils.StatsType.LUMEN)+"")
-                    .replaceAll("\\[item.damage-umbra]",IDENTIFICATION.getStats(ItemUtils.StatsType.UMBRA)+"");
+                        .replaceAll("\\[item.damage-terra]",IDENTIFICATION.getStats(ItemUtils.StatsType.TERRA)+"")
+                        .replaceAll("\\[item.damage-aer]",IDENTIFICATION.getStats(ItemUtils.StatsType.AER)+"")
+                        .replaceAll("\\[item.damage-ignis]",IDENTIFICATION.getStats(ItemUtils.StatsType.IGNIS)+"")
+                        .replaceAll("\\[item.damage-aqua]",IDENTIFICATION.getStats(ItemUtils.StatsType.AQUA)+"")
+                        .replaceAll("\\[item.damage-lumen]",IDENTIFICATION.getStats(ItemUtils.StatsType.LUMEN)+"")
+                        .replaceAll("\\[item.damage-umbra]",IDENTIFICATION.getStats(ItemUtils.StatsType.UMBRA)+"");
             LoreWithStats.add(l);
         }
     }
@@ -99,6 +100,14 @@ public class ItemInstance { //represents a single ItemStack
     @Nullable
     public ItemIdentification getIdentification(){
         return IDENTIFICATION;
+    }
+
+    public Material getMaterial(){
+        return MATERIAL;
+    }
+
+    public int getModel() {
+        return MODEL;
     }
 
     public void reIdentify(){
