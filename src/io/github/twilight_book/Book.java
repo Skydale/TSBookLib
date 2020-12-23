@@ -6,12 +6,14 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import io.github.twilight_book.command.Commands;
 import io.github.twilight_book.command.CommandsTab;
+import io.github.twilight_book.entities.EntityEffect;
 import io.github.twilight_book.items.ItemUtils;
 import io.github.twilight_book.listener.event.DamageIndicator;
 import io.github.twilight_book.listener.DisableHeartParticle;
 import io.github.twilight_book.listener.event.EntityDamage;
-import io.github.twilight_book.listener.ItemPacketListener;
+import io.github.twilight_book.listener.ItemPacket;
 import io.github.twilight_book.listener.event.EntityClick;
+import io.github.twilight_book.listener.event.UpdateItemMaterial;
 import io.github.twilight_book.utils.papi.item;
 import io.github.twilight_book.utils.config.Config;
 import io.github.twilight_book.utils.papi.tsbook;
@@ -43,7 +45,9 @@ public class Book extends JavaPlugin {
     public void unload(){
         config.unload();
         ItemUtils.unload();
-        DamageIndicator.cleanArmorStands();
+        EntityEffect.unload();
+        DamageIndicator.unload();
+        EntityDamage.unload();
     }
 
     public void load() {
@@ -56,10 +60,11 @@ public class Book extends JavaPlugin {
         new   unid(inst, config).register();
 
         DisableHeartParticle.register();
-        ItemPacketListener.register();
+        ItemPacket.register();
 
-        Bukkit.getPluginManager().registerEvents  (new EntityDamage(), inst);
-        Bukkit.getPluginManager().registerEvents  (new EntityClick(), inst);
+        Bukkit.getPluginManager().registerEvents(new EntityDamage(), inst);
+        Bukkit.getPluginManager().registerEvents(new EntityClick(), inst);
+        Bukkit.getPluginManager().registerEvents(new UpdateItemMaterial(), inst);
 
         getCommand("tsbook").setExecutor    (new Commands());
         getCommand("tsbook").setTabCompleter(new CommandsTab());

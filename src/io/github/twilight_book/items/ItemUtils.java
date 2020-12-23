@@ -4,6 +4,7 @@ import io.github.twilight_book.Book;
 import io.github.twilight_book.utils.uuid.UUIDTag;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -32,23 +33,23 @@ public class ItemUtils {
     }
 
     public static ItemStack createItem(JavaPlugin plugin, ItemInstance inst, String path) {
-        String mat = inst.getConfig().getString("MATERIAL");
-        if (mat == null) throw new IllegalArgumentException("Cannot get Material of the item.");
+        YamlConfiguration config = inst.getConfig();
 
-        Material material = Material.getMaterial(mat);
-
-        ItemStack item = new ItemStack((material == null) ? Material.STONE : material, 1);
+        ItemStack item = new ItemStack(inst.getMaterial(), 1);
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        ITEMS.put(constructUUID(plugin, container), inst);
-
-        String ID = inst.getConfig().getString("ID");
+        String ID = config.getString("ID");
         if (ID == null) throw new IllegalArgumentException("Cannot get ID of the item.");
 
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        ITEMS.put(constructUUID(plugin, container), inst);
         container.set(new NamespacedKey(plugin, path), PersistentDataType.STRING, ID);
+
+        if (config.contains("MODEL")) {
+            meta.setCustomModelData(config.getInt("MODEL"));
+        }
 
         item.setItemMeta(meta);
         return item;
@@ -93,6 +94,20 @@ public class ItemUtils {
                 }
         );
         return ID[0];
+    }
+
+    public static boolean hasItemID(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+
+        Set<NamespacedKey> data = meta.getPersistentDataContainer().getKeys();
+
+        for (NamespacedKey key : data) {
+            if (key.getNamespace().equals("tsbooklib")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static void setDataTag(JavaPlugin plugin, ItemStack item, String k, String v) {
