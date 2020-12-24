@@ -1,6 +1,5 @@
 package io.github.twilight_book.items;
 
-import com.sun.istack.internal.Nullable;
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -8,19 +7,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class ItemInstance { //represents a single ItemStack
+    private List<String> LoreWithStats = new ArrayList<>();
+    private ItemIdentification IDENTIFICATION;
     private final String NAME;
     private final List<String> LORE;
     private final String PATH;
     private final Material MATERIAL;
     private YamlConfiguration CONFIG;
     private int MODEL = 0;
-    private List<String> LoreWithStats = new ArrayList<>();
-    private ItemIdentification IDENTIFICATION;
 
     public ItemInstance(ConfigAbstract config, String ID, String path) {
         switch (path.toLowerCase()) {
@@ -42,29 +39,6 @@ public class ItemInstance { //represents a single ItemStack
             MODEL = CONFIG.getInt("MODEL");
         }
         PATH = path;
-    }
-
-    public ItemInstance(ConfigAbstract config, YamlConfiguration setting, String ID, String path) {
-        CONFIG = setting;
-        NAME = config.getLang().translate    ("FORMAT.NAME", null, CONFIG);
-        LORE = config.getLang().translateList("FORMAT.LORE", null, CONFIG);
-
-        String material = CONFIG.getString("MATERIAL");
-        if (material == null) throw new IllegalArgumentException("Cannot get Material of the item.");
-        MATERIAL = Material.getMaterial(material);
-
-        if (CONFIG.contains("MODEL")) {
-            MODEL = CONFIG.getInt("MODEL");
-        }
-        PATH = path;
-    }
-
-    private ItemInstance(String ID, List<String> lore) { //TODO identification also unused
-        NAME = null; //for using "final"
-        PATH = null;
-        CONFIG = null;
-        MATERIAL = null;
-        LORE = lore;
     }
 
     public String getName() {

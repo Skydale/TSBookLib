@@ -10,7 +10,10 @@ import org.bukkit.inventory.ItemStack;
 
 public class Give {
     protected static ItemStack getItem(ConfigAbstract config, String s, String path) {
-        return new ItemInstance(config, s, path).createItem(Book.getInst());
+        ItemInstance i = new ItemInstance(config, s, path);
+        i.reIdentify();
+        i.updateLore();
+        return i.createItem(Book.getInst());
     }
 
     public static boolean call(CommandSender sender) {

@@ -14,6 +14,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class ItemUtils {
+
+    public enum StatsType {
+        PHYSICAL,
+        TERRA,
+        AER,
+        IGNIS,
+        AQUA,
+        LUMEN,
+        UMBRA;
+    }
+
     private static final Map<UUID, ItemInstance> ITEMS = new HashMap<>();
     private static final PersistentDataType<byte[], UUID> UUID_TAG_TYPE = new UUIDTag();
     private static final List<String> REGISTERED_TAG = Arrays.asList(
