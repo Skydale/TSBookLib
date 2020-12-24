@@ -42,7 +42,7 @@ public class Identify {
         List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
 
         ItemInstance i = new ItemInstance(config, items.get(new Random().nextInt(items.size())), "item");
-        i.reIdentify();
+
         return i;
     }
 }
