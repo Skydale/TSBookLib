@@ -1,7 +1,8 @@
 package io.github.twilight_book.items;
 
 import io.github.twilight_book.Book;
-import io.github.twilight_book.utils.uuid.UUIDTag;
+import io.github.twilight_book.items.data.Identification;
+import io.github.twilight_book.items.data.UUIDTag;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,7 +27,7 @@ public class ItemUtils {
 
     private static final Map<UUID, ItemInstance> ITEMS = new HashMap<>();
     private static final PersistentDataType<byte[], UUID> UUID_TAG_TYPE = new UUIDTag();
-    private static final PersistentDataType<byte[], ItemIdentification> IDENTIFICATION_TAG_TYPE = new IdentificationData();
+    private static final PersistentDataType<byte[], ItemIdentification> IDENTIFICATION_TAG_TYPE = new Identification();
     private static final List<String> REGISTERED_TAG = Arrays.asList(
             "item",
             "unid"
@@ -62,9 +63,8 @@ public class ItemUtils {
             meta.setCustomModelData(config.getInt("MODEL"));
         }
 
-        setIdentification(inst, item);
-
         item.setItemMeta(meta);
+        setIdentification(inst, item);
         return item;
     }
 

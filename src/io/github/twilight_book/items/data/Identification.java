@@ -1,12 +1,13 @@
-package io.github.twilight_book.items;
+package io.github.twilight_book.items.data;
 
+import io.github.twilight_book.items.ItemIdentification;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
-public class IdentificationData implements PersistentDataType<byte[], ItemIdentification> { //basically copied from the internet
+public class Identification implements PersistentDataType<byte[], ItemIdentification> { //basically copied from the internet
     @NotNull
     @Override
     public Class<byte[]> getPrimitiveType() {

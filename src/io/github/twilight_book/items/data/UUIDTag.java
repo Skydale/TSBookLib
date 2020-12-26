@@ -1,4 +1,4 @@
-package io.github.twilight_book.utils.uuid;
+package io.github.twilight_book.items.data;
 
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;

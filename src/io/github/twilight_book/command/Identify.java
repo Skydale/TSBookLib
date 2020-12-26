@@ -37,7 +37,7 @@ public class Identify {
         ItemInstance item = identify(Book.getCfg(), ID);
         hand.setAmount(hand.getAmount() - 1);
 
-        player.getInventory().addItem(item.createItem(Book.getInst(), "unid"));
+        player.getInventory().addItem(item.createItem(Book.getInst(), "item"));
         return true;
     }
 

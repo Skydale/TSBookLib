@@ -11,7 +11,7 @@ import java.util.Objects;
 import java.util.Random;
 
 public class ItemIdentification implements Serializable {
-    private final HashMap<ItemUtils.DamageType, StatRange> identification = new HashMap<>();
+    private final HashMap<ItemUtils.DamageType, StatRange> stat = new HashMap<>();
 
     public ItemIdentification(ItemInstance inst) {
         this(inst.getConfig(), true);
@@ -22,6 +22,11 @@ public class ItemIdentification implements Serializable {
     }
 
     public ItemIdentification(YamlConfiguration item, boolean isRandom) {
+        ConfigurationSection stat = item.getConfigurationSection("stat");
+        assert stat != null;
+        for (String key : stat.getKeys(true)) {
+            System.out.println(key);
+        }
         //TODO SUPPORT OTHER STATS
         if (!item.contains("stat.damage")) return;
         ConfigurationSection damage = item.getConfigurationSection("stat.damage");
@@ -31,7 +36,7 @@ public class ItemIdentification implements Serializable {
             Random random = new Random();
 
             for (String damageType : damage.getKeys(false)) {
-                double percentage = ((random.nextGaussian() + 3) / 4);
+                double percentage = ((random.nextGaussian() / 4) + 1);
 
                 if (percentage < 0) percentage = 0;
                 else if (percentage > 1) percentage = 1;
@@ -52,21 +57,22 @@ public class ItemIdentification implements Serializable {
                 Objects.requireNonNull(damage.getConfigurationSection(damageType)).getDouble("min") * percentage,
                 Objects.requireNonNull(damage.getConfigurationSection(damageType)).getDouble("max") * percentage
         );
-        identification.put(type, statRange);
+        stat.put(type, statRange);
     }
 
-    public HashMap<ItemUtils.DamageType, StatRange> getIdentifications() {
-        return identification;
+    public HashMap<ItemUtils.DamageType, StatRange> getStat() {
+        return stat;
     }
 
-    public StatRange getStat(ItemUtils.@NonNull DamageType stat) {
-        return identification.get(stat);
+    public StatRange getStatRange(ItemUtils.@NonNull DamageType stat) {
+        return this.stat.get(stat);
     }
 
-    public String getDesc(ItemUtils.DamageType stat, ConfigAbstract config) {
+    public String getDesc(ItemUtils.DamageType stat, ConfigAbstract config, double max) {
         String format = config.getLang().translate("format.damage-range." + stat.toString().toLowerCase());
-        StatRange range = identification.get(stat);
-        return format.replaceAll("\\[min]", String.valueOf((int) range.min))
-                     .replaceAll("\\[max]", String.valueOf((int) range.max));
+        StatRange range = this.stat.get(stat);
+        return format.replaceAll("\\[min]",        String.valueOf((int) range.min))
+                     .replaceAll("\\[max]",        String.valueOf((int) range.max))
+                     .replaceAll("\\[percentage]", String.valueOf((int) ((range.max / max) * 100)) + '%');
     }
 }

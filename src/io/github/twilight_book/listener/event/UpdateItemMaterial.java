@@ -22,7 +22,7 @@ public class UpdateItemMaterial implements Listener {
             ItemMeta meta = item.getItemMeta();
             if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-            meta.setCustomModelData(inst.getModel() == 0 ? null : inst.getModel());
+            meta.setCustomModelData(inst.getModel());
 
             item.setItemMeta(meta);
         }

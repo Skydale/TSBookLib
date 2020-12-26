@@ -2,6 +2,8 @@ package io.github.twilight_book.listener.event;
 
 import io.github.twilight_book.Book;
 import io.github.twilight_book.entities.EntityEffect;
+import io.github.twilight_book.items.ItemIdentification;
+import io.github.twilight_book.items.ItemInstance;
 import io.github.twilight_book.items.StatRange;
 import io.github.twilight_book.items.ItemUtils;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -16,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Collections;
@@ -33,6 +36,11 @@ public class EntityDamage implements Listener {
     public static void unload(){
         damageCD.clear();
         lastDamageTime.clear();
+    }
+
+    @EventHandler
+    public void onArrowShoot(EntityShootBowEvent event) {
+        event.getProjectile().setGravity(false);
     }
 
     @EventHandler
@@ -118,12 +126,15 @@ public class EntityDamage implements Listener {
                 damageCD.replace(damager, System.currentTimeMillis());
             }
 
+            ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), damager.getInventory().getItemInMainHand(), "item");
+            if (inst == null) throw new NullPointerException("Somehow, I cannot make an instance with the item in hand.");
+
+            ItemIdentification identification = inst.getIdentification();
+            if (identification == null) throw new NullPointerException("Somehow, I cannot get the identification.");
+
             for (String k : config.getKeys(false)) {
-                StatRange v = new StatRange(
-                        item.getDouble("stat.damage." + k + ".max"),
-                        item.getDouble("stat.damage." + k + ".min")
-                );
-                double randomDamage = v.calculate();
+                StatRange range = identification.getStatRange(ItemUtils.DamageType.valueOf(k.toUpperCase()));
+                double randomDamage = range.calculate();
                 boolean critical = (new Random().nextFloat() < ((item.getDouble("stat.critical") + 10) / 100));
                 double temp = calculateDamage(
                         randomDamage,
