@@ -44,6 +44,7 @@ public class Identify {
     public static ItemInstance identify(ConfigAbstract config, String ID){
         List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
         YamlConfiguration setting = config.getItemByID(items.get(new Random().nextInt(items.size())));
+
         ItemInstance inst = new ItemInstance(config, setting, new ItemIdentification(setting, true));
         return inst;
     }

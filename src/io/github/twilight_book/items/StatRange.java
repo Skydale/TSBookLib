@@ -1,8 +1,9 @@
 package io.github.twilight_book.items;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class StatRange {
+public class StatRange implements Serializable {
     final double max;
     final double min;
 
@@ -23,6 +24,6 @@ public class StatRange {
 
     public double calculate(double percentage) {
         if (max == min) return max;
-        return ((percentage) * max - min) + min;
+        return ((percentage) * (max - min)) + min;
     }
 }

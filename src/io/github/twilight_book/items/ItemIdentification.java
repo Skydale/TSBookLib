@@ -31,7 +31,7 @@ public class ItemIdentification implements Serializable {
             Random random = new Random();
 
             for (String damageType : damage.getKeys(false)) {
-                double percentage = ((random.nextGaussian() + 3) / 3);
+                double percentage = ((random.nextGaussian() + 3) / 4);
 
                 if (percentage < 0) percentage = 0;
                 else if (percentage > 1) percentage = 1;
