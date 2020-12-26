@@ -26,6 +26,7 @@ public class ItemUtils {
 
     private static final Map<UUID, ItemInstance> ITEMS = new HashMap<>();
     private static final PersistentDataType<byte[], UUID> UUID_TAG_TYPE = new UUIDTag();
+    private static final PersistentDataType<byte[], ItemIdentification> IDENTIFICATION_TAG_TYPE = new IdentificationData();
     private static final List<String> REGISTERED_TAG = Arrays.asList(
             "item",
             "unid"
@@ -86,6 +87,24 @@ public class ItemUtils {
             ITEMS.put(uuid, inst);
             return inst;
         }
+    }
+
+    public static void setIdentification(ItemInstance inst, ItemStack item){
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
+
+        ItemIdentification current = inst.getIdentification();
+        if (current == null) return;
+
+        meta.getPersistentDataContainer().set(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE, current);
+        item.setItemMeta(meta);
+    }
+
+    public static ItemIdentification getIdentification(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
+
+        return meta.getPersistentDataContainer().get(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE);
     }
 
     public static String getDataTag(JavaPlugin plugin, ItemStack item, String k) {
