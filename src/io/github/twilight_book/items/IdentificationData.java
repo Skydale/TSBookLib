@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 
-public class IdentificationData implements PersistentDataType<byte[],ItemIdentification> { //basically copied from the internet
+public class IdentificationData implements PersistentDataType<byte[], ItemIdentification> { //basically copied from the internet
     @NotNull
     @Override
     public Class<byte[]> getPrimitiveType() {
@@ -23,7 +23,7 @@ public class IdentificationData implements PersistentDataType<byte[],ItemIdentif
     @Override
     public byte[] toPrimitive(@NotNull ItemIdentification itemIdentification, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutputStream out = null;
+        ObjectOutputStream out;
         byte[] result = null;
         try {
             out = new ObjectOutputStream(bos);
@@ -35,10 +35,10 @@ public class IdentificationData implements PersistentDataType<byte[],ItemIdentif
         } finally {
             try {
                 bos.close();
-            } catch (IOException ex) {
-                // ignore close exception
+            } catch (IOException ignored) {
             }
         }
+        assert result != null;
         return result;
     }
 
@@ -51,17 +51,16 @@ public class IdentificationData implements PersistentDataType<byte[],ItemIdentif
         try {
             in = new ObjectInputStream(bis);
             Object o = in.readObject();
-            if(!(o instanceof ItemIdentification)) throw new IllegalArgumentException("huh?");
+            if (!(o instanceof ItemIdentification)) throw new IllegalArgumentException("huh?");
             i = (ItemIdentification) o;
-        } catch (IOException | ClassNotFoundException e){
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (in != null) {
                     in.close();
                 }
-            } catch (IOException ex) {
-                // ignore close exception
+            } catch (IOException ignored) {
             }
         }
         return i;

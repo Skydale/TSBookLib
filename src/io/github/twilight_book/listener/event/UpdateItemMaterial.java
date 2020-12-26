@@ -6,7 +6,6 @@ import io.github.twilight_book.items.ItemUtils;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -15,7 +14,7 @@ public class UpdateItemMaterial implements Listener {
         if (item == null) return;
 
         if (ItemUtils.hasItemID(item)) {
-            ItemInstance inst = ItemUtils.getItem(Book.getInst(), item, "item");
+            ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, "item");
             if (inst == null) throw new NullPointerException("Cannot get item instance.");
 
             item.setType(inst.getMaterial());

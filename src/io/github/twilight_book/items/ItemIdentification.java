@@ -1,63 +1,72 @@
 package io.github.twilight_book.items;
 
-import com.google.common.math.StatsAccumulator;
 import io.github.twilight_book.utils.config.ConfigAbstract;
-import io.github.twilight_book.utils.papi.item;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 public class ItemIdentification implements Serializable {
-    private final HashMap<ItemUtils.StatsType,Integer> identificationValue = new HashMap<>();
-    private final Random random;
+    private final HashMap<ItemUtils.DamageType, StatRange> identification = new HashMap<>();
 
-    public ItemIdentification(ItemInstance i, Random random){
-        this(i.getConfig(),random);
+    public ItemIdentification(ItemInstance inst) {
+        this(inst.getConfig(), true);
     }
 
-    public ItemIdentification(ConfigAbstract config, String ID, Random random){
-        this(config.getItemByID(ID),random);
+    public ItemIdentification(ConfigAbstract config, String ID) {
+        this(config.getItemByID(ID), true);
     }
 
-    public ItemIdentification(YamlConfiguration item, Random random){
-        this.random = random;
-        rollStats(item);
-    }
+    public ItemIdentification(YamlConfiguration item, boolean isRandom) {
+        //TODO SUPPORT OTHER STATS
+        if (!item.contains("stat.damage")) return;
+        ConfigurationSection damage = item.getConfigurationSection("stat.damage");
+        if (damage == null) return;
 
-    @Nonnull
-    public Map<ItemUtils.StatsType,Integer> rollStats(YamlConfiguration item){
-        for(String damageType : item.getConfigurationSection("stat.damage").getKeys(false)){
-            Double statsPercentage = random.nextGaussian();
-            ItemUtils.StatsType a = ItemUtils.StatsType.valueOf(damageType.toUpperCase());
-            if(a==null) continue; //Invalid damage type
-            ConfigurationSection damages = item.getConfigurationSection("stat.damage");
-            Integer statsMin = damages.getConfigurationSection(damageType).getInt("min");
-            Integer statsMax = damages.getConfigurationSection(damageType).getInt("max");
-            Integer stats = (int) (((statsMax - statsMin)/2)*(statsPercentage+3)/3 + statsMin);
-            //Bukkit.broadcastMessage(stats+"a");
-            if(stats>statsMax) stats = statsMax;
-            if(stats<statsMin) stats = statsMin;
-            //Bukkit.broadcastMessage(stats+"b");
-            identificationValue.put(a,stats);
+        if (isRandom) {
+            Random random = new Random();
+
+            for (String damageType : damage.getKeys(false)) {
+                double percentage = ((random.nextGaussian() + 3) / 3);
+
+                if (percentage < 0) percentage = 0;
+                else if (percentage > 1) percentage = 1;
+
+                setIdentification(damageType, damage, percentage);
+            }
+        } else {
+            for (String damageType : damage.getKeys(false)) {
+                setIdentification(damageType, damage, 1);
+            }
         }
-        return identificationValue;
     }
 
-    @Nonnull
-    public Map<ItemUtils.StatsType,Integer> getIdentifications(){
-        return identificationValue;
+    private void setIdentification(String damageType, ConfigurationSection damage, double percentage) {
+        ItemUtils.DamageType type = ItemUtils.DamageType.valueOf(damageType.toUpperCase());
+
+        StatRange statRange = new StatRange(
+                Objects.requireNonNull(damage.getConfigurationSection(damageType)).getDouble("min") * percentage,
+                Objects.requireNonNull(damage.getConfigurationSection(damageType)).getDouble("max") * percentage
+        );
+        identification.put(type, statRange);
     }
 
-    @Nullable
-    public Integer getStats(@Nonnull ItemUtils.StatsType stats){
-        return identificationValue.get(stats);
+    public HashMap<ItemUtils.DamageType, StatRange> getIdentifications() {
+        return identification;
     }
 
+    public StatRange getStat(ItemUtils.@NonNull DamageType stat) {
+        return identification.get(stat);
+    }
+
+    public String getDesc(ItemUtils.DamageType stat, ConfigAbstract config) {
+        String format = config.getLang().translate("format.damage-range." + stat.toString().toLowerCase());
+        StatRange range = identification.get(stat);
+        return format.replaceAll("\\[min]", String.valueOf((int) range.min))
+                     .replaceAll("\\[max]", String.valueOf((int) range.max));
+    }
 }

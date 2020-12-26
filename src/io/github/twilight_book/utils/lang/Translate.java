@@ -20,8 +20,9 @@ public class Translate {
 
     public String translateString(String s, OfflinePlayer p) {
         while (PlaceholderAPI.containsPlaceholders(s)) {
-            if (s.equals(PlaceholderAPI.setPlaceholders(p, s))) throw new IllegalArgumentException("Placeholder stuck in a loop.");
-            s = PlaceholderAPI.setPlaceholders(p, s);
+            String newString = PlaceholderAPI.setPlaceholders(p, s);
+            if (s.equals(newString)) throw new IllegalArgumentException("Placeholder stuck in a loop.");
+            s = newString;
         }
         return ChatColor.translateAlternateColorCodes('&', s);
     }

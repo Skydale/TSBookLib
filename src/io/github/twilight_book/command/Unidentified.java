@@ -23,7 +23,7 @@ public class Unidentified extends Give{
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.getCfg(), i, "unid"));
+            player.getInventory().addItem(getItem(Book.getCfg(), i, "unid", item));
             return true;
         }
 

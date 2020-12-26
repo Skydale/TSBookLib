@@ -1,6 +1,7 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
+import io.github.twilight_book.items.ItemIdentification;
 import io.github.twilight_book.items.ItemInstance;
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.command.CommandSender;
@@ -9,11 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Give {
-    protected static ItemStack getItem(ConfigAbstract config, String s, String path) {
-        ItemInstance i = new ItemInstance(config, s, path);
-        i.reIdentify();
-        i.updateLore();
-        return i.createItem(Book.getInst());
+    protected static ItemStack getItem(ConfigAbstract config, String s, String path, YamlConfiguration setting) {
+        ItemInstance inst = new ItemInstance(config, setting, new ItemIdentification(setting, false));
+        return inst.createItem(Book.getInst(), path);
     }
 
     public static boolean call(CommandSender sender) {
@@ -33,7 +32,7 @@ public class Give {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.getCfg(), i, "item"));
+            player.getInventory().addItem(getItem(Book.getCfg(), i, "item", item));
             return true;
         }
 

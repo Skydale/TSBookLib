@@ -2,7 +2,7 @@ package io.github.twilight_book.listener.event;
 
 import io.github.twilight_book.Book;
 import io.github.twilight_book.entities.EntityEffect;
-import io.github.twilight_book.items.DamageRange;
+import io.github.twilight_book.items.StatRange;
 import io.github.twilight_book.items.ItemUtils;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Collections;
@@ -26,11 +27,17 @@ import static io.github.twilight_book.listener.event.DamageIndicator.displayDama
 
 public class EntityDamage implements Listener {
     final BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();
-    static long lastDamageTime = 0;
     static Map<Player, Long> damageCD = new HashMap<>();
+    static Map<Entity, Long> lastDamageTime = new HashMap<>();
 
     public static void unload(){
         damageCD.clear();
+        lastDamageTime.clear();
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        lastDamageTime.remove(event.getEntity());
     }
 
     @EventHandler
@@ -50,15 +57,16 @@ public class EntityDamage implements Listener {
             case FIRE_TICK:
             case FIRE:
             case LAVA:
-                if (System.currentTimeMillis() - lastDamageTime > 50) {
-                    damage((LivingEntity) event.getEntity(), 2, "ignis");
-                    lastDamageTime = System.currentTimeMillis();
+                if (lastDamageTime.putIfAbsent(e, System.currentTimeMillis()) != null) {
+                    if ((System.currentTimeMillis() - lastDamageTime.get(e)) > 500) {
+                        damage((LivingEntity) event.getEntity(), 2, "ignis");
+                        lastDamageTime.replace(e, System.currentTimeMillis());
+                    }
                 }
-                event.setDamage(0);
+                event.setCancelled(true);
                 return;
         }
         if (event instanceof EntityDamageByEntityEvent) {
-
             if (helper.isMythicMob(e)) {
                 ConfigurationSection mob = Book.getCfg().getMMMob(helper.getMythicMobInstance(e).getType().getInternalName());
                 if (mob != null) {
@@ -102,7 +110,7 @@ public class EntityDamage implements Listener {
             Player damager = (Player) event.getDamager();
             Location loc = damaged.getLocation();
 
-            if (!(damageCD.putIfAbsent(damager, System.currentTimeMillis()) == null)) {
+            if (damageCD.putIfAbsent(damager, System.currentTimeMillis()) != null) {
                 if ((System.currentTimeMillis() - damageCD.get(damager)) < 500) {
                     event.setCancelled(true);
                     return;
@@ -111,7 +119,7 @@ public class EntityDamage implements Listener {
             }
 
             for (String k : config.getKeys(false)) {
-                DamageRange v = new DamageRange(
+                StatRange v = new StatRange(
                         item.getDouble("stat.damage." + k + ".max"),
                         item.getDouble("stat.damage." + k + ".min")
                 );

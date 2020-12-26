@@ -10,25 +10,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ItemInstance { //represents a single ItemStack
-    private List<String> LoreWithStats = new ArrayList<>();
-    private ItemIdentification IDENTIFICATION;
-    private final String NAME;
     private final List<String> LORE;
-    private final String PATH;
+    private final String NAME;
     private final Material MATERIAL;
+    private final ItemIdentification IDENTIFICATION;
     private YamlConfiguration CONFIG;
-    private int MODEL = 0;
+    private Integer MODEL = null;
 
-    public ItemInstance(ConfigAbstract config, String ID, String path) {
-        switch (path.toLowerCase()) {
-            case "item":
-                CONFIG = config.getItemByID(ID);
-                break;
-            case "unid":
-                CONFIG = config.getUnidentifiedByID(ID);
-                break;
-        }
-        NAME = config.getLang().translate    ("FORMAT.NAME", null, CONFIG);
+    public ItemInstance(ConfigAbstract config, YamlConfiguration setting, ItemIdentification identification) {
+        CONFIG = setting;
+        NAME = config.getLang().translate("FORMAT.NAME", null, CONFIG);
         LORE = config.getLang().translateList("FORMAT.LORE", null, CONFIG);
 
         String material = CONFIG.getString("MATERIAL");
@@ -38,7 +29,9 @@ public class ItemInstance { //represents a single ItemStack
         if (CONFIG.contains("MODEL")) {
             MODEL = CONFIG.getInt("MODEL");
         }
-        PATH = path;
+
+        IDENTIFICATION = identification;
+        updateLore(config);
     }
 
     public String getName() {
@@ -49,34 +42,50 @@ public class ItemInstance { //represents a single ItemStack
         return LORE;
     }
 
-    public void updateLore(){
-        LoreWithStats.clear();
-        for(String s:LORE){
-            String l = s.replaceAll("\\[item.damage-physical]",IDENTIFICATION.getStats(ItemUtils.StatsType.PHYSICAL)+"")
-                        .replaceAll("\\[item.damage-terra]",IDENTIFICATION.getStats(ItemUtils.StatsType.TERRA)+"")
-                        .replaceAll("\\[item.damage-aer]",IDENTIFICATION.getStats(ItemUtils.StatsType.AER)+"")
-                        .replaceAll("\\[item.damage-ignis]",IDENTIFICATION.getStats(ItemUtils.StatsType.IGNIS)+"")
-                        .replaceAll("\\[item.damage-aqua]",IDENTIFICATION.getStats(ItemUtils.StatsType.AQUA)+"")
-                        .replaceAll("\\[item.damage-lumen]",IDENTIFICATION.getStats(ItemUtils.StatsType.LUMEN)+"")
-                        .replaceAll("\\[item.damage-umbra]",IDENTIFICATION.getStats(ItemUtils.StatsType.UMBRA)+"");
-            LoreWithStats.add(l);
+    public void updateLore(ConfigAbstract config) {
+        ListIterator<String> iterator = LORE.listIterator();
+        while(iterator.hasNext()) {
+            String s = iterator.next();
+            if (s.contains("[item.damage-physical]")) {
+                iterator.set(s.replaceAll("\\[item.damage-physical]", IDENTIFICATION.getDesc(ItemUtils.DamageType.PHYSICAL, config)));
+            }
+
+            if (s.contains("[item.damage-terra]")) {
+                iterator.set(s.replaceAll("\\[item.damage-terra]", IDENTIFICATION.getDesc(ItemUtils.DamageType.TERRA, config)));
+            }
+
+            if (s.contains("[item.damage-aer]")) {
+                iterator.set(s.replaceAll("\\[item.damage-aer]", IDENTIFICATION.getDesc(ItemUtils.DamageType.AER, config)));
+            }
+
+            if (s.contains("[item.damage-ignis]")) {
+                iterator.set(s.replaceAll("\\[item.damage-ignis]", IDENTIFICATION.getDesc(ItemUtils.DamageType.IGNIS, config)));
+            }
+
+            if (s.contains("[item.damage-aqua]")) {
+                iterator.set(s.replaceAll("\\[item.damage-aqua]", IDENTIFICATION.getDesc(ItemUtils.DamageType.AQUA, config)));
+            }
+
+            if (s.contains("[item.damage-lumen]")) {
+                iterator.set(s.replaceAll("\\[item.damage-lumen]", IDENTIFICATION.getDesc(ItemUtils.DamageType.LUMEN, config)));
+            }
+
+            if (s.contains("[item.damage-umbra]")) {
+                iterator.set(s.replaceAll("\\[item.damage-umbra]", IDENTIFICATION.getDesc(ItemUtils.DamageType.UMBRA, config)));
+            }
         }
     }
 
-    public List<String> getLoreWithStats(){
-        return LoreWithStats;
-    }
-
-    public YamlConfiguration getConfig(){
+    public YamlConfiguration getConfig() {
         return CONFIG;
     }
 
     @Nullable
-    public ItemIdentification getIdentification(){
+    public ItemIdentification getIdentification() {
         return IDENTIFICATION;
     }
 
-    public Material getMaterial(){
+    public Material getMaterial() {
         return MATERIAL;
     }
 
@@ -84,15 +93,7 @@ public class ItemInstance { //represents a single ItemStack
         return MODEL;
     }
 
-    public void reIdentify(){
-        //TODO if(not identifiable) return;
-        if (IDENTIFICATION == null)
-            IDENTIFICATION = new ItemIdentification(CONFIG,new Random());
-        else
-            IDENTIFICATION.rollStats();
-    }
-
-    public ItemStack createItem(JavaPlugin plugin) {
-        return ItemUtils.createItem(plugin, this, PATH);
+    public ItemStack createItem(JavaPlugin plugin, String path) {
+        return ItemUtils.createItem(plugin, this, path);
     }
 }

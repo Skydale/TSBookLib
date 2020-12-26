@@ -2,11 +2,11 @@ package io.github.twilight_book.items;
 
 import java.util.Random;
 
-public class DamageRange {
+public class StatRange {
     final double max;
     final double min;
 
-    public DamageRange(double max, double min) {
+    public StatRange(double max, double min) {
         if (max > min) {
             this.max = max;
             this.min = min;
@@ -18,6 +18,11 @@ public class DamageRange {
 
     public double calculate(){
         if (max == min) return max;
-        return new Random().nextDouble() * (max - min) + min;
+        return calculate(new Random().nextDouble());
+    }
+
+    public double calculate(double percentage) {
+        if (max == min) return max;
+        return ((percentage) * max - min) + min;
     }
 }

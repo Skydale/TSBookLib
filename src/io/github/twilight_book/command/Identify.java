@@ -1,11 +1,13 @@
 package io.github.twilight_book.command;
 
 import io.github.twilight_book.Book;
+import io.github.twilight_book.items.ItemIdentification;
 import io.github.twilight_book.items.ItemInstance;
 import io.github.twilight_book.items.ItemUtils;
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,15 +36,15 @@ public class Identify {
 
         ItemInstance item = identify(Book.getCfg(), ID);
         hand.setAmount(hand.getAmount() - 1);
-        player.getInventory().addItem(item.createItem(Book.getInst()));
+
+        player.getInventory().addItem(item.createItem(Book.getInst(), "unid"));
         return true;
     }
 
     public static ItemInstance identify(ConfigAbstract config, String ID){
         List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
-
-        ItemInstance i = new ItemInstance(config, items.get(new Random().nextInt(items.size())), "item");
-
-        return i;
+        YamlConfiguration setting = config.getItemByID(items.get(new Random().nextInt(items.size())));
+        ItemInstance inst = new ItemInstance(config, setting, new ItemIdentification(setting, true));
+        return inst;
     }
 }

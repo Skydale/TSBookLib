@@ -14,8 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class ItemUtils {
-
-    public enum StatsType {
+    public enum DamageType {
         PHYSICAL,
         TERRA,
         AER,
@@ -62,11 +61,13 @@ public class ItemUtils {
             meta.setCustomModelData(config.getInt("MODEL"));
         }
 
+        setIdentification(inst, item);
+
         item.setItemMeta(meta);
         return item;
     }
 
-    public static ItemInstance getItem(JavaPlugin plugin, ItemStack item, String path) {
+    public static ItemInstance getInstByItem(JavaPlugin plugin, ItemStack item, String path) {
         if (item.getType() == Material.AIR) return null;
 
         ItemMeta meta = item.getItemMeta();
@@ -77,12 +78,12 @@ public class ItemUtils {
         String ID = container.get(new NamespacedKey(plugin, path), PersistentDataType.STRING);
         if (ID == null) return null;
 
-        UUID UUID = constructUUID(plugin, container);
-        if (ITEMS.containsKey(UUID)) {
-            return ITEMS.get(UUID);
+        UUID uuid = constructUUID(plugin, container);
+        if (ITEMS.containsKey(uuid)) {
+            return ITEMS.get(uuid);
         } else {
-            ItemInstance inst = new ItemInstance(Book.getCfg(), ID, path);
-            ITEMS.put(UUID, inst);
+            ItemInstance inst = new ItemInstance(Book.getCfg(), Book.getCfg().getItemByID(ID), getIdentification(item));
+            ITEMS.put(uuid, inst);
             return inst;
         }
     }
@@ -105,6 +106,13 @@ public class ItemUtils {
                 }
         );
         return ID[0];
+    }
+
+    public static UUID getUUID(ItemStack item, JavaPlugin plugin) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return null;
+
+        return meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "uuid"), UUID_TAG_TYPE);
     }
 
     public static boolean hasItemID(ItemStack item) {
