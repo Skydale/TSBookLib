@@ -44,7 +44,7 @@ public class ItemUtils {
         return uuid;
     }
 
-    public static ItemStack createItem(JavaPlugin plugin, ItemInstance inst, String path) {
+    public static ItemStack createItem(JavaPlugin plugin, ItemInstance inst, String type) {
         YamlConfiguration config = inst.getConfig();
 
         ItemStack item = new ItemStack(inst.getMaterial(), 1);
@@ -57,7 +57,7 @@ public class ItemUtils {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
         ITEMS.put(constructUUID(plugin, container), inst);
-        container.set(new NamespacedKey(plugin, path), PersistentDataType.STRING, ID);
+        container.set(new NamespacedKey(plugin, type), PersistentDataType.STRING, ID);
 
         if (config.contains("MODEL")) {
             meta.setCustomModelData(config.getInt("MODEL"));
@@ -68,7 +68,7 @@ public class ItemUtils {
         return item;
     }
 
-    public static ItemInstance getInstByItem(JavaPlugin plugin, ItemStack item, String path) {
+    public static ItemInstance getInstByItem(JavaPlugin plugin, ItemStack item, String type) {
         if (item.getType() == Material.AIR) return null;
 
         ItemMeta meta = item.getItemMeta();
@@ -76,14 +76,14 @@ public class ItemUtils {
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
 
-        String ID = container.get(new NamespacedKey(plugin, path), PersistentDataType.STRING);
+        String ID = container.get(new NamespacedKey(plugin, type), PersistentDataType.STRING);
         if (ID == null) return null;
 
         UUID uuid = constructUUID(plugin, container);
         if (ITEMS.containsKey(uuid)) {
             return ITEMS.get(uuid);
         } else {
-            ItemInstance inst = new ItemInstance(Book.getCfg(), Book.getCfg().getItemByID(ID), getIdentification(item));
+            ItemInstance inst = new ItemInstance(Book.getCfg(), Book.getCfg().getAnyItemByID(ID), getIdentification(item));
             ITEMS.put(uuid, inst);
             return inst;
         }
@@ -93,10 +93,10 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-        ItemIdentification current = inst.getIdentification();
-        if (current == null) return;
+        ItemIdentification identification = inst.getIdentification();
+        if (identification == null) return;
 
-        meta.getPersistentDataContainer().set(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE, current);
+        meta.getPersistentDataContainer().set(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE, identification);
         item.setItemMeta(meta);
     }
 
@@ -114,7 +114,7 @@ public class ItemUtils {
         return meta.getPersistentDataContainer().get(new NamespacedKey(plugin, k), PersistentDataType.STRING);
     }
 
-    public static String getItemID(ItemStack item) {
+    public static String getItemType(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return null;
 
@@ -141,7 +141,7 @@ public class ItemUtils {
         Set<NamespacedKey> data = meta.getPersistentDataContainer().getKeys();
 
         for (NamespacedKey key : data) {
-            if (key.getNamespace().equals("tsbooklib")) {
+            if (key.getKey().equals("item")) {
                 return true;
             }
         }

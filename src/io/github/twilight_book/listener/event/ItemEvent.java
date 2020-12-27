@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class UpdateItemMaterial implements Listener {
+public class ItemEvent implements Listener {
     private void update(ItemStack item) {
         if (item == null) return;
 

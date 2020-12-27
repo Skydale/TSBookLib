@@ -74,6 +74,7 @@ public class EntityDamage implements Listener {
                 event.setCancelled(true);
                 return;
         }
+
         if (event instanceof EntityDamageByEntityEvent) {
             if (helper.isMythicMob(e)) {
                 ConfigurationSection mob = Book.getCfg().getMMMob(helper.getMythicMobInstance(e).getType().getInternalName());
@@ -127,37 +128,38 @@ public class EntityDamage implements Listener {
             }
 
             ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), damager.getInventory().getItemInMainHand(), "item");
-            if (inst == null) throw new NullPointerException("Somehow, I cannot make an instance with the item in hand.");
+            if (inst == null)
+                throw new NullPointerException("Somehow, I cannot make an instance with the item in hand.");
 
             ItemIdentification identification = inst.getIdentification();
             if (identification == null) throw new NullPointerException("Somehow, I cannot get the identification.");
 
-            for (String k : config.getKeys(false)) {
-                StatRange range = identification.getStatRange(ItemUtils.DamageType.valueOf(k.toUpperCase()));
-                double randomDamage = range.calculate();
+            for (String damageType : config.getKeys(false)) {
+                ItemUtils.DamageType type = ItemUtils.DamageType.valueOf(damageType.toUpperCase());
+                double randomDamage = inst.getStatRange(type).calculate() * identification.getStatPercentage(type);
                 boolean critical = (new Random().nextFloat() < ((item.getDouble("stat.critical") + 10) / 100));
                 double temp = calculateDamage(
                         randomDamage,
-                        def.getOrDefault(k, 0.0),
+                        def.getOrDefault(damageType, 0.0),
                         1 + (critical ? 1 : 0)
                 );
                 damage += temp;
-                if (new Random().nextFloat() < 0.45 ) {
+                if (new Random().nextFloat() < 0.45) {
                     double power;
-                    switch (k) {
-                        case "ignis":
+                    switch (type) {
+                        case IGNIS:
                             power = temp / 8;
                             if (power < 5) break;
                             EntityEffect.setBurning(damaged, power, (int) (temp / 6));
                             break;
-                        case "physical":
+                        case PHYSICAL:
                             power = temp / 12;
                             if (power < 5) break;
                             EntityEffect.setBleeding(damaged, power, (int) (temp / 14));
                             break;
                     }
                 }
-                displayDamage(temp, k, loc, critical);
+                displayDamage(temp, damageType, loc, critical);
             }
             event.setDamage(damage);
         }

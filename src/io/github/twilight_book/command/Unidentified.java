@@ -18,12 +18,12 @@ public class Unidentified extends Give{
             return false;
         }
 
-        YamlConfiguration item = Book.getCfg().getUnidentifiedByID(i);
-        if (item != null) {
+        YamlConfiguration unid = Book.getCfg().getUnidentifiedByID(i);
+        if (unid != null) {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.getCfg(), i, "unid", item));
+            player.getInventory().addItem(getItem(Book.getCfg(), "unid", unid));
             return true;
         }
 

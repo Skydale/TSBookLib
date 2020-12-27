@@ -13,7 +13,7 @@ import io.github.twilight_book.listener.DisableHeartParticle;
 import io.github.twilight_book.listener.event.EntityDamage;
 import io.github.twilight_book.listener.ItemPacket;
 import io.github.twilight_book.listener.event.EntityClick;
-import io.github.twilight_book.listener.event.UpdateItemMaterial;
+import io.github.twilight_book.listener.event.ItemEvent;
 import io.github.twilight_book.utils.papi.item;
 import io.github.twilight_book.utils.config.Config;
 import io.github.twilight_book.utils.papi.tsbook;
@@ -64,7 +64,7 @@ public class Book extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), inst);
         Bukkit.getPluginManager().registerEvents(new EntityClick(), inst);
-        Bukkit.getPluginManager().registerEvents(new UpdateItemMaterial(), inst);
+        Bukkit.getPluginManager().registerEvents(new ItemEvent(), inst);
 
         getCommand("tsbook").setExecutor    (new Commands());
         getCommand("tsbook").setTabCompleter(new CommandsTab());

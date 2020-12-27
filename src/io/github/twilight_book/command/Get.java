@@ -21,7 +21,7 @@ public class Get extends Give {
 		if (item != null) {
 			Commands.setITEM(i);
 			sender.sendMessage(Book.getCfg().getLang().translate("messages.get", (Player) sender));
-			((Player) sender).getInventory().addItem(getItem(Book.getCfg(), i, "item", item));
+			((Player) sender).getInventory().addItem(getItem(Book.getCfg(), "item", item));
 			return true;
 		}
 

@@ -18,10 +18,10 @@ public class ItemPacket {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String ID = ItemUtils.getItemID(item);
-        if (ID == null) return;
+        String type = ItemUtils.getItemType(item);
+        if (type == null) return;
 
-        ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, ID);
+        ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, type);
         if (inst == null) return;
 
         meta.setLore(inst.getLore());

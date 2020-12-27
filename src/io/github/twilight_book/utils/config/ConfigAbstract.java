@@ -43,8 +43,13 @@ public abstract class ConfigAbstract {
     public Set<String> getUnidentified() { return unid.keySet(); }
     public YamlConfiguration getItemByID(String ID) { return items.get(ID); }
     public YamlConfiguration getUnidentifiedByID(String ID) { return unid.get(ID); }
-    public ConfigurationSection getMMMob(String ID) { return mmMobs.get(ID); }
+    public YamlConfiguration getAnyItemByID(String ID) {
+        if (items.containsKey(ID)) return getItemByID(ID);
+        if (unid.containsKey(ID)) return getUnidentifiedByID(ID);
+        return null;
+    }
 
     public abstract void setup(JavaPlugin p, File j);
+    public ConfigurationSection getMMMob(String ID) { return mmMobs.get(ID); }
     public abstract void unload();
 }

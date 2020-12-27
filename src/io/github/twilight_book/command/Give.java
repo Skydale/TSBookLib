@@ -10,9 +10,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class Give {
-    protected static ItemStack getItem(ConfigAbstract config, String s, String path, YamlConfiguration setting) {
-        ItemInstance inst = new ItemInstance(config, setting, new ItemIdentification(setting, false));
-        return inst.createItem(Book.getInst(), path);
+    protected static ItemStack getItem(ConfigAbstract config, String type, YamlConfiguration setting) {
+        ItemInstance inst = null;
+        switch (type.toLowerCase()) {
+            case "item":
+                inst = new ItemInstance(config, setting, new ItemIdentification(setting, false));
+                break;
+            case "unid":
+                inst = new ItemInstance(config, setting, null);
+
+        }
+        if (inst == null) return null;
+        return inst.createItem(Book.getInst(), type);
     }
 
     public static boolean call(CommandSender sender) {
@@ -32,7 +41,7 @@ public class Give {
             Commands.setITEM(i);
             sender.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
             player.sendMessage(Book.getCfg().getLang().translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.getCfg(), i, "item", item));
+            player.getInventory().addItem(getItem(Book.getCfg(), "item", item));
             return true;
         }
 

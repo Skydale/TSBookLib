@@ -2,6 +2,7 @@ package io.github.twilight_book.items;
 
 import io.github.twilight_book.utils.config.ConfigAbstract;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +16,7 @@ public class ItemInstance { //represents a single ItemStack
     private final Material MATERIAL;
     private final ItemIdentification IDENTIFICATION;
     private final YamlConfiguration CONFIG;
+    private final HashMap<ItemUtils.DamageType, StatRange> STAT = new HashMap<>();
     private Integer MODEL = null;
 
     public ItemInstance(ConfigAbstract config, YamlConfiguration setting, ItemIdentification identification) {
@@ -25,6 +27,18 @@ public class ItemInstance { //represents a single ItemStack
         String material = CONFIG.getString("MATERIAL");
         if (material == null) throw new IllegalArgumentException("Cannot get Material of the item.");
         MATERIAL = Material.getMaterial(material);
+
+        if (CONFIG.contains("stat.damage")) {
+            ConfigurationSection damage = CONFIG.getConfigurationSection("stat.damage");
+            if (damage == null) throw new IllegalArgumentException("I cannot properly get Damage of the item");
+            for (String damageType : damage.getKeys(false)) {
+                ItemUtils.DamageType type = ItemUtils.DamageType.valueOf(damageType.toUpperCase());
+                STAT.put(type, new StatRange(
+                        damage.getDouble(damageType + ".max"),
+                        damage.getDouble(damageType + ".min")
+                ));
+            }
+        }
 
         if (CONFIG.contains("MODEL")) {
             MODEL = CONFIG.getInt("MODEL");
@@ -53,7 +67,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.PHYSICAL,
                                         config,
-                                        CONFIG.getDouble("stat.damage.physical.max")
+                                        STAT.get(ItemUtils.DamageType.PHYSICAL)
                                 )
                         )
                 );
@@ -66,7 +80,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.TERRA,
                                         config,
-                                        CONFIG.getDouble("stat.damage.terra.max")
+                                        STAT.get(ItemUtils.DamageType.TERRA)
                                 )
                         )
                 );
@@ -79,7 +93,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.AER,
                                         config,
-                                        CONFIG.getDouble("stat.damage.aer.max")
+                                        STAT.get(ItemUtils.DamageType.AER)
                                 )
                         )
                 );
@@ -92,7 +106,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.IGNIS,
                                         config,
-                                        CONFIG.getDouble("stat.damage.ignis.max")
+                                        STAT.get(ItemUtils.DamageType.IGNIS)
                                 )
                         )
                 );
@@ -104,7 +118,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.AQUA,
                                         config,
-                                        CONFIG.getDouble("stat.damage.aqua.max")
+                                        STAT.get(ItemUtils.DamageType.AQUA)
                                 )
                         )
                 );
@@ -117,7 +131,7 @@ public class ItemInstance { //represents a single ItemStack
                                 IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.LUMEN,
                                         config,
-                                        CONFIG.getDouble("stat.damage.lumen.max")
+                                        STAT.get(ItemUtils.DamageType.LUMEN)
                                 )
                         )
                 );
@@ -129,7 +143,7 @@ public class ItemInstance { //represents a single ItemStack
                                 "\\[item.damage-umbra]", IDENTIFICATION.getDesc(
                                         ItemUtils.DamageType.UMBRA,
                                         config,
-                                        CONFIG.getDouble("stat.damage.umbra.max")
+                                        STAT.get(ItemUtils.DamageType.UMBRA)
                                 )
                         )
                 );
@@ -152,6 +166,10 @@ public class ItemInstance { //represents a single ItemStack
 
     public Integer getModel() {
         return MODEL;
+    }
+
+    public StatRange getStatRange(ItemUtils.DamageType type) {
+        return STAT.get(type);
     }
 
     public ItemStack createItem(JavaPlugin plugin, String path) {
