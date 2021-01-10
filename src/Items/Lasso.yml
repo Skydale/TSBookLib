@@ -1,0 +1,17 @@
+ID: 'LASSO'
+MATERIAL: 'LEAD'
+
+FORMAT:
+  NAME: '%item_LASSO.NAME%'
+  LORE: |
+          %item_LASSO.DESC%
+          
+          %item_LASSO.RARITY% %item_LASSO.TYPE%
+
+NAME: "&eLasso"
+RARITY: '%tsbook_mythic%'
+TYPE: ''
+
+
+DESC: |
+      &7&o他媽的拿去騎啦

@@ -1,0 +1,30 @@
+ID: 'PHYSICAL_TEST'
+MATERIAL: 'BOOK'
+
+FORMAT:
+  NAME: '%item_PHYSICAL_TEST.NAME%'
+  LORE: |
+          %item_PHYSICAL_TEST.DAMAGE%
+          
+          %item_PHYSICAL_TEST.DESC%
+          
+          %item_PHYSICAL_TEST.RARITY% %item_PHYSICAL_TEST.TYPE%
+
+NAME: "&6Physical Test"
+RARITY: '%tsbook_mythic%'
+TYPE: '%tsbook_book%'
+
+DAMAGE: |
+    %tsbook_damage.physical% %item_PHYSICAL_TEST.stat-damage-physical-min% &7- &6%item_PHYSICAL_TEST.stat-damage-physical-max%
+    
+    %tsbook_stat.critical% %item_TS_BOOK.stat-critical%
+
+DESC: |
+      &7&oWeapon for testing
+
+stat:
+  damage:
+    physical:
+        min: 1
+        max: 1
+  critical: 100

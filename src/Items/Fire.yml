@@ -1,5 +1,5 @@
 ID: 'FIRE_TEST'
-MATERIAL: 'WOODEN_SWORD'
+MATERIAL: 'BOOK'
 
 FORMAT:
   NAME: '%item_FIRE_TEST.NAME%'
@@ -10,7 +10,7 @@ FORMAT:
           
           %item_FIRE_TEST.RARITY% %item_FIRE_TEST.TYPE%
 
-NAME: "&cTest Fire Weapon"
+NAME: "&cIgnis Test"
 RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 
@@ -18,10 +18,10 @@ DAMAGE: |
     %tsbook_damage.ignis% %item_FIRE_TEST.stat-damage-ignis-min% &7- &c%item_FIRE_TEST.stat-damage-ignis-max%
 
 DESC: |
-      &7&oA FUCKING FIRE WEAPON FOR TEST
+      &7&oWeapon for testing
 
 stat:
   damage:
     ignis:
-        min: 1000
-        max: 10000
+        min: 100000
+        max: 100000

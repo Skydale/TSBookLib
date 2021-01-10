@@ -11,7 +11,7 @@ commands:
   feedback:
     get: '&8[&7=>&8] &c/tsbook get <item> &7- &aGet specified item.'
     give: '&8[&7=>&8] &c/tsbook give <player> <item> &7- &aGive the player specified item.'
-    unid: '&8[&7=>&8] &c/tsbook unid <player> <item> &7- &aGive the player specified unid item.'
+    unidentified: '&8[&7=>&8] &c/tsbook unidentified <player> <item> &7- &aGive the player specified unidentified item.'
 
 messages:
    help: |
@@ -27,21 +27,35 @@ messages:
 mythic: "&d&l神話"
 book: "書"
 
-damage:
-   physical: "&f⚔ &6物理傷害"
-   terra:    "&f⛰ &2大地傷害"
-   aer:      "&f💨 &e狂風傷害"
-   ignis:    "&f🔥 &c烈焰傷害"
-   aqua:     "&f🌊 &b洪水傷害"
-   lumen:    "&f✳ &f光明傷害"
-   umbra:    "&7❇ &8黑暗傷害"
+stat:
+   damage:
+      physical: "&f⚔ &6物理傷害"
+      terra:    "&f⛰ &2大地傷害"
+      aer:      "&f💨 &e狂風傷害"
+      ignis:    "&f🔥 &c烈焰傷害"
+      aqua:     "&f🌊 &b洪水傷害"
+      lumen:    "&f✳ &f光明傷害"
+      umbra:    "&7❇ &8黑暗傷害"
+   critical: "&7爆擊機率:"
+   
+format:
+   damage_physical: "&6[min] &7- &6[max] &7([percentage])"
+   damage_terra:    "&2[min] &7- &2[max] &7([percentage])"
+   damage_aer:      "&e[min] &7- &e[max] &7([percentage])"
+   damage_ignis:    "&c[min] &7- &c[max] &7([percentage])"
+   damage_aqua:     "&b[min] &7- &b[max] &7([percentage])"
+   damage_lumen:    "&f[min] &7- &f[max] &7([percentage])"
+   damage_umbra:    "&8[min] &7- &8[max] &7([percentage])"
+   critical:        "&a[stat] &7([percentage])"
 
 indicator:
-   physical: "&f⚔ &6"
-   terra:    "&f⛰ &2"
-   aer:      "&f💨 &e"
-   ignis:    "&f🔥 &c"
-   aqua:     "&f🌊 &b"
-   lumen:    "&f✳ "
-   umbra:    "&7❇ &8"
+   damage_physical: "&f⚔ &6"
+   damage_terra:    "&f⛰ &2"
+   damage_aer:      "&f💨 &e"
+   damage_ignis:    "&f🔥 &c"
+   damage_aqua:     "&f🌊 &b"
+   damage_lumen:    "&f✳ "
+   damage_umbra:    "&7❇ &8"
    none:     "&7"
+   bleed:    "&f🩸 &4"
+   critical: "&r&f 💥"

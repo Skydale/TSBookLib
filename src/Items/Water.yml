@@ -1,0 +1,27 @@
+ID: 'WATER_TEST'
+MATERIAL: 'BOOK'
+
+FORMAT:
+  NAME: '%item_WATER_TEST.NAME%'
+  LORE: |
+          %item_WATER_TEST.DAMAGE%
+          
+          %item_WATER_TEST.DESC%
+          
+          %item_WATER_TEST.RARITY% %item_WATER_TEST.TYPE%
+
+NAME: "&bAqua Test"
+RARITY: '%tsbook_mythic%'
+TYPE: '%tsbook_book%'
+
+DAMAGE: |
+    %tsbook_damage.aqua% %item_WATER_TEST.stat-damage-aqua-min% &7- &b%item_WATER_TEST.stat-damage-aqua-max%
+
+DESC: |
+      &7&oWeapon for testing
+
+stat:
+  damage:
+    aqua:
+        min: 100000
+        max: 100000

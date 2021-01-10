@@ -8,8 +8,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="PlaceholderAPI-2.10.9" level="project" />
-    <orderEntry type="library" name="spigot-api-1.16.3-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="MythicMobs-4.10.1" level="project" />
     <orderEntry type="library" name="ProtocolLib" level="project" />
+    <orderEntry type="library" name="spigot-api-1.16.4-R0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="MythicMobs-4.11.0-BETA" level="project" />
+    <orderEntry type="library" name="reactant-0.2.1-20200826.015529-2-all" level="project" />
+    <orderEntry type="library" name="ArcticGlobal-0.0.1" level="project" />
   </component>
 </module>

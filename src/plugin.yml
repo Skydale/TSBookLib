@@ -1,5 +1,5 @@
 name: "TSBookLib"
-main: io.github.twilight_book.Book
+main: io.github.mg138.tsbook.Book
 version: 1.0
 api-version: 1.16
 

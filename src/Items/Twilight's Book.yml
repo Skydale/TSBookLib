@@ -1,5 +1,7 @@
 ID: 'TS_BOOK'
+TYPE: 'BOOK'
 MATERIAL: 'BOOK'
+MODEL: 1
 
 FORMAT:
   NAME: '%item_TS_BOOK.NAME%'
@@ -15,38 +17,40 @@ RARITY: '%tsbook_mythic%'
 TYPE: '%tsbook_book%'
 
 DAMAGE: |
-    %tsbook_damage.physical% %item_TS_BOOK.stat-damage-physical-min% &7- &6%item_TS_BOOK.stat-damage-physical-max%
-    %tsbook_damage.terra% %item_TS_BOOK.stat-damage-terra-min% &7- &2%item_TS_BOOK.stat-damage-terra-max%
-    %tsbook_damage.aer% %item_TS_BOOK.stat-damage-aer-min% &7- &e%item_TS_BOOK.stat-damage-aer-max%
-    %tsbook_damage.ignis% %item_TS_BOOK.stat-damage-ignis-min% &7- &c%item_TS_BOOK.stat-damage-ignis-max%
-    %tsbook_damage.aqua% %item_TS_BOOK.stat-damage-aqua-min% &7- &b%item_TS_BOOK.stat-damage-aqua-max%
-    %tsbook_damage.lumen% %item_TS_BOOK.stat-damage-lumen-min% &7- &f%item_TS_BOOK.stat-damage-lumen-max%
-    %tsbook_damage.umbra% %item_TS_BOOK.stat-damage-umbra-min% &7- &8%item_TS_BOOK.stat-damage-umbra-max%
+    %tsbook_stat.damage.physical% [damage-physical]
+    %tsbook_stat.damage.terra% [damage-terra]
+    %tsbook_stat.damage.aer% [damage-aer]
+    %tsbook_stat.damage.ignis% [damage-ignis]
+    %tsbook_stat.damage.aqua% [damage-aqua]
+    %tsbook_stat.damage.lumen% [damage-lumen]
+    %tsbook_stat.damage.umbra% [damage-umbra]
+    
+    %tsbook_stat.critical% [critical]
 
 DESC: |
       &7&o一本神話。
       &7&o裡面講述著六隻小馬的故事。
 
 stat:
-  damage:
-    physical:
-        min: 1000
-        max: 1000
-    terra:
-        min: 1000
-        max: 10000
-    aer:
-        min: 1000
-        max: 10000
-    ignis:
-        min: 1000
-        max: 10000
-    aqua:
-        min: 1000
-        max: 10000
-    lumen:
-        min: 1000
-        max: 10000
-    umbra:
-        min: 1000
-        max: 10000
+  damage_physical:
+      min: 1000
+      max: 1000
+  damage_terra:
+      min: 1000
+      max: 10000
+  damage_aer:
+      min: 1000
+      max: 10000
+  damage_ignis:
+      min: 1000
+      max: 10000
+  damage_aqua:
+      min: 1000
+      max: 10000
+  damage_lumen:
+      min: 1000
+      max: 10000
+  damage_umbra:
+      min: 1000
+      max: 10000
+  critical: 100.0
