@@ -1,0 +1,15 @@
+name: "TSBookLib"
+main: io.github.mg138.tsbook.Book
+version: 1.0
+api-version: 1.16
+
+depend: [PlaceholderAPI, MythicMobs, ProtocolLib, Reactant]
+
+commands:
+   tsbook:
+      description: "Just for testing."
+      permission: tsbook.test
+      aliases: [ts, tb]
+permissions:
+   tsbook.test:
+      default: op

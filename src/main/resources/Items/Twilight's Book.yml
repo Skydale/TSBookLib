@@ -1,0 +1,56 @@
+ID: 'TS_BOOK'
+ITEM_TYPE: 'BOOK'
+MATERIAL: 'BOOK'
+MODEL: 1
+
+FORMAT:
+  NAME: '%item_TS_BOOK.NAME%'
+  LORE: |
+          %item_TS_BOOK.DAMAGE%
+          
+          %item_TS_BOOK.DESC%
+          
+          %item_TS_BOOK.RARITY% %item_TS_BOOK.TYPE%
+
+NAME: "&d暮暮手書"
+RARITY: '%tsbook_mythic%'
+TYPE: '%tsbook_book%'
+
+DAMAGE: |
+    %tsbook_stat.damage.physical% [damage-physical]
+    %tsbook_stat.damage.terra% [damage-terra]
+    %tsbook_stat.damage.aer% [damage-aer]
+    %tsbook_stat.damage.ignis% [damage-ignis]
+    %tsbook_stat.damage.aqua% [damage-aqua]
+    %tsbook_stat.damage.lumen% [damage-lumen]
+    %tsbook_stat.damage.umbra% [damage-umbra]
+    
+    %tsbook_stat.critical% [critical]
+
+DESC: |
+      &7&o一本神話。
+      &7&o裡面講述著六隻小馬的故事。
+
+stat:
+  DAMAGE_PHYSICAL:
+      min: 1000
+      max: 1000
+  DAMAGE_TERRA:
+      min: 1000
+      max: 10000
+  DAMAGE_AER:
+      min: 1000
+      max: 10000
+  DAMAGE_IGNIS:
+      min: 1000
+      max: 10000
+  DAMAGE_AQUA:
+      min: 1000
+      max: 10000
+  DAMAGE_LUMEN:
+      min: 1000
+      max: 10000
+  DAMAGE_UMBRA:
+      min: 1000
+      max: 10000
+  CRITICAL: 100.0
