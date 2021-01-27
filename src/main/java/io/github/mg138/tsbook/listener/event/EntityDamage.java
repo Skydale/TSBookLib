@@ -3,8 +3,8 @@ package io.github.mg138.tsbook.listener.event;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.entities.StatusEffect;
 import io.github.mg138.tsbook.items.ItemUtils;
+import io.github.mg138.tsbook.items.data.stat.DamageType;
 import io.github.mg138.tsbook.items.data.stat.Stat;
-import io.github.mg138.tsbook.items.data.stat.StatRange;
 import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.items.ItemStats;
 import io.github.mg138.tsbook.entities.EffectHandler;
@@ -30,6 +30,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static io.github.mg138.tsbook.listener.event.utils.DamageIndicator.displayDamage;
 
@@ -95,13 +97,14 @@ public class EntityDamage implements Listener {
 
     public static HashMap<StatType, Double> getItemDamage(ItemStats stats) {
         HashMap<StatType, Double> damages = new HashMap<>();
+        Supplier<Stream<StatType>> damageTypes = DamageType.DAMAGES::stream;
+
         stats.getStats().forEach(statMap -> {
-            Stat stat = statMap.getValue();
-            if (stat instanceof StatRange) {
-                damages.put(statMap.getKey(), statMap.getValue().getStat());
+            StatType key = statMap.getKey();
+            if (damageTypes.get().anyMatch(type -> type.equals(key))) {
+                damages.put(key, statMap.getValue().getStat());
             }
         });
-
         return damages;
     }
 

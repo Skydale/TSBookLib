@@ -1,6 +1,7 @@
 package io.github.mg138.tsbook.listener.event;
 
 import io.github.mg138.tsbook.items.ItemUtils;
+import io.github.mg138.tsbook.items.data.stat.Stat;
 import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.items.ItemStats;
 import io.github.mg138.tsbook.Book;
@@ -9,11 +10,13 @@ import io.github.mg138.tsbook.items.ItemInstance;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -27,7 +30,25 @@ public class ItemRightClick implements Listener {
 
     public static void unload() {
         damageCD.clear();
+    }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    public boolean onEntityClick(PlayerInteractEntityEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item.getType() == Material.AIR) return false;
+
+        String ID = ItemUtils.getDataTag(Book.getInst(), item, "item");
+        if (ID != null) {
+            itemIDOperator(ID, event);
+        }
+
+        String type = ItemUtils.getDataTag(Book.getInst(), item, "type");
+        if (type != null) {
+            itemTypeOperator(type, item, player);
+        }
+
+        return true;
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -40,44 +61,69 @@ public class ItemRightClick implements Listener {
             String type = ItemUtils.getDataTag(Book.getInst(), item, "type");
             if (type == null) return false;
 
-            switch (type) {
-                case "BOOK":
-                    return BOOK(item, event.getPlayer());
-            }
+            itemTypeOperator(type, item, event.getPlayer());
+            return true;
         }
         return false;
     }
 
-    public boolean BOOK(ItemStack item, Player player) {
+    public void itemTypeOperator(String type, ItemStack item, Player player) {
+        switch (type) {
+            case "BOOK":
+                BOOK(item, player);
+        }
+    }
+
+    public void itemIDOperator(String itemID, PlayerInteractEntityEvent event) {
+        switch (itemID) {
+            case "LASSO":
+                LASSO(event);
+        }
+    }
+
+    public void LASSO(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+
+        entity.addPassenger(event.getPlayer());
+    }
+
+    public void BOOK(ItemStack item, Player player) {
         if (damageCD.putIfAbsent(player, System.currentTimeMillis()) != null) {
             if ((System.currentTimeMillis() - damageCD.get(player)) < 500) {
-                return false;
+                return;
             }
             damageCD.replace(player, System.currentTimeMillis());
         }
         player.setCooldown(item.getType(), 10);
 
         ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, "item");
-        if (inst == null) return false;
+        if (inst == null) return;
 
         ItemStats stats = inst.getStats();
-        if (stats == null) return false;
+        if (stats == null) return;
 
-        HashMap<StatType, Double> damage = EntityDamage.getItemDamage(stats);
         Location loc = player.getLocation();
 
         Arrow arrow = player.getWorld().spawn(player.getEyeLocation(), Arrow.class, aw -> {
             PersistentDataContainer container = aw.getPersistentDataContainer();
-            damage.keySet().forEach(stat -> container.set(
-                    new NamespacedKey(Book.getInst(), stat.toString()),
-                    PersistentDataType.DOUBLE,
-                    damage.get(stat)
-            ));
-            container.set(
-                    new NamespacedKey(Book.getInst(), "CRITICAL"),
-                    PersistentDataType.DOUBLE,
-                    stats.getStat(StatType.CRITICAL).getStat()
-            );
+
+            HashMap<StatType, Double> damages = EntityDamage.getItemDamage(stats);
+            if (!damages.isEmpty()) {
+                damages.keySet().forEach(stat -> container.set(
+                        new NamespacedKey(Book.getInst(), stat.toString()),
+                        PersistentDataType.DOUBLE,
+                        damages.get(stat)
+                ));
+            }
+
+            Stat critical = stats.getStat(StatType.CRITICAL);
+            if (critical != null) {
+                container.set(
+                        new NamespacedKey(Book.getInst(), "CRITICAL"),
+                        PersistentDataType.DOUBLE,
+                        critical.getStat()
+                );
+            }
 
             aw.setGravity(false);
             aw.setInvulnerable(true);
@@ -88,7 +134,5 @@ public class ItemRightClick implements Listener {
             aw.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
         });
         Bukkit.getScheduler().runTaskLater(Book.getInst(), arrow::remove, 120);
-
-        return true;
     }
 }

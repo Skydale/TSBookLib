@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class ItemStats {
     private final ItemIdentification IDENTIFICATION;
@@ -26,10 +27,8 @@ public class ItemStats {
     }
 
     public Stat getStat(StatType type) {
-        for (StatMap statMap : STATS) {
-            if (type.equals(statMap.getKey())) return statMap.getValue();
-        }
-        return null;
+        Optional<StatMap> statMap = STATS.stream().filter((map) -> type.equals(map.getKey())).findAny();
+        return statMap.map(StatMap::getValue).orElse(null);
     }
 
     public String translate(StatMap statMap) {

@@ -13,7 +13,6 @@ import com.comphenix.protocol.ProtocolManager;
 import com.google.gson.Gson;
 import dev.reactant.reactant.core.ReactantPlugin;
 
-import io.github.mg138.tsbook.listener.event.EntityClick;
 import io.github.mg138.tsbook.listener.event.EntityDamage;
 import io.github.mg138.tsbook.command.Commands;
 import io.github.mg138.tsbook.entities.EffectHandler;
@@ -75,10 +74,8 @@ public class Book extends JavaPlugin {
         ItemPacket.register();
 
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), inst);
-        Bukkit.getPluginManager().registerEvents(new EntityClick(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemUpdate(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemRightClick(), inst);
-        Bukkit.getPluginManager().registerEvents(new EffectHandler(), inst);
 
         Objects.requireNonNull(getCommand("tsbook")).setExecutor(new Commands());
         Objects.requireNonNull(getCommand("tsbook")).setTabCompleter(new CommandsTab());
