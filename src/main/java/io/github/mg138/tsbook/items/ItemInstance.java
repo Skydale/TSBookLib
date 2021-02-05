@@ -3,6 +3,7 @@ package io.github.mg138.tsbook.items;
 import io.github.mg138.tsbook.items.data.stat.Stat;
 import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
+import io.github.mg138.tsbook.utils.config.Config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,10 +27,10 @@ public class ItemInstance { //represents a single ItemStack
         ID = setting.getString("ID");
         assert ID != null;
 
-        NAME = config.getTranslate().translate("FORMAT.NAME", null, setting);
+        NAME = config.translate.translate("FORMAT.NAME", null, setting);
         assert NAME != null;
 
-        LORE = config.getTranslate().translateList("FORMAT.LORE", null, setting);
+        LORE = config.translate.translateList("FORMAT.LORE", null, setting);
         assert LORE != null;
 
         String material = setting.getString("MATERIAL");
@@ -83,21 +84,12 @@ public class ItemInstance { //represents a single ItemStack
         }
     }
 
-    public ItemIdentification getIdentification() {
-        if (STATS == null) return null;
-        return STATS.getIdentification();
-    }
-
     public Material getMaterial() {
         return MATERIAL;
     }
 
     public Integer getModel() {
         return MODEL;
-    }
-
-    public Stat getStat(StatType type) {
-        return STATS.getStat(type);
     }
 
     public ItemStats getStats() {

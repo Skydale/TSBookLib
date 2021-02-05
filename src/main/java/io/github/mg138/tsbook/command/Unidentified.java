@@ -8,27 +8,27 @@ import org.bukkit.entity.Player;
 
 public class Unidentified extends Give {
     public static boolean call(CommandSender sender) {
-        sender.sendMessage(Book.getCfg().getTranslate().translate("commands.feedback.unid"));
+        sender.sendMessage(Book.getCfg().translate.translate("commands.feedback.unid"));
         return true;
     }
 
     public static boolean call(CommandSender sender, String playerName, String item) {
         Player player = Book.getInst().getServer().getPlayer(playerName);
         if (player == null) {
-            sender.sendMessage(Book.getCfg().getTranslate().translate("errors.player_not_found"));
+            sender.sendMessage(Book.getCfg().translate.translate("errors.player_not_found"));
             return false;
         }
 
-        YamlConfiguration unid = Book.getCfg().getUnidentifiedByID(item);
+        YamlConfiguration unid = Book.getCfg().getItemConfig().getUnidentifiedByID(item);
         if (unid != null) {
             Commands.setITEM(item);
-            sender.sendMessage(Book.getCfg().getTranslate().translate("messages.get", player));
-            player.sendMessage(Book.getCfg().getTranslate().translate("messages.get", player));
+            sender.sendMessage(Book.getCfg().translate.translate("messages.get", player));
+            player.sendMessage(Book.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.getCfg(), "unid", unid));
             return true;
         }
 
-        sender.sendMessage(Book.getCfg().getTranslate().translate("errors.item_not_found"));
+        sender.sendMessage(Book.getCfg().translate.translate("errors.item_not_found"));
         return false;
     }
 }

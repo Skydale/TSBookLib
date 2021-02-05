@@ -52,7 +52,7 @@ public class item extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         String item = identifier.replaceAll("\\..*", "");
         String path = identifier.replaceAll(".*?\\.", "").replaceAll("-", ".");
-        YamlConfiguration itemSetting = config.getItemByID(item);
+        YamlConfiguration itemSetting = config.getItemConfig().getItemByID(item);
 
         if (!itemSetting.contains(path)) return null;
 

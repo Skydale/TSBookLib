@@ -10,5 +10,9 @@ public enum StatType {
     DAMAGE_UMBRA,
     DAMAGE_NONE,
     DAMAGE_BLEED,
-    CRITICAL
+    CRITICAL,
+    CRITICAL_CHANCE,
+    ATTACK_SPEED,
+    DAMAGE_TRUE,
+    DEFENSE_TRUE
 }

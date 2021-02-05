@@ -1,7 +1,9 @@
 package io.github.mg138.tsbook.listener.event;
 
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.entities.StatusEffect;
+import io.github.mg138.tsbook.entities.data.StatusEffect;
+import io.github.mg138.tsbook.entities.data.StatusEffectType;
+import io.github.mg138.tsbook.items.ItemIdentification;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.items.data.stat.DamageType;
 import io.github.mg138.tsbook.items.data.stat.Stat;
@@ -23,6 +25,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
@@ -36,9 +39,9 @@ import java.util.stream.Stream;
 import static io.github.mg138.tsbook.listener.event.utils.DamageIndicator.displayDamage;
 
 public class EntityDamage implements Listener {
-    final BukkitAPIHelper helper = MythicMobs.inst().getAPIHelper();
-    static final Map<Player, Long> damageCD = new HashMap<>();
-    static final Map<Entity, Long> lastDamageTime = new HashMap<>();
+    private static final BukkitAPIHelper mythicMobHelper = MythicMobs.inst().getAPIHelper();
+    private static final HashMap<Player, Long> damageCD = new HashMap<>();
+    private static final HashMap<Entity, Long> lastDamageTime = new HashMap<>();
 
     public static void unload() {
         damageCD.clear();
@@ -55,12 +58,13 @@ public class EntityDamage implements Listener {
         damageCD.remove(event.getPlayer());
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        Entity e = event.getEntity();
-        if (!(e instanceof LivingEntity)) return;
-        if (e instanceof ArmorStand || e instanceof Item) return;
-        ((LivingEntity) event.getEntity()).setNoDamageTicks(0);
+        Entity entity = event.getEntity();
+        if (!(entity instanceof LivingEntity)) return;
+        if (entity instanceof ArmorStand || entity instanceof Item) return;
+        LivingEntity livingEntity = (LivingEntity) entity;
+        livingEntity.setNoDamageTicks(0);
 
         if (event.isCancelled()) return;
         EntityDamageEvent.DamageCause cause = event.getCause();
@@ -68,20 +72,28 @@ public class EntityDamage implements Listener {
             case FIRE_TICK:
             case FIRE:
             case LAVA:
-                if (lastDamageTime.putIfAbsent(e, System.currentTimeMillis()) != null) {
-                    if ((System.currentTimeMillis() - lastDamageTime.get(e)) > 500) {
-                        simpleDamage((LivingEntity) event.getEntity(), 2, StatType.DAMAGE_IGNIS);
-                        lastDamageTime.replace(e, System.currentTimeMillis());
+                if (lastDamageTime.putIfAbsent(entity, System.currentTimeMillis()) != null) {
+                    if ((System.currentTimeMillis() - lastDamageTime.get(entity)) > 500) {
+                        simpleDamage(livingEntity, 2, StatType.DAMAGE_IGNIS);
+                        lastDamageTime.replace(entity, System.currentTimeMillis());
                     }
                 }
                 event.setCancelled(true);
                 return;
+            case FALL:
+                if (EffectHandler.hasEffect(livingEntity, StatusEffectType.FALL_DAMAGE_RESISTANCE)) {
+                    StatusEffect effect = EffectHandler.getEffect(livingEntity, StatusEffectType.FALL_DAMAGE_RESISTANCE);
+                    assert effect != null;
+                    simpleDamage(livingEntity, event.getDamage() * (1 - effect.power), StatType.DAMAGE_NONE);
+                    event.setCancelled(true);
+                    return;
+                }
         }
         if (event.isCancelled()) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
-            if (helper.isMythicMob(e)) {
-                ConfigurationSection mob = Book.getCfg().getMMMob(helper.getMythicMobInstance(e).getType().getInternalName());
+            if (mythicMobHelper.isMythicMob(entity)) {
+                ConfigurationSection mob = Book.getCfg().getMMMob(mythicMobHelper.getMythicMobInstance(entity).getType().getInternalName());
                 if (mob != null) {
                     HashMap<StatType, Double> map = new HashMap<>();
                     for (String key : Objects.requireNonNull(mob.getConfigurationSection("defense")).getKeys(false)) {
@@ -97,12 +109,12 @@ public class EntityDamage implements Listener {
 
     public static HashMap<StatType, Double> getItemDamage(ItemStats stats) {
         HashMap<StatType, Double> damages = new HashMap<>();
+        ItemIdentification identification = stats.getIdentification();
         Supplier<Stream<StatType>> damageTypes = DamageType.DAMAGES::stream;
 
-        stats.getStats().forEach(statMap -> {
-            StatType key = statMap.getKey();
-            if (damageTypes.get().anyMatch(type -> type.equals(key))) {
-                damages.put(key, statMap.getValue().getStat());
+        stats.getStats().forEach((type, statMap) -> {
+            if (damageTypes.get().anyMatch(damageType -> damageType.equals(type))) {
+                damages.put(type, statMap.getValue().getStat() * identification.getStatPercentage(type));
             }
         });
         return damages;
@@ -134,7 +146,6 @@ public class EntityDamage implements Listener {
 
             ItemStats stats = inst.getStats();
             if (stats == null) {
-
                 simpleDamage((LivingEntity) damaged, 1, StatType.DAMAGE_NONE);
                 return;
             }
@@ -184,12 +195,12 @@ public class EntityDamage implements Listener {
                     case DAMAGE_IGNIS:
                         power = currentDamage / 8;
                         if (power < 5) break;
-                        EffectHandler.apply(StatusEffect.BURNING, damaged, power, (int) (currentDamage / 6));
+                        EffectHandler.apply(StatusEffectType.BURNING, damaged, power, (int) (currentDamage / 6));
                         break;
                     case DAMAGE_PHYSICAL:
                         power = currentDamage / 12;
                         if (power < 5) break;
-                        EffectHandler.apply(StatusEffect.BLEEDING, damaged, power, (int) (currentDamage / 14));
+                        EffectHandler.apply(StatusEffectType.BLEEDING, damaged, power, (int) (currentDamage / 14));
                         break;
                 }
             }
@@ -198,10 +209,9 @@ public class EntityDamage implements Listener {
         event.setDamage(damage);
     }
 
-    public static boolean simpleDamage(LivingEntity entity, double power, StatType type) {
+    public static boolean simpleDamage(LivingEntity entity, double damage, StatType type) {
         if (entity.isDead()) return false;
 
-        double damage = EntityDamage.calculateDamage(power, 0, 1);
         entity.damage(damage);
         entity.setNoDamageTicks(0);
         displayDamage(damage, type, entity.getLocation(), false);

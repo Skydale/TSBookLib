@@ -56,7 +56,7 @@ public class tsbook extends PlaceholderExpansion {
             case "item":
                 return Commands.getITEM();
             default:
-                return config.getTranslate().translate(identifier);
+                return config.translate.translate(identifier);
         }
     }
 }

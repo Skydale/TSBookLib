@@ -6,6 +6,7 @@ import io.github.mg138.tsbook.items.ItemInstance;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
 
+import io.github.mg138.tsbook.utils.config.Config;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -18,21 +19,21 @@ import java.util.Random;
 public class Identify {
     public static boolean call(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Book.getCfg().getTranslate().translate("errors.player_only"));
+            sender.sendMessage(Book.getCfg().translate.translate("errors.player_only"));
             return false;
         }
         Player player = (Player) sender;
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR) {
-            player.sendMessage(Book.getCfg().getTranslate().translate("errors.hand_empty"));
+            player.sendMessage(Book.getCfg().translate.translate("errors.hand_empty"));
             return false;
         }
 
         String type = ItemUtils.getItemType(item);
         String ID = ItemUtils.getDataTag(Book.getInst(), item, type);
         if (ID == null || type == null) {
-            player.sendMessage(Book.getCfg().getTranslate().translate("errors.item_not_found"));
+            player.sendMessage(Book.getCfg().translate.translate("errors.item_not_found"));
             return false;
         }
 
@@ -42,13 +43,13 @@ public class Identify {
         return true;
     }
 
-    public static ItemInstance identify(AbstractConfig config, String ID, String type) {
+    public static ItemInstance identify(Config config, String ID, String type) {
         if (type.equalsIgnoreCase("unid")) {
-            List<String> items = Book.getCfg().getUnidentifiedByID(ID).getStringList("ITEMS");
-            YamlConfiguration setting = config.getItemByID(items.get(new Random().nextInt(items.size())));
+            List<String> items = Book.getCfg().getItemConfig().getUnidentifiedByID(ID).getStringList("ITEMS");
+            YamlConfiguration setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
             return new ItemInstance(config, setting, ItemIdentification.create(setting, true));
         }
-        YamlConfiguration setting = config.getItemByID(ID);
+        YamlConfiguration setting = config.getItemConfig().getItemByID(ID);
         return new ItemInstance(config, setting, ItemIdentification.create(setting, true));
     }
 }

@@ -5,12 +5,10 @@ import io.github.mg138.tsbook.items.data.stat.*;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
 
 public class ItemStats {
     private final ItemIdentification IDENTIFICATION;
-    private final HashSet<StatMap> STATS = new HashSet<>();
+    private final HashMap<StatType, StatMap> STATS = new HashMap<>();
     private final HashMap<String, String> PLACEHOLDER = new HashMap<>();
     private final AbstractConfig CONFIG;
 
@@ -22,17 +20,16 @@ public class ItemStats {
         return PLACEHOLDER;
     }
 
-    public HashSet<StatMap> getStats() {
+    public HashMap<StatType, StatMap> getStats() {
         return STATS;
     }
 
     public Stat getStat(StatType type) {
-        Optional<StatMap> statMap = STATS.stream().filter((map) -> type.equals(map.getKey())).findAny();
-        return statMap.map(StatMap::getValue).orElse(null);
+        return STATS.get(type).getValue();
     }
 
     public String translate(StatMap statMap) {
-        String format = CONFIG.getTranslate().translate("format." + statMap.getKey().toString());
+        String format = CONFIG.translate.translate("format." + statMap.getKey().toString());
         double percentage = IDENTIFICATION.getStatPercentage(statMap.getKey());
 
         Stat stat = statMap.getValue();
@@ -58,16 +55,16 @@ public class ItemStats {
 
             if (settings.contains(literalType + ".min")) {
                 statMap = new StatMap(type, new StatRange(
-                        settings.getDouble(literalType + ".max"), settings.getDouble(literalType + ".min")
-                ));
+                        settings.getDouble(literalType + ".max"), settings.getDouble(literalType + ".min"))
+                );
             } else {
                 statMap = new StatMap(type, new StatSingle(
-                        settings.getDouble(literalType)
-                ));
+                        settings.getDouble(literalType))
+                );
             }
 
-            STATS.add(statMap);
-            PLACEHOLDER.put(ItemUtils.PLACEHOLDER.get(type), translate(statMap));
+            STATS.put(type, statMap);
+            PLACEHOLDER.put(RegisteredPlaceholder.HOLDER.get(type), translate(statMap));
         }
     }
 }

@@ -8,25 +8,25 @@ import org.bukkit.entity.Player;
 
 public class Get extends Give {
     public static boolean call(CommandSender sender) {
-        sender.sendMessage(Book.getCfg().getTranslate().translate("commands.feedback.get"));
+        sender.sendMessage(Book.getCfg().translate.translate("commands.feedback.get"));
         return true;
     }
 
     public static boolean call(CommandSender sender, String i) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Book.getCfg().getTranslate().translate("errors.player_only"));
+            sender.sendMessage(Book.getCfg().translate.translate("errors.player_only"));
             return false;
         }
 
-        YamlConfiguration item = Book.getCfg().getItemByID(i);
+        YamlConfiguration item = Book.getCfg().getItemConfig().getItemByID(i);
         if (item != null) {
             Commands.setITEM(i);
-            sender.sendMessage(Book.getCfg().getTranslate().translate("messages.get", (Player) sender));
+            sender.sendMessage(Book.getCfg().translate.translate("messages.get", (Player) sender));
             ((Player) sender).getInventory().addItem(getItem(Book.getCfg(), "item", item));
             return true;
         }
 
-        sender.sendMessage(Book.getCfg().getTranslate().translate("errors.item_not_found"));
+        sender.sendMessage(Book.getCfg().translate.translate("errors.item_not_found"));
         return false;
     }
 }

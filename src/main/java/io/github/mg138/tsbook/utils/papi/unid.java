@@ -51,7 +51,7 @@ public class unid extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, String identifier) {
         String item = identifier.replaceAll("\\..*", "");
         String path = identifier.replaceAll(".*?\\.", "").replaceAll("-", ".");
-        YamlConfiguration itemSetting = config.getUnidentifiedByID(item);
+        YamlConfiguration itemSetting = config.getItemConfig().getUnidentifiedByID(item);
 
         if (!itemSetting.contains(path)) return null;
 

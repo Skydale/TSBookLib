@@ -35,18 +35,17 @@ public class DamageIndicator {
         double z = Math.sin(r) / 6;
 
         assert world != null;
-        ArmorStand indic = world.spawn(loc, ArmorStand.class, indicator -> {
+        ArmorStand indic = world.spawn(loc.add(new Vector(x * 2, new Random().nextDouble() / 2, z * 2)), ArmorStand.class, indicator -> {
             indicators.add(indicator);
             indicator.setInvulnerable(true);
             indicator.setVisible(false);
             indicator.setGravity(false);
             indicator.setMarker(true);
             indicator.setCustomNameVisible(true);
-            indicator.teleport(indicator.getLocation().add(new Vector(x * 2, new Random().nextDouble(), z * 2)));
             indicator.setCustomName(
-                    Book.getCfg().getTranslate().translate("indicator." + type)
+                    Book.getCfg().translate.translate("indicator." + type)
                             + (int) damage
-                            + (critical ? Book.getCfg().getTranslate().translate("indicator." + StatType.CRITICAL) : ""
+                            + (critical ? Book.getCfg().translate.translate("indicator." + StatType.CRITICAL) : ""
                     )
             );
         });

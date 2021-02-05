@@ -36,6 +36,7 @@ stat:
       aqua:     "&f🌊 &b洪水傷害"
       lumen:    "&f✳ &f光明傷害"
       umbra:    "&7❇ &8黑暗傷害"
+      true:     "&f✨ &f真實傷害"
    critical:    "&7爆擊機率:"
    
 format:
@@ -58,4 +59,5 @@ indicator:
    DAMAGE_UMBRA:    "&7❇ &8"
    DAMAGE_NONE:     "&7"
    DAMAGE_BLEED:    "&f🩸 &4"
+   DAMAGE_TRUE:     "#ffffff✨ "
    CRITICAL: "&r&f 💥"

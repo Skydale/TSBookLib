@@ -29,7 +29,7 @@ public class CommandsTab implements TabCompleter {
                 case 2:
                     switch (args[0].toLowerCase()) {
                         case "get":
-                            StringUtil.copyPartialMatches(args[1], Book.getCfg().getItems(), s);
+                            StringUtil.copyPartialMatches(args[1], Book.getCfg().getItemConfig().getItems(), s);
                             break;
                         case "give":
                         case "unid":
@@ -40,10 +40,10 @@ public class CommandsTab implements TabCompleter {
                 case 3:
                     switch (args[0].toLowerCase()) {
                         case "give":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItems(), s);
+                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getItems(), s);
                             break;
                         case "unid":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getUnidentified(), s);
+                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getUnidentified(), s);
                             break;
                     }
                     break;

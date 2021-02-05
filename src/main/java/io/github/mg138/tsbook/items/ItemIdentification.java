@@ -38,12 +38,12 @@ public class ItemIdentification {
         return new ItemIdentification(stats, random);
     }
 
-
     public HashMap<StatType, Float> getPercentageMap() {
         return percentageMap;
     }
 
     public Float getStatPercentage(StatType statType) {
-        return this.percentageMap.get(statType);
+        getPercentageMap().putIfAbsent(statType, 0.5F);
+        return getPercentageMap().get(statType);
     }
 }

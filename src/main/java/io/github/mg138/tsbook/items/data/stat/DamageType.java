@@ -12,6 +12,7 @@ public class DamageType {
         damageType.add(StatType.DAMAGE_IGNIS);
         damageType.add(StatType.DAMAGE_UMBRA);
         damageType.add(StatType.DAMAGE_LUMEN);
+        damageType.add(StatType.DAMAGE_TRUE);
         return damageType;
     }
 

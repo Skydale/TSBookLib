@@ -5,6 +5,7 @@ import java.io.File;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.listener.event.ItemRightClick;
 import io.github.mg138.tsbook.listener.event.ItemUpdate;
+import io.github.mg138.tsbook.listener.event.utils.EnemyHealthIndicator;
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle;
 import java.util.Objects;
 
@@ -35,13 +36,11 @@ public class Book extends JavaPlugin {
     private static Book inst;
     private static File jar;
     private static final Config config = new Config();
-    private ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
         inst = this;
         jar = inst.getFile();
-        protocolManager = ProtocolLibrary.getProtocolManager();
 
         load();
         reg();
@@ -50,6 +49,7 @@ public class Book extends JavaPlugin {
     @Override
     public void onDisable() {
         unload();
+
     }
 
     public void unload() {
@@ -59,6 +59,7 @@ public class Book extends JavaPlugin {
         DamageIndicator.unload();
         EntityDamage.unload();
         ItemRightClick.unload();
+        EnemyHealthIndicator.unload();
     }
 
     public void load() {
@@ -76,6 +77,7 @@ public class Book extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemUpdate(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemRightClick(), inst);
+        Bukkit.getPluginManager().registerEvents(new EnemyHealthIndicator(), inst);
 
         Objects.requireNonNull(getCommand("tsbook")).setExecutor(new Commands());
         Objects.requireNonNull(getCommand("tsbook")).setTabCompleter(new CommandsTab());
@@ -87,9 +89,5 @@ public class Book extends JavaPlugin {
 
     public static Book getInst() {
         return inst;
-    }
-
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
     }
 }

@@ -4,6 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
+import tsp.hexchat.util.RGBUtil;
 
 import java.util.*;
 
@@ -24,7 +25,7 @@ public class Translate {
             if (string.equals(newString)) throw new IllegalArgumentException("Placeholder stuck in a loop.");
             string = newString;
         }
-        return ChatColor.translateAlternateColorCodes('&', string);
+        return RGBUtil.format(string);
     }
 
     public String translate(String path) {
@@ -38,12 +39,6 @@ public class Translate {
     public String translate(String path, OfflinePlayer player, YamlConfiguration file) {
         return translateString(file.getString(path), player);
     }
-
-    /*
-    #                                                  #
-    #                  List<String>                    #
-    #                                                  #
-    */
 
     public List<String> translateList(String path) {
         return translateList(path, null, LANG);

@@ -24,21 +24,6 @@ public class ItemUtils {
             "unid"
     );
 
-    private static HashMap<StatType, String> constructPlaceholder() {
-        HashMap<StatType, String> map = new HashMap<>();
-        map.put(StatType.CRITICAL, "[critical]");
-        map.put(StatType.DAMAGE_PHYSICAL, "[damage-physical]");
-        map.put(StatType.DAMAGE_IGNIS, "[damage-ignis]");
-        map.put(StatType.DAMAGE_AER, "[damage-aer]");
-        map.put(StatType.DAMAGE_TERRA, "[damage-terra]");
-        map.put(StatType.DAMAGE_AQUA, "[damage-aqua]");
-        map.put(StatType.DAMAGE_LUMEN, "[damage-lumen]");
-        map.put(StatType.DAMAGE_UMBRA, "[damage-umbra]");
-        return map;
-    }
-
-    public static final HashMap<StatType, String> PLACEHOLDER = constructPlaceholder();
-
     public static UUID constructUUID(JavaPlugin plugin, PersistentDataContainer container) {
         NamespacedKey key = new NamespacedKey(plugin, "uuid");
 
@@ -97,7 +82,7 @@ public class ItemUtils {
             String ID = container.get(new NamespacedKey(plugin, type), PersistentDataType.STRING);
             if (ID == null) return null;
 
-            inst = new ItemInstance(Book.getCfg(), Book.getCfg().getAnyItemByID(ID), getIdentification(plugin, item));
+            inst = new ItemInstance(Book.getCfg(), Book.getCfg().getItemConfig().getAnyItemByID(ID), getIdentification(plugin, item));
             ITEMS.put(uuid, inst);
         }
 
@@ -108,7 +93,10 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-        ItemIdentification identification = inst.getIdentification();
+        ItemStats stats = inst.getStats();
+        if (stats == null) return;
+
+        ItemIdentification identification = stats.getIdentification();
         if (identification == null) return;
 
         meta.getPersistentDataContainer().set(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE, identification);

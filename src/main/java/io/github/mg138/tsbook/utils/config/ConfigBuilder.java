@@ -22,7 +22,7 @@ public class ConfigBuilder {
     }
 
     public YamlConfiguration create(String path, String target) {
-        File file = new File(plugin.getDataFolder(), target);
+        File file = new File(plugin.getDataFolder(), path + target);
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
@@ -69,10 +69,10 @@ public class ConfigBuilder {
         return YAMLs;
     }
 
-    public Map<String, YamlConfiguration> createFileMap(String path) {
+    public HashMap<String, YamlConfiguration> createFileMap(String path) {
         List<File> files = loadJarContent(path);
 
-        Map<String, YamlConfiguration> MappedYAML = new HashMap<>();
+        HashMap<String, YamlConfiguration> MappedYAML = new HashMap<>();
         try {
             for (File file : files) {
                 YamlConfiguration yaml = new YamlConfiguration();
@@ -87,10 +87,10 @@ public class ConfigBuilder {
         return MappedYAML;
     }
 
-    public Map<String, ConfigurationSection> createSectionMap(String path) {
+    public HashMap<String, ConfigurationSection> createSectionMap(String path) {
         List<File> files = loadJarContent(path);
 
-        Map<String, ConfigurationSection> MappedYAML = new HashMap<>();
+        HashMap<String, ConfigurationSection> MappedYAML = new HashMap<>();
         try {
             for (File file : files) {
                 YamlConfiguration yaml = new YamlConfiguration();
