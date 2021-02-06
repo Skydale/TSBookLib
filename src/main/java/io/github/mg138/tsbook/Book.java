@@ -5,6 +5,7 @@ import java.io.File;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.listener.event.ItemRightClick;
 import io.github.mg138.tsbook.listener.event.ItemUpdate;
+import io.github.mg138.tsbook.players.DamageIndicator;
 import io.github.mg138.tsbook.players.HealthIndicator;
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle;
 import java.util.Objects;
@@ -12,7 +13,7 @@ import java.util.Objects;
 import com.google.gson.Gson;
 import dev.reactant.reactant.core.ReactantPlugin;
 
-import io.github.mg138.tsbook.listener.event.EntityDamage;
+import io.github.mg138.tsbook.listener.event.damage.EntityDamage;
 import io.github.mg138.tsbook.command.Commands;
 import io.github.mg138.tsbook.entities.EffectHandler;
 import io.github.mg138.tsbook.listener.packet.ItemPacket;
@@ -55,6 +56,7 @@ public class Book extends JavaPlugin {
         EntityDamage.unload();
         ItemRightClick.unload();
         HealthIndicator.unload();
+        DamageIndicator.unload();
     }
 
     public void load() {

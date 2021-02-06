@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.listener.event.utils;
+package io.github.mg138.tsbook.listener.event.damage.utils;
 
 import io.github.mg138.tsbook.items.data.stat.StatType;
 import org.bukkit.entity.LivingEntity;

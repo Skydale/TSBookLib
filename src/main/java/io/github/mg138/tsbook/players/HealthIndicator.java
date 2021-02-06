@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.players;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.listener.event.utils.CustomDamageEvent;
+import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -12,7 +12,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;

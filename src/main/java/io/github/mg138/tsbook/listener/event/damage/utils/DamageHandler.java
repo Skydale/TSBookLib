@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.listener.event.utils;
+package io.github.mg138.tsbook.listener.event.damage.utils;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.entities.EffectHandler;

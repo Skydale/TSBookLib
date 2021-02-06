@@ -2,9 +2,8 @@ package io.github.mg138.tsbook.entities.data;
 
 import io.github.mg138.tsbook.entities.EffectHandler;
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.listener.event.EntityDamage;
 
-import io.github.mg138.tsbook.listener.event.utils.DamageHandler;
+import io.github.mg138.tsbook.listener.event.damage.utils.DamageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;

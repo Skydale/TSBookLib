@@ -1,6 +1,4 @@
-package io.github.mg138.tsbook.listener.event.utils;
-
-import org.bukkit.entity.LivingEntity;
+package io.github.mg138.tsbook.listener.event.damage.utils;
 
 public class DamageCalculator {
     public static double calculateTrueDamage(double damage, double defense, double modifier) {

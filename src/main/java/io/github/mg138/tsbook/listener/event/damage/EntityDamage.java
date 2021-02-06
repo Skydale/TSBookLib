@@ -1,25 +1,14 @@
-package io.github.mg138.tsbook.listener.event;
+package io.github.mg138.tsbook.listener.event.damage;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.entities.data.StatusEffect;
 import io.github.mg138.tsbook.entities.data.StatusEffectType;
-import io.github.mg138.tsbook.items.ItemUtils;
-import io.github.mg138.tsbook.items.data.stat.DamageDefenseRelation;
-import io.github.mg138.tsbook.items.data.stat.DamageType;
-import io.github.mg138.tsbook.items.data.stat.ModifierType;
 import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.items.ItemStats;
 import io.github.mg138.tsbook.entities.EffectHandler;
-import io.github.mg138.tsbook.items.ItemInstance;
 
-import io.github.mg138.tsbook.listener.event.utils.CustomDamageEvent;
-import io.github.mg138.tsbook.listener.event.utils.DamageHandler;
-import io.github.mg138.tsbook.utils.MobType;
+import io.github.mg138.tsbook.listener.event.damage.utils.DamageHandler;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -29,14 +18,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class EntityDamage implements Listener {
     private static final BukkitAPIHelper mythicMobHelper = MythicMobs.inst().getAPIHelper();

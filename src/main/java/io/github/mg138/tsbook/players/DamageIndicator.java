@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.listener.event.utils;
+package io.github.mg138.tsbook.players;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.data.stat.StatType;
@@ -43,10 +43,7 @@ public class DamageIndicator {
             indicator.setMarker(true);
             indicator.setCustomNameVisible(true);
             indicator.setCustomName(
-                    Book.getCfg().translate.translate("indicator." + type)
-                            + (int) damage
-                            + (critical ? Book.getCfg().translate.translate("indicator." + StatType.CRITICAL) : ""
-                    )
+                    Book.getCfg().translate.translate("indicator." + type) + (int) damage
             );
         });
 
