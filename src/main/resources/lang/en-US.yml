@@ -56,7 +56,7 @@ format:
    DAMAGE_UMBRA:    "&8[min] &7- &8[max] &7([percentage])"
    DAMAGE_TRUE:     "&f[min] &7- &f[max] &7([percentage])"
    CHANCE_CRITICAL: "&a[stat]% &7([percentage])"
-   CRITICAL_DAMAGE: "&a[stat]% &7([percentage])"
+   POWER_CRITICAL: "&a[stat]% &7([percentage])"
 
 indicator:
    DAMAGE_PHYSICAL: "&f⚔ &6"
