@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.items;
 
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDTag;
 
@@ -16,9 +15,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class ItemUtils {
-    private static final UUIDTag UUID_TAG_TYPE = new UUIDTag();
-    private static final IdentificationTag IDENTIFICATION_TAG_TYPE = new IdentificationTag();
-    private static final Map<UUID, ItemInstance> ITEMS = new HashMap<>();
+    public static final UUIDTag UUID_TAG_TYPE = new UUIDTag();
+    public static final IdentificationTag IDENTIFICATION_TAG_TYPE = new IdentificationTag();
+    public static final Map<UUID, ItemInstance> UUID_ITEM = new HashMap<>();
     private static final List<String> REGISTERED_TAG = Arrays.asList(
             "item",
             "unid"
@@ -43,17 +42,16 @@ public class ItemUtils {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-        String ID = inst.getID();
 
         PersistentDataContainer container = meta.getPersistentDataContainer();
-        ITEMS.put(constructUUID(plugin, container), inst);
+        UUID_ITEM.put(constructUUID(plugin, container), inst);
+
+        String ID = inst.getID();
         container.set(new NamespacedKey(plugin, type), PersistentDataType.STRING, ID);
-        //SET UUID
 
         String itemType = inst.getItemType();
         if (itemType != null) {
             container.set(new NamespacedKey(plugin, "type"), PersistentDataType.STRING, itemType);
-            //SET ITEM TYPE
         }
 
         Integer model = inst.getModel();
@@ -76,14 +74,14 @@ public class ItemUtils {
 
         UUID uuid = constructUUID(plugin, container);
 
-        ItemInstance inst = ITEMS.get(uuid);
+        ItemInstance inst = UUID_ITEM.get(uuid);
 
         if (inst == null) {
             String ID = container.get(new NamespacedKey(plugin, type), PersistentDataType.STRING);
             if (ID == null) return null;
 
             inst = new ItemInstance(Book.getCfg(), Book.getCfg().getItemConfig().getAnyItemByID(ID), getIdentification(plugin, item));
-            ITEMS.put(uuid, inst);
+            UUID_ITEM.put(uuid, inst);
         }
 
         return inst;
@@ -165,6 +163,6 @@ public class ItemUtils {
     }
 
     public static void unload() {
-        ITEMS.clear();
+        UUID_ITEM.clear();
     }
 }

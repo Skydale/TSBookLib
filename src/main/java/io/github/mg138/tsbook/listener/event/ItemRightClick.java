@@ -1,12 +1,12 @@
 package io.github.mg138.tsbook.listener.event;
 
 import io.github.mg138.tsbook.items.ItemUtils;
-import io.github.mg138.tsbook.items.data.stat.Stat;
 import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.items.ItemStats;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemInstance;
 
+import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -24,6 +24,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class ItemRightClick implements Listener {
     static final Map<Player, Long> damageCD = new HashMap<>();
@@ -96,34 +97,19 @@ public class ItemRightClick implements Listener {
         }
         player.setCooldown(item.getType(), 10);
 
-        ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, "item");
-        if (inst == null) return;
-
-        ItemStats stats = inst.getStats();
-        if (stats == null) return;
+        UUID uuid = ItemUtils.getUUID(item, Book.getInst());
+        if (uuid == null) return;
 
         Location loc = player.getLocation();
 
         Arrow arrow = player.getWorld().spawn(player.getEyeLocation(), Arrow.class, aw -> {
             PersistentDataContainer container = aw.getPersistentDataContainer();
 
-            HashMap<StatType, Double> damages = EntityDamage.getItemDamage(stats);
-            if (!damages.isEmpty()) {
-                damages.keySet().forEach(stat -> container.set(
-                        new NamespacedKey(Book.getInst(), stat.toString()),
-                        PersistentDataType.DOUBLE,
-                        damages.get(stat)
-                ));
-            }
-
-            Stat critical = stats.getStat(StatType.CRITICAL);
-            if (critical != null) {
-                container.set(
-                        new NamespacedKey(Book.getInst(), "CRITICAL"),
-                        PersistentDataType.DOUBLE,
-                        critical.getStat()
-                );
-            }
+            container.set(
+                    new NamespacedKey(Book.getInst(), "item_uuid"),
+                    ItemUtils.UUID_TAG_TYPE,
+                    uuid
+            );
 
             aw.setGravity(false);
             aw.setInvulnerable(true);

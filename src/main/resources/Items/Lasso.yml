@@ -2,16 +2,8 @@ ID: 'LASSO'
 MATERIAL: 'LEAD'
 
 FORMAT:
-  NAME: '%item_LASSO.NAME%'
+  NAME: "&eLasso"
   LORE: |
-          %item_LASSO.DESC%
+          &7&o他媽的拿去騎啦
           
-          %item_LASSO.RARITY% %item_LASSO.TYPE%
-
-NAME: "&eLasso"
-RARITY: '%tsbook_mythic%'
-TYPE: ''
-
-
-DESC: |
-      &7&o他媽的拿去騎啦
+          %tsbook_mythic%

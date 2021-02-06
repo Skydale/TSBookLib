@@ -1,9 +1,6 @@
 package io.github.mg138.tsbook.items;
 
-import io.github.mg138.tsbook.items.data.stat.Stat;
-import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
-import io.github.mg138.tsbook.utils.config.Config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -51,7 +48,7 @@ public class ItemInstance { //represents a single ItemStack
             if (stats == null) throw new IllegalArgumentException("I cannot properly get Damage of the item");
 
             STATS = new ItemStats(stats, identification, config);
-            updateLore();
+            putStatsInLore();
         } else STATS = null;
     }
 
@@ -71,7 +68,7 @@ public class ItemInstance { //represents a single ItemStack
         return ITEM_TYPE;
     }
 
-    public void updateLore() {
+    public void putStatsInLore() {
         ListIterator<String> iterator = LORE.listIterator();
         HashMap<String, String> placeholders = STATS.getPlaceholders();
         while (iterator.hasNext()) {

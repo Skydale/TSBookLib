@@ -4,32 +4,24 @@ MATERIAL: 'BOOK'
 MODEL: 1
 
 FORMAT:
-  NAME: '%item_TS_BOOK.NAME%'
+  NAME: "&d暮暮手書"
   LORE: |
-          %item_TS_BOOK.DAMAGE%
-          
-          %item_TS_BOOK.DESC%
-          
-          %item_TS_BOOK.RARITY% %item_TS_BOOK.TYPE%
+        %tsbook_stat.damage.physical% [damage-physical]
+        %tsbook_stat.damage.terra% [damage-terra]
+        %tsbook_stat.damage.aer% [damage-aer]
+        %tsbook_stat.damage.ignis% [damage-ignis]
+        %tsbook_stat.damage.aqua% [damage-aqua]
+        %tsbook_stat.damage.lumen% [damage-lumen]
+        %tsbook_stat.damage.umbra% [damage-umbra]
+        %tsbook_stat.damage.true% [damage-true]
 
-NAME: "&d暮暮手書"
-RARITY: '%tsbook_mythic%'
-TYPE: '%tsbook_book%'
+        %tsbook_stat.chance.critical% [chance-critical]
+        %tsbook_stat.power.critical% [power-critical]
 
-DAMAGE: |
-    %tsbook_stat.damage.physical% [damage-physical]
-    %tsbook_stat.damage.terra% [damage-terra]
-    %tsbook_stat.damage.aer% [damage-aer]
-    %tsbook_stat.damage.ignis% [damage-ignis]
-    %tsbook_stat.damage.aqua% [damage-aqua]
-    %tsbook_stat.damage.lumen% [damage-lumen]
-    %tsbook_stat.damage.umbra% [damage-umbra]
-    
-    %tsbook_stat.critical% [critical]
+        &7&o一本神話。
+        &7&o裡面講述著六隻小馬的故事。
 
-DESC: |
-      &7&o一本神話。
-      &7&o裡面講述著六隻小馬的故事。
+        %tsbook_mythic% %tsbook_book%
 
 stat:
   DAMAGE_PHYSICAL:
@@ -53,4 +45,8 @@ stat:
   DAMAGE_UMBRA:
       min: 1000
       max: 10000
-  CRITICAL: 100.0
+  DAMAGE_TRUE:
+      min: 100
+      max: 100
+  CHANCE_CRITICAL: 100.0
+  POWER_CRITICAL: 100.0

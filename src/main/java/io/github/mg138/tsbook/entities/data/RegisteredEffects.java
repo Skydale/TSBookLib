@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.entities.data;
 
 import io.github.mg138.tsbook.entities.EffectHandler;
-import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.listener.event.EntityDamage;
 
+import io.github.mg138.tsbook.listener.event.utils.DamageHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -35,7 +35,7 @@ public class RegisteredEffects {
 
             @Override
             public void run() {
-                if (!EntityDamage.simpleDamage(target, statusEffect.power, StatType.DAMAGE_IGNIS) || i > statusEffect.ticks) {
+                if (!DamageHandler.simpleDamage(target, statusEffect.power) || i > statusEffect.ticks) {
                     EffectHandler.remove(target);
                     cancel();
                     return;
@@ -60,7 +60,7 @@ public class RegisteredEffects {
 
             @Override
             public void run() {
-                if (!EntityDamage.simpleDamage(target, statusEffect.power, StatType.DAMAGE_BLEED) || i > statusEffect.ticks) {
+                if (!DamageHandler.simpleDamage(target, statusEffect.power) || i > statusEffect.ticks) {
                     EffectHandler.remove(target);
                     cancel();
                     return;

@@ -37,8 +37,15 @@ stat:
       lumen:    "&f✳ &f光明傷害"
       umbra:    "&7❇ &8黑暗傷害"
       true:     "&f✨ &f真實傷害"
-   critical:    "&7爆擊機率:"
-   
+   chance:
+      critical: "&7爆擊機率:"
+   power:
+      critical: "&7爆擊傷害:"
+
+health_indicator:
+   title: "[name] &f(&c[health]&7/&c[max_health]&f) [change]"
+   fallback_name: "無名生物"
+
 format:
    DAMAGE_PHYSICAL: "&6[min] &7- &6[max] &7([percentage])"
    DAMAGE_TERRA:    "&2[min] &7- &2[max] &7([percentage])"
@@ -47,7 +54,9 @@ format:
    DAMAGE_AQUA:     "&b[min] &7- &b[max] &7([percentage])"
    DAMAGE_LUMEN:    "&f[min] &7- &f[max] &7([percentage])"
    DAMAGE_UMBRA:    "&8[min] &7- &8[max] &7([percentage])"
-   CRITICAL:        "&a[stat] &7([percentage])"
+   DAMAGE_TRUE:     "&f[min] &7- &f[max] &7([percentage])"
+   CHANCE_CRITICAL: "&a[stat]% &7([percentage])"
+   CRITICAL_DAMAGE: "&a[stat]% &7([percentage])"
 
 indicator:
    DAMAGE_PHYSICAL: "&f⚔ &6"
@@ -59,5 +68,5 @@ indicator:
    DAMAGE_UMBRA:    "&7❇ &8"
    DAMAGE_NONE:     "&7"
    DAMAGE_BLEED:    "&f🩸 &4"
-   DAMAGE_TRUE:     "#ffffff✨ "
-   CRITICAL: "&r&f 💥"
+   DAMAGE_TRUE:     "&f✨ "
+   CRITICAL: "&r&f💥 "

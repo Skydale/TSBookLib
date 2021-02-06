@@ -21,7 +21,7 @@ public class Unidentified extends Give {
 
         YamlConfiguration unid = Book.getCfg().getItemConfig().getUnidentifiedByID(item);
         if (unid != null) {
-            Commands.setITEM(item);
+            Commands.setItem(item);
             sender.sendMessage(Book.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.getCfg(), "unid", unid));

@@ -20,7 +20,11 @@ public class EffectHandler implements Listener {
     }
 
     public static void unload() {
+        activeRunnable.forEach((entity, runnableMap) -> {
+            runnableMap.forEach((type, runnable) -> runnable.cancel());
+        });
         activeRunnable.clear();
+        activeEffect.clear();
     }
 
     public static void addEffect(LivingEntity entity, StatusEffect effect) {

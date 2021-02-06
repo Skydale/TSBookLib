@@ -1,0 +1,21 @@
+ID: 'MED_FIRE_TEST'
+ITEM_TYPE: 'BOOK'
+MATERIAL: 'BOOK'
+MODEL: 1
+
+FORMAT:
+  NAME: "&d中等火焰測試"
+  LORE: |
+          %tsbook_stat.damage.ignis% [damage-ignis]
+
+          %tsbook_stat.chance.critical% [chance-critical]
+          %tsbook_stat.power.critical% [power-critical]
+          
+          %tsbook_mythic% %tsbook_book%
+
+stat:
+  DAMAGE_IGNIS:
+      min: 200
+      max: 200
+  CHANCE_CRITICAL: 100
+  POWER_CRITICAL: 1000000

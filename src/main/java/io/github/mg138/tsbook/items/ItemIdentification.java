@@ -31,7 +31,6 @@ public class ItemIdentification {
     }
 
     public static ItemIdentification create(YamlConfiguration item, boolean random) {
-        if (!item.contains("stat")) return null;
         ConfigurationSection stats = item.getConfigurationSection("stat");
         if (stats == null) return null;
 

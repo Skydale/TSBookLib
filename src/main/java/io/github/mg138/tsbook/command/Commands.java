@@ -8,36 +8,18 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Commands implements CommandExecutor {
-    protected static String CMD;
-    protected static Player PLAYER;
     protected static String ITEM;
 
-    public static String getCommand() {
-        return CMD;
-    }
-
-    public static Player getPlayer() {
-        return PLAYER;
-    }
-
-    public static String getITEM() {
+    public static String getItem() {
         return ITEM;
     }
 
-    public static void setITEM(String s) {
+    public static void setItem(String s) {
         ITEM = s;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
-        if (sender instanceof Player) {
-            PLAYER = (Player) sender;
-        } else PLAYER = null;
-
-        if (args.length > 0) {
-            CMD = args[0];
-        } else CMD = "";
-
         ITEM = null;
 
         switch (args.length) {

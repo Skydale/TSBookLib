@@ -5,21 +5,17 @@ import java.io.File;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.listener.event.ItemRightClick;
 import io.github.mg138.tsbook.listener.event.ItemUpdate;
-import io.github.mg138.tsbook.listener.event.utils.EnemyHealthIndicator;
+import io.github.mg138.tsbook.players.HealthIndicator;
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle;
 import java.util.Objects;
 
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
 import com.google.gson.Gson;
 import dev.reactant.reactant.core.ReactantPlugin;
 
 import io.github.mg138.tsbook.listener.event.EntityDamage;
 import io.github.mg138.tsbook.command.Commands;
 import io.github.mg138.tsbook.entities.EffectHandler;
-import io.github.mg138.tsbook.listener.event.utils.DamageIndicator;
 import io.github.mg138.tsbook.listener.packet.ItemPacket;
-import io.github.mg138.tsbook.utils.papi.item;
 import io.github.mg138.tsbook.utils.config.Config;
 import io.github.mg138.tsbook.utils.papi.tsbook;
 import io.github.mg138.tsbook.utils.papi.unid;
@@ -56,10 +52,9 @@ public class Book extends JavaPlugin {
         config.unload();
         ItemUtils.unload();
         EffectHandler.unload();
-        DamageIndicator.unload();
         EntityDamage.unload();
         ItemRightClick.unload();
-        EnemyHealthIndicator.unload();
+        HealthIndicator.unload();
     }
 
     public void load() {
@@ -68,7 +63,6 @@ public class Book extends JavaPlugin {
 
     public void reg() {
         new tsbook(inst, config).register();
-        new item(inst, config).register();
         new unid(inst, config).register();
 
         DisableHeartParticle.register();
@@ -77,7 +71,7 @@ public class Book extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EntityDamage(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemUpdate(), inst);
         Bukkit.getPluginManager().registerEvents(new ItemRightClick(), inst);
-        Bukkit.getPluginManager().registerEvents(new EnemyHealthIndicator(), inst);
+        Bukkit.getPluginManager().registerEvents(new HealthIndicator(), inst);
 
         Objects.requireNonNull(getCommand("tsbook")).setExecutor(new Commands());
         Objects.requireNonNull(getCommand("tsbook")).setTabCompleter(new CommandsTab());

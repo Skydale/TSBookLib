@@ -48,13 +48,11 @@ public class tsbook extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String identifier) {
         switch (identifier) {
-            case "command":
-                return Commands.getCommand();
             case "player":
                 if (player == null) return "PLAYER_NOT_FOUND";
                 return player.getName();
             case "item":
-                return Commands.getITEM();
+                return Commands.getItem();
             default:
                 return config.translate.translate(identifier);
         }

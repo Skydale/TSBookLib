@@ -24,8 +24,10 @@ public class ItemStats {
         return STATS;
     }
 
-    public Stat getStat(StatType type) {
-        return STATS.get(type).getValue();
+    public Double getStat(StatType type) {
+        StatMap statMap = STATS.get(type);
+        if (statMap == null) return null;
+        return statMap.getValue().getStat() * getIdentification().getStatPercentage(type);
     }
 
     public String translate(StatMap statMap) {

@@ -51,7 +51,6 @@ public class IdentificationTag implements PersistentDataType<String, ItemIdentif
     @Override
     public ItemIdentification fromPrimitive(@NotNull String string, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
         ItemIdentification result = null;
-
         try {
             result = Book.gson.fromJson(string, ItemIdentification.class);
         } catch (JsonSyntaxException e) {

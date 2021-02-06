@@ -1,3 +1,2 @@
-SkeletonMaster:
-    defense:
-        physical: 100.0
+True_Defense:
+    DEFENSE_TRUE: 6

@@ -5,7 +5,8 @@ import java.util.HashMap;
 public class RegisteredPlaceholder {
     private static HashMap<StatType, String> constructPlaceholder() {
         HashMap<StatType, String> map = new HashMap<>();
-        map.put(StatType.CRITICAL, "[critical]");
+        map.put(StatType.CHANCE_CRITICAL, "[chance-critical]");
+        map.put(StatType.POWER_CRITICAL, "[power-critical]");
         map.put(StatType.DAMAGE_PHYSICAL, "[damage-physical]");
         map.put(StatType.DAMAGE_IGNIS, "[damage-ignis]");
         map.put(StatType.DAMAGE_AER, "[damage-aer]");

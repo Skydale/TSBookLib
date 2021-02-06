@@ -40,7 +40,7 @@ public class Give {
 
         YamlConfiguration item = Book.getCfg().getItemConfig().getItemByID(i);
         if (item != null) {
-            Commands.setITEM(i);
+            Commands.setItem(i);
             sender.sendMessage(Book.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.getCfg(), "item", item));
