@@ -1,0 +1,100 @@
+prefix: '&7[&eTwilight''s Book&7]&r'
+
+errors:
+   unknown_command: '&cUnknown command "%tsbook_command%"!'
+   item_not_found: '&cUnknown item!'
+   player_only: '&cThis command is for players only!'
+   player_not_found: '&cCannot find that player!'
+   hand_empty: '&cThere''s no item in your hand!'
+   effect:
+      no_active_effect: '&cThe player doesn''t have any active effects!'
+   should_put_number: '&cYou should put numbers!'
+
+commands:
+  feedback:
+    get:    '&8[&7=>&8] &c/tsbook get <item> &7- &aGet specified item.'
+    give:   '&8[&7=>&8] &c/tsbook give <player> <item> &7- &aGive the player specified item.'
+    unid:   '&8[&7=>&8] &c/tsbook unid <player> <item> &7- &aGive the player specified unidentified item.'
+    effect: |
+            &8[&7=>&8] &c/tsbook effect <player> <effect> <power> <ticks> &7- &aApply the specified effect to the player.
+            &8[&7=>&8] &c/tsbook effect <player> clear &7- &aClear the player's effects.
+
+messages:
+   help: |
+         &a%tsbook_prefix% &aBooks!
+         &8[&7=>&8] &c/tsbook reload &7- &aReload the plugin.
+         &8[&7=>&8] &c/tsbook get <item> &7- &aGet specified item.
+   reload: '%tsbook_prefix% &9Plugin reloading...'
+   reloaded: '%tsbook_prefix% &9Plugin reloaded.'
+   player: '%tsbook_player%'
+   get: '%tsbook_prefix% &9Gave %tsbook_player% "%tsbook_item%&9"'
+   effect:
+      cleared: '%tsbook_prefix% &aSuccessfully cleared the player''s effects!'
+      applied: '%tsbook_prefix% &aSuccessfully applied the effect to the player!'
+
+mythic: "&d&l神話"
+book: "書"
+
+format:
+   DAMAGE_PHYSICAL:   "&6[min] &7- &6[max] &7([percentage])"
+   DAMAGE_TERRA:      "&2[min] &7- &2[max] &7([percentage])"
+   DAMAGE_TEMPUS:     "&e[min] &7- &e[max] &7([percentage])"
+   DAMAGE_IGNIS:      "&c[min] &7- &c[max] &7([percentage])"
+   DAMAGE_AQUA:       "&b[min] &7- &b[max] &7([percentage])"
+   DAMAGE_LUMEN:      "&f[min] &7- &f[max] &7([percentage])"
+   DAMAGE_UMBRA:      "&8[min] &7- &8[max] &7([percentage])"
+   DAMAGE_TRUE:       "&f[min] &7- &f[max] &7([percentage])"
+   CHANCE_CRITICAL:   "&a[stat]% &7([percentage])"
+   POWER_CRITICAL:    "&a[stat]% &7([percentage])"
+   MODIFIER_PLAYER:   "&a[stat]% &7([percentage])"
+   CHANCE_DRAIN:      "&a[stat]% &7([percentage])"
+   POWER_DRAIN:       "&a[stat]% &7([percentage])"
+   CHANCE_SLOWNESS:   "&a[stat]% &7([percentage])"
+   POWER_SLOWNESS:    "&a[stat]% &7([percentage])"
+   CHANCE_NAUSEOUS:   "&a[stat]% &7([percentage])"
+   POWER_NAUSEOUS:    "&a[stat] 秒 &7([percentage])"
+   CHANCE_LEVITATION: "&a[stat]% &7([percentage])"
+   POWER_LEVITATION:  "&a[stat] 秒 &7([percentage])"
+   AFFINITY_ELEMENT:  "&a[stat]% &7([percentage])"
+   
+stat:
+   damage:
+      physical: "&f⚔ &6物理傷害"
+      terra:    "&f⛰ &2大地傷害"
+      tempus:   "&f💨 &e風暴傷害"
+      ignis:    "&f🔥 &c烈焰傷害"
+      aqua:     "&f🌊 &b洪水傷害"
+      lumen:    "&f✳ &f光明傷害"
+      umbra:    "&7❇ &8黑暗傷害"
+      true:     "&f✨ &f真實傷害"
+   chance:
+      critical: "&7爆擊機率:"
+      drain: "&7吸血機率:"
+      slowness: "&7緩速機率:"
+      levitation: "&7漂浮機率:"
+      nauseous: "&7暈眩機率:"
+   power:
+      critical: "&7爆擊傷害:"
+      drain: "&7吸血傷害:"
+      slowness: "&7緩速等級:"
+      levitation: "&7漂浮秒數:"
+      nauseous: "&7暈眩秒數:"
+   modifier:
+      player:   "&7玩家增傷:"
+
+health_indicator:
+   title: "[name] &f(&c[health]&7/&c[max_health]&f) [change]"
+
+indicator:
+   DAMAGE_PHYSICAL: "&f⚔ &6"
+   DAMAGE_TERRA:    "&f⛰ &2"
+   DAMAGE_TEMPUS:   "&f💨 &e"
+   DAMAGE_IGNIS:    "&f🔥 &c"
+   DAMAGE_AQUA:     "&f🌊 &b"
+   DAMAGE_LUMEN:    "&f✳ &f"
+   DAMAGE_UMBRA:    "&7❇ &8"
+   DAMAGE_NONE:     "&7"
+   DAMAGE_BLEED:    "&f🩸 &4"
+   DAMAGE_TRUE:     "&f✨ &f"
+   DAMAGE_THUNDER:  "&f⚡ &6"
+   CRITICAL: "&r&f💥 "

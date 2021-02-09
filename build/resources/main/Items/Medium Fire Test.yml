@@ -1,0 +1,28 @@
+ID: 'MED_FIRE_TEST'
+ITEM_TYPE: 'BOOK'
+MATERIAL: 'BOOK'
+MODEL: 1
+
+FORMAT:
+  NAME: "&d中等火焰測試"
+  LORE: |
+          %tsbook_stat.damage.ignis% [damage-ignis]
+          %tsbook_stat.damage.tempus% [damage-tempus]
+          
+          %tsbook_stat.chance.slowness% [chance-slowness]
+          %tsbook_stat.power.slowness% [power-slowness]
+          %tsbook_stat.chance.nauseous% [chance-nauseous]
+          %tsbook_stat.power.nauseous% [power-nauseous]
+          %tsbook_stat.chance.levitation% [chance-levitation]
+          %tsbook_stat.power.levitation% [power-levitation]
+          
+          %tsbook_mythic% %tsbook_book%
+
+stat:
+  #DAMAGE_IGNIS:
+      #min: 5
+      #max: 5
+  DAMAGE_TEMPUS:
+      min: 5
+      max: 5
+  AFFINITY_ELEMENT: 100
