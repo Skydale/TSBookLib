@@ -4,7 +4,6 @@ import io.github.mg138.tsbook.Book;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class Commands implements CommandExecutor {
@@ -41,6 +40,8 @@ public class Commands implements CommandExecutor {
                         return Unidentified.call(sender);
                     case "identify":
                         return Identify.call(sender);
+                    case "effect":
+                        return Effect.call(sender);
                 }
 
             case 2:
@@ -51,6 +52,8 @@ public class Commands implements CommandExecutor {
                         return Give.call(sender);
                     case "unid":
                         return Unidentified.call(sender);
+                    case "effect":
+                        return Effect.call(sender);
                 }
             case 3:
                 switch (args[0].toLowerCase()) {
@@ -58,6 +61,19 @@ public class Commands implements CommandExecutor {
                         return Give.call(sender, args[1], args[2]);
                     case "unid":
                         return Unidentified.call(sender, args[1], args[2]);
+                    case "effect":
+                        if (args[2].equals("clear")) return Effect.clear(sender, args[1]);
+                        return Effect.call(sender);
+                }
+            case 4:
+                switch (args[0].toLowerCase()) {
+                    case "effect":
+                        return Effect.call(sender);
+                }
+            case 5:
+                switch (args[0].toLowerCase()) {
+                    case "effect":
+                        return Effect.call(sender, args[1], args[2], args[3], args[4]);
                 }
         }
 

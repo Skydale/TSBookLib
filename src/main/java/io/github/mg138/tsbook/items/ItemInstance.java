@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.items;
 
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
-import io.github.mg138.tsbook.utils.config.Config;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

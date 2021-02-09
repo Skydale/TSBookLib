@@ -7,9 +7,9 @@ import com.comphenix.protocol.events.PacketEvent;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemUtils;
-import io.github.mg138.tsbook.listener.packet.wrapper.WrapperPlayClientSetCreativeSlot;
-import io.github.mg138.tsbook.listener.packet.wrapper.WrapperPlayServerSetSlot;
-import io.github.mg138.tsbook.listener.packet.wrapper.WrapperPlayServerWindowItems;
+import com.comphenix.packetwrapper.WrapperPlayClientSetCreativeSlot;
+import com.comphenix.packetwrapper.WrapperPlayServerSetSlot;
+import com.comphenix.packetwrapper.WrapperPlayServerWindowItems;
 import io.github.mg138.tsbook.items.ItemInstance;
 
 import org.bukkit.inventory.ItemStack;

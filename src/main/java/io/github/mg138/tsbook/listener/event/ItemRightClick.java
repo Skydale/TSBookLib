@@ -1,12 +1,8 @@
 package io.github.mg138.tsbook.listener.event;
 
 import io.github.mg138.tsbook.items.ItemUtils;
-import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.items.ItemStats;
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.items.ItemInstance;
 
-import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -20,7 +16,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;

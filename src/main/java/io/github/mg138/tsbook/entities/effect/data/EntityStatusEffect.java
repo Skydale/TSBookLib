@@ -1,10 +1,10 @@
-package io.github.mg138.tsbook.entities.data;
+package io.github.mg138.tsbook.entities.effect.data;
 
 import org.bukkit.entity.Entity;
 
 public class EntityStatusEffect {
-    Entity target;
-    StatusEffect statusEffect;
+    public final Entity target;
+    public final StatusEffect statusEffect;
 
     public EntityStatusEffect(Entity target, StatusEffectType type, double power, int ticks) {
         this.target = target;

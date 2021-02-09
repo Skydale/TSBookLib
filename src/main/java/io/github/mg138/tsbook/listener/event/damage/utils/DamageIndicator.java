@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.players;
+package io.github.mg138.tsbook.listener.event.damage.utils;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.data.stat.StatType;
@@ -24,11 +24,11 @@ public class DamageIndicator {
         indicators.clear();
     }
 
-    public static void displayDamage(double damage, String type, Location loc, boolean critical) {
-        displayDamage(damage, StatType.valueOf(type.toUpperCase()), loc, critical);
+    public static void displayDamage(double damage, String type, Location loc) {
+        displayDamage(damage, StatType.valueOf(type.toUpperCase()), loc);
     }
 
-    public static void displayDamage(double damage, StatType type, Location loc, boolean critical) {
+    public static void displayDamage(double damage, StatType type, Location loc) {
         World world = loc.getWorld();
         double r = new Random().nextDouble() * Math.PI * 2;
         double x = Math.cos(r) / 6;

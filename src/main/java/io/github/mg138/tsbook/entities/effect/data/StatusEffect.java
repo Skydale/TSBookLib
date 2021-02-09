@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.entities.data;
+package io.github.mg138.tsbook.entities.effect.data;
 
 public class StatusEffect {
     public final StatusEffectType type;

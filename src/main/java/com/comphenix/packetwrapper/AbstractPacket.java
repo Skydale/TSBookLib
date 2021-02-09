@@ -16,8 +16,7 @@
   * You should have received a copy of the GNU General Public License
   * along with this program.  If not, see <http://www.gnu.org/licenses/>.
   */
-
- package io.github.mg138.tsbook.listener.packet.wrapper;
+ package com.comphenix.packetwrapper;
 
  import java.lang.reflect.InvocationTargetException;
 

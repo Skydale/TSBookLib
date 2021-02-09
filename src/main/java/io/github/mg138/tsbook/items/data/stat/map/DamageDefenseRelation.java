@@ -1,12 +1,14 @@
-package io.github.mg138.tsbook.items.data.stat;
+package io.github.mg138.tsbook.items.data.stat.map;
 
-import java.util.HashMap;
+import io.github.mg138.tsbook.items.data.stat.StatType;
+
+import java.util.EnumMap;
 
 public class DamageDefenseRelation {
-    private static HashMap<StatType, StatType> constructRelationship() {
-        HashMap<StatType, StatType> relation = new HashMap<>();
+    private static EnumMap<StatType, StatType> constructRelationship() {
+        EnumMap<StatType, StatType> relation = new EnumMap<>(StatType.class);
         relation.put(StatType.DAMAGE_PHYSICAL, StatType.DEFENSE_PHYSICAL);
-        relation.put(StatType.DAMAGE_AER, StatType.DEFENSE_AER);
+        relation.put(StatType.DAMAGE_TEMPUS, StatType.DEFENSE_TEMPUS);
         relation.put(StatType.DAMAGE_TERRA, StatType.DEFENSE_TERRA);
         relation.put(StatType.DAMAGE_IGNIS, StatType.DEFENSE_IGNIS);
         relation.put(StatType.DAMAGE_AQUA, StatType.DEFENSE_AQUA);
@@ -16,5 +18,5 @@ public class DamageDefenseRelation {
         return relation;
     }
 
-    public final static HashMap<StatType, StatType> relationship = constructRelationship();
+    public final static EnumMap<StatType, StatType> relationship = constructRelationship();
 }

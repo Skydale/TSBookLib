@@ -2,6 +2,7 @@ package io.github.mg138.tsbook.command;
 
 import io.github.mg138.tsbook.Book;
 
+import io.github.mg138.tsbook.entities.effect.data.StatusEffectType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -19,36 +20,53 @@ public class CommandsTab implements TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (sender.hasPermission("tsbook.test")) {
-            List<String> s = new ArrayList<>();
+            List<String> result = new ArrayList<>();
 
             switch (args.length) {
                 case 1:
-                    StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "player", "get", "help", "give", "unid", "identify"), s);
+                    StringUtil.copyPartialMatches(args[0], Arrays.asList("reload", "player", "get", "help", "give", "unid", "identify", "effect"), result);
                     break;
 
                 case 2:
                     switch (args[0].toLowerCase()) {
                         case "get":
-                            StringUtil.copyPartialMatches(args[1], Book.getCfg().getItemConfig().getItems(), s);
+                            StringUtil.copyPartialMatches(args[1], Book.getCfg().getItemConfig().getItems(), result);
                             break;
                         case "give":
                         case "unid":
-                            StringUtil.copyPartialMatches(args[1], getPlayerNames(), s);
+                        case "effect":
+                            StringUtil.copyPartialMatches(args[1], getPlayerNames(), result);
                             break;
                     }
                     break;
                 case 3:
                     switch (args[0].toLowerCase()) {
                         case "give":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getItems(), s);
+                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getItems(), result);
                             break;
                         case "unid":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getUnidentified(), s);
+                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getUnidentified(), result);
                             break;
+                        case "effect":
+                            List<String> matcher = new ArrayList<>(StatusEffectType.names);
+                            matcher.add("clear");
+                            StringUtil.copyPartialMatches(args[2], matcher, result);
+                    }
+                    break;
+                case 4:
+                    switch (args[0].toLowerCase()) {
+                        case "effect":
+                            result.add("<power>");
+                    }
+                    break;
+                case 5:
+                    switch (args[0].toLowerCase()) {
+                        case "effect":
+                            result.add("<ticks>");
                     }
                     break;
             }
-            return s;
+            return result;
         }
         return Collections.emptyList();
     }

@@ -16,35 +16,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.mg138.tsbook.listener.packet.wrapper;
+package com.comphenix.packetwrapper;
 
 import org.bukkit.inventory.ItemStack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
-public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
-    public static final PacketType TYPE =
-            PacketType.Play.Client.SET_CREATIVE_SLOT;
+public class WrapperPlayServerSetSlot extends AbstractPacket {
+    public static final PacketType TYPE = PacketType.Play.Server.SET_SLOT;
 
-    public WrapperPlayClientSetCreativeSlot() {
+    public WrapperPlayServerSetSlot() {
         super(new PacketContainer(TYPE), TYPE);
         handle.getModifier().writeDefaults();
     }
 
-    public WrapperPlayClientSetCreativeSlot(PacketContainer packet) {
+    public WrapperPlayServerSetSlot(PacketContainer packet) {
         super(packet, TYPE);
+    }
+
+    /**
+     * Retrieve Window ID.
+     * <p>
+     * Notes: the window which is being updated. 0 for player inventory. Note
+     * that all known window types include the player inventory. This packet
+     * will only be sent for the currently opened window while the player is
+     * performing actions, even if it affects the player inventory. After the
+     * window is closed, a number of these packets are sent to update the
+     * player's inventory window (0).
+     *
+     * @return The current Window ID
+     */
+    public int getWindowId() {
+        return handle.getIntegers().read(0);
+    }
+
+    /**
+     * Set Window ID.
+     *
+     * @param value - new value.
+     */
+    public void setWindowId(int value) {
+        handle.getIntegers().write(0, value);
     }
 
     /**
      * Retrieve Slot.
      * <p>
-     * Notes: inventory slot
+     * Notes: the slot that should be updated
      *
      * @return The current Slot
      */
     public int getSlot() {
-        return handle.getIntegers().read(0);
+        return handle.getIntegers().read(1);
     }
 
     /**
@@ -53,24 +77,24 @@ public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
      * @param value - new value.
      */
     public void setSlot(int value) {
-        handle.getIntegers().write(0, value);
+        handle.getIntegers().write(1, value);
     }
 
     /**
-     * Retrieve Clicked item.
+     * Retrieve Slot data.
      *
-     * @return The current Clicked item
+     * @return The current Slot data
      */
-    public ItemStack getClickedItem() {
+    public ItemStack getSlotData() {
         return handle.getItemModifier().read(0);
     }
 
     /**
-     * Set Clicked item.
+     * Set Slot data.
      *
      * @param value - new value.
      */
-    public void setClickedItem(ItemStack value) {
+    public void setSlotData(ItemStack value) {
         handle.getItemModifier().write(0, value);
     }
 

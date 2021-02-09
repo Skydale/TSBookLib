@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import tsp.hexchat.util.RGBUtil;

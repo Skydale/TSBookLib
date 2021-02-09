@@ -16,64 +16,62 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package io.github.mg138.tsbook.listener.packet.wrapper;
-
-import java.util.List;
+package com.comphenix.packetwrapper;
 
 import org.bukkit.inventory.ItemStack;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 
-public class WrapperPlayServerWindowItems extends AbstractPacket {
-    public static final PacketType TYPE = PacketType.Play.Server.WINDOW_ITEMS;
+public class WrapperPlayClientSetCreativeSlot extends AbstractPacket {
+    public static final PacketType TYPE =
+            PacketType.Play.Client.SET_CREATIVE_SLOT;
 
-    public WrapperPlayServerWindowItems() {
+    public WrapperPlayClientSetCreativeSlot() {
         super(new PacketContainer(TYPE), TYPE);
         handle.getModifier().writeDefaults();
     }
 
-    public WrapperPlayServerWindowItems(PacketContainer packet) {
+    public WrapperPlayClientSetCreativeSlot(PacketContainer packet) {
         super(packet, TYPE);
     }
 
     /**
-     * Retrieve Window ID.
+     * Retrieve Slot.
      * <p>
-     * Notes: the id of window which items are being sent for. 0 for player
-     * inventory.
+     * Notes: inventory slot
      *
-     * @return The current Window ID
+     * @return The current Slot
      */
-    public int getWindowId() {
+    public int getSlot() {
         return handle.getIntegers().read(0);
     }
 
     /**
-     * Set Window ID.
+     * Set Slot.
      *
      * @param value - new value.
      */
-    public void setWindowId(int value) {
+    public void setSlot(int value) {
         handle.getIntegers().write(0, value);
     }
 
     /**
-     * Retrieve Slot data.
+     * Retrieve Clicked item.
      *
-     * @return The current Slot data
+     * @return The current Clicked item
      */
-    public List<ItemStack> getSlotData() {
-        return handle.getItemListModifier().read(0);
+    public ItemStack getClickedItem() {
+        return handle.getItemModifier().read(0);
     }
 
     /**
-     * Set Slot data.
+     * Set Clicked item.
      *
      * @param value - new value.
      */
-    public void setSlotData(List<ItemStack> value) {
-        handle.getItemListModifier().write(0, value);
+    public void setClickedItem(ItemStack value) {
+        handle.getItemModifier().write(0, value);
     }
 
 }

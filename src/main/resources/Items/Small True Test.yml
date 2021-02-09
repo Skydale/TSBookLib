@@ -1,10 +1,10 @@
-ID: 'MED_TRUE_TEST'
+ID: 'SMALL_TRUE_TEST'
 ITEM_TYPE: 'BOOK'
 MATERIAL: 'BOOK'
 MODEL: 1
 
 FORMAT:
-  NAME: "&d中等貫穿測試"
+  NAME: "&d弱等貫穿測試"
   LORE: |
           %tsbook_stat.damage.true% [damage-true]
 

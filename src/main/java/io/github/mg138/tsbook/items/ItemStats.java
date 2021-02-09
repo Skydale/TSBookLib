@@ -1,5 +1,6 @@
 package io.github.mg138.tsbook.items;
 
+import io.github.mg138.tsbook.items.data.stat.map.RegisteredPlaceholder;
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
 import io.github.mg138.tsbook.items.data.stat.*;
 import org.bukkit.configuration.ConfigurationSection;

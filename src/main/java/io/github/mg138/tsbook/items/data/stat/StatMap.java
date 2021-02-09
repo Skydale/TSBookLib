@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.items.data.stat;
 
-import java.util.Map.Entry;
+import java.util.Map;
 
-public class StatMap implements Entry<StatType, Stat> {
+public class StatMap implements Map.Entry<StatType, Stat> {
     private StatType statType;
     private Stat stat;
 

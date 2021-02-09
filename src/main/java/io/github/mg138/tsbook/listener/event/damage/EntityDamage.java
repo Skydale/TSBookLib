@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.listener.event.damage;
 
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.entities.data.StatusEffect;
-import io.github.mg138.tsbook.entities.data.StatusEffectType;
+import io.github.mg138.tsbook.entities.effect.data.StatusEffect;
+import io.github.mg138.tsbook.entities.effect.data.StatusEffectType;
 import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.entities.EffectHandler;
+import io.github.mg138.tsbook.entities.effect.EffectHandler;
 
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageHandler;
 import io.lumine.xikage.mythicmobs.MythicMobs;
@@ -50,7 +50,6 @@ public class EntityDamage implements Listener {
         livingEntity.setMaximumNoDamageTicks(0);
         livingEntity.setNoDamageTicks(0);
 
-        if (event.isCancelled()) return;
         EntityDamageEvent.DamageCause cause = event.getCause();
         switch (cause) {
             case FIRE_TICK:
@@ -58,8 +57,7 @@ public class EntityDamage implements Listener {
             case LAVA:
                 event.setCancelled(true);
 
-                lastDamageTime.putIfAbsent(entity, System.currentTimeMillis());
-                if ((System.currentTimeMillis() - lastDamageTime.get(entity)) > 500) {
+                if ((System.currentTimeMillis() - lastDamageTime.getOrDefault(entity, 0L)) > 500) {
                     DamageHandler.simpleDamage(livingEntity, 2);
                     lastDamageTime.put(entity, System.currentTimeMillis());
                 }
@@ -74,7 +72,6 @@ public class EntityDamage implements Listener {
                     return;
                 }
         }
-        if (event.isCancelled()) return;
 
         if (event instanceof EntityDamageByEntityEvent) {
             if (mythicMobHelper.isMythicMob(entity)) {

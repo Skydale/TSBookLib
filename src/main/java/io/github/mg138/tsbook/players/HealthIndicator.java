@@ -21,14 +21,10 @@ import java.util.Objects;
 
 public class HealthIndicator implements Listener {
     public final static HashMap<LivingEntity, HashMap<Player, BossBar>> healthIndicators = new HashMap<>();
-    public final static HashMap<Player, BukkitRunnable> removeHealthIndicator = new HashMap<>();
+    public final static HashMap<Player, HashMap<LivingEntity, BukkitRunnable>> removeHealthIndicator = new HashMap<>();
 
     public static void unload() {
-        healthIndicators.forEach((entity, map) -> {
-            map.forEach((player, bossBar) -> {
-                bossBar.removeAll();
-            });
-        });
+        healthIndicators.forEach((entity, map) -> map.forEach((player, bossBar) -> bossBar.removeAll()));
         healthIndicators.clear();
     }
 
@@ -101,13 +97,16 @@ public class HealthIndicator implements Listener {
     }
 
     public static void showToPlayer(Entity entity, Player player, HashMap<StatType, Double> damages) {
-        if (removeHealthIndicator.containsKey(player)) {
-            removeHealthIndicator.get(player).cancel();
-            removeHealthIndicator.remove(player);
-        }
-
         if (!(entity instanceof LivingEntity)) return;
         LivingEntity livingEntity = (LivingEntity) entity;
+
+        if (removeHealthIndicator.containsKey(player)) {
+            HashMap<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.get(player);
+            if (runnables.containsKey(entity)) {
+                runnables.get(entity).cancel();
+                runnables.remove(entity);
+            }
+        }
 
         BossBar bossBar = updateHealth(livingEntity, player, damages);
         bossBar.addPlayer(player);
@@ -123,7 +122,9 @@ public class HealthIndicator implements Listener {
                 }
             }
         };
-        removeHealthIndicator.put(player, remove);
+        HashMap<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.getOrDefault(player, new HashMap<>());
+        runnables.put(livingEntity, remove);
+        removeHealthIndicator.put(player, runnables);
         remove.runTaskLater(Book.getInst(), 50);
     }
 

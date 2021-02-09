@@ -4,7 +4,6 @@ import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemIdentification;
 import io.github.mg138.tsbook.items.ItemInstance;
 import io.github.mg138.tsbook.items.ItemUtils;
-import io.github.mg138.tsbook.utils.config.AbstractConfig;
 
 import io.github.mg138.tsbook.utils.config.Config;
 import org.bukkit.Material;
