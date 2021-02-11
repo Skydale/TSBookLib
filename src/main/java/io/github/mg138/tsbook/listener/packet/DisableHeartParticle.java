@@ -12,7 +12,7 @@ import org.bukkit.Particle;
 
 public class DisableHeartParticle {
     public static void register() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, PacketType.Play.Server.WORLD_PARTICLES) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, PacketType.Play.Server.WORLD_PARTICLES) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 if (event.getPacket().getNewParticles().getValues().get(0).getParticle() == Particle.DAMAGE_INDICATOR) {

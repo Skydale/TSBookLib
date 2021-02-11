@@ -21,7 +21,7 @@ public class EffectHandler implements Listener {
 
         addRunnable((LivingEntity) target, effect, runnable);
         addEffect((LivingEntity) target, effect);
-        runnable.runTaskTimer(Book.getInst(), delay, period);
+        runnable.runTaskTimer(Book.inst, delay, period);
     }
 
     public static void apply(StatusEffectType type, Entity target, double power, int time) {

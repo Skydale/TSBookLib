@@ -15,7 +15,7 @@ public class ItemUpdate implements Listener {
         if (item == null) return;
 
         if (ItemUtils.hasItemID(item)) {
-            ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, "item");
+            ItemInstance inst = ItemUtils.getInstByItem(Book.inst, item);
             if (inst == null) throw new NullPointerException("Cannot create item instance.");
 
             item.setType(inst.getMaterial());

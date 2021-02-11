@@ -5,11 +5,17 @@ import io.github.mg138.tsbook.items.data.stat.StatType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class ItemIdentification {
     private final HashMap<StatType, Float> percentageMap = new HashMap<>();
+
+    public ItemIdentification(HashMap<StatType, Float> percentageMap) {
+        this.percentageMap.putAll(percentageMap);
+    }
 
     private ItemIdentification(ConfigurationSection stats, boolean isRandom) {
         if (isRandom) {

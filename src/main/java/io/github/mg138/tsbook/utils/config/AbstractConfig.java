@@ -12,7 +12,7 @@ public abstract class AbstractConfig {
     public File JAR;
     public Translate translate;
 
-    public abstract void setup(JavaPlugin p, File j);
+    public abstract void load(JavaPlugin p, File j);
 
     public abstract void unload();
 }

@@ -19,8 +19,11 @@ public class ItemInstance { //represents a single ItemStack
     private final String NAME;
     private final List<String> LORE;
     private final ItemStats STATS;
+    private final String INTERNAL_TYPE;
 
-    public ItemInstance(AbstractConfig config, YamlConfiguration setting, ItemIdentification identification) {
+    public ItemInstance(AbstractConfig config, YamlConfiguration setting, ItemIdentification identification, String internalType) {
+        INTERNAL_TYPE = internalType;
+
         ID = setting.getString("ID");
         assert ID != null;
 
@@ -68,6 +71,10 @@ public class ItemInstance { //represents a single ItemStack
         return ITEM_TYPE;
     }
 
+    public String getInternalType() {
+        return INTERNAL_TYPE;
+    }
+
     public void putStatsInLore() {
         ListIterator<String> iterator = LORE.listIterator();
         HashMap<String, String> placeholders = STATS.getPlaceholders();
@@ -93,7 +100,7 @@ public class ItemInstance { //represents a single ItemStack
         return STATS;
     }
 
-    public ItemStack createItem(JavaPlugin plugin, String path) {
-        return ItemUtils.createItem(plugin, this, path);
+    public ItemStack createItem(JavaPlugin plugin) {
+        return ItemUtils.createItem(plugin, this);
     }
 }

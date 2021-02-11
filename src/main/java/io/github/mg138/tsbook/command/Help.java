@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 public class Help {
     public static boolean call(CommandSender sender) {
-        sender.sendMessage(Book.getCfg().translate.translate("messages.help"));
+        sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.help"));
         return true;
     }
 }

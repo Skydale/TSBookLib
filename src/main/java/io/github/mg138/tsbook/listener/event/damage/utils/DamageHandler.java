@@ -14,7 +14,7 @@ import io.github.mg138.tsbook.items.data.stat.set.EffectChanceType;
 import io.github.mg138.tsbook.items.data.stat.set.EffectPowerType;
 import io.github.mg138.tsbook.items.data.stat.set.ModifierType;
 import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.utils.MobType;
+import io.github.mg138.tsbook.entities.util.MobType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -52,7 +52,7 @@ public class DamageHandler {
             ItemStack item = equipment.getItemInMainHand();
             if (item.getType() == Material.AIR || item.getItemMeta() == null) return;
 
-            ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, "item");
+            ItemInstance inst = ItemUtils.getInstByItem(Book.inst, item);
             if (inst == null) return;
 
             ItemStats stats = inst.getStats();
@@ -65,7 +65,7 @@ public class DamageHandler {
             Arrow arrow = (Arrow) damager;
             PersistentDataContainer container = arrow.getPersistentDataContainer();
 
-            UUID uuid = container.get(new NamespacedKey(Book.getInst(), "item_uuid"), ItemUtils.UUID_TAG_TYPE);
+            UUID uuid = container.get(new NamespacedKey(Book.inst, "item_uuid"), ItemUtils.UUID_TAG_TYPE);
             if (uuid == null) return;
 
             ItemInstance inst = ItemUtils.UUID_ITEM.get(uuid);

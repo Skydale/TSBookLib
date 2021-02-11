@@ -30,7 +30,7 @@ public class CommandsTab implements TabCompleter {
                 case 2:
                     switch (args[0].toLowerCase()) {
                         case "get":
-                            StringUtil.copyPartialMatches(args[1], Book.getCfg().getItemConfig().getItems(), result);
+                            StringUtil.copyPartialMatches(args[1], Book.Companion.getCfg().getItemConfig().getItems(), result);
                             break;
                         case "give":
                         case "unid":
@@ -42,10 +42,10 @@ public class CommandsTab implements TabCompleter {
                 case 3:
                     switch (args[0].toLowerCase()) {
                         case "give":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getItems(), result);
+                            StringUtil.copyPartialMatches(args[2], Book.Companion.getCfg().getItemConfig().getItems(), result);
                             break;
                         case "unid":
-                            StringUtil.copyPartialMatches(args[2], Book.getCfg().getItemConfig().getUnidentified(), result);
+                            StringUtil.copyPartialMatches(args[2], Book.Companion.getCfg().getItemConfig().getUnidentified(), result);
                             break;
                         case "effect":
                             List<String> matcher = new ArrayList<>(StatusEffectType.names);
@@ -73,7 +73,7 @@ public class CommandsTab implements TabCompleter {
 
     protected List<String> getPlayerNames() {
         List<String> playerNames = new ArrayList<>();
-        for (Player player : Book.getInst().getServer().getOnlinePlayers()) {
+        for (Player player : Book.inst.getServer().getOnlinePlayers()) {
             playerNames.add(player.getName());
         }
         return playerNames;

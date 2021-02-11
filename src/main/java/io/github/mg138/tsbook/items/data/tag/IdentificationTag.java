@@ -31,7 +31,7 @@ public class IdentificationTag implements PersistentDataType<String, ItemIdentif
         String result = null;
         try {
             ObjectOutputStream oos = new ObjectOutputStream(bos);
-            result = Book.gson.toJson(itemIdentification);
+            result = Book.Companion.getGson().toJson(itemIdentification);
             oos.writeObject(result);
             oos.flush();
         } catch (IOException e) {
@@ -52,7 +52,7 @@ public class IdentificationTag implements PersistentDataType<String, ItemIdentif
     public ItemIdentification fromPrimitive(@NotNull String string, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
         ItemIdentification result = null;
         try {
-            result = Book.gson.fromJson(string, ItemIdentification.class);
+            result = Book.Companion.getGson().fromJson(string, ItemIdentification.class);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
         }

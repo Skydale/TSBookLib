@@ -36,18 +36,20 @@ public class ItemUtils {
         return uuid;
     }
 
-    public static ItemStack createItem(JavaPlugin plugin, ItemInstance inst, String type) {
+    public static ItemStack createItem(JavaPlugin plugin, ItemInstance inst) {
         ItemStack item = new ItemStack(inst.getMaterial(), 1);
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) throw new NullPointerException("Somehow, I cannot get the metadata of the item.");
 
-
         PersistentDataContainer container = meta.getPersistentDataContainer();
         UUID_ITEM.put(constructUUID(plugin, container), inst);
 
+        String internalType = inst.getInternalType();
+        container.set(new NamespacedKey(plugin, "internal"), PersistentDataType.STRING, internalType);
+
         String ID = inst.getID();
-        container.set(new NamespacedKey(plugin, type), PersistentDataType.STRING, ID);
+        container.set(new NamespacedKey(plugin, internalType), PersistentDataType.STRING, ID);
 
         String itemType = inst.getItemType();
         if (itemType != null) {
@@ -64,7 +66,7 @@ public class ItemUtils {
         return item;
     }
 
-    public static ItemInstance getInstByItem(JavaPlugin plugin, ItemStack item, String type) {
+    public static ItemInstance getInstByItem(JavaPlugin plugin, ItemStack item) {
         if (item.getType() == Material.AIR) return null;
 
         ItemMeta meta = item.getItemMeta();
@@ -77,10 +79,13 @@ public class ItemUtils {
         ItemInstance inst = UUID_ITEM.get(uuid);
 
         if (inst == null) {
-            String ID = container.get(new NamespacedKey(plugin, type), PersistentDataType.STRING);
+            String internalType = container.get(new NamespacedKey(plugin, "internal"), PersistentDataType.STRING);
+            if (internalType == null) return null;
+
+            String ID = container.get(new NamespacedKey(plugin, internalType), PersistentDataType.STRING);
             if (ID == null) return null;
 
-            inst = new ItemInstance(Book.getCfg(), Book.getCfg().getItemConfig().getAnyItemByID(ID), getIdentification(plugin, item));
+            inst = new ItemInstance(Book.Companion.getCfg(), Book.Companion.getCfg().getItemConfig().getAnyItemByID(ID), getIdentification(plugin, item), internalType);
             UUID_ITEM.put(uuid, inst);
         }
 
@@ -97,7 +102,7 @@ public class ItemUtils {
         ItemIdentification identification = stats.getIdentification();
         if (identification == null) return;
 
-        meta.getPersistentDataContainer().set(new NamespacedKey(Book.getInst(), "iden"), IDENTIFICATION_TAG_TYPE, identification);
+        meta.getPersistentDataContainer().set(new NamespacedKey(Book.inst, "iden"), IDENTIFICATION_TAG_TYPE, identification);
         item.setItemMeta(meta);
     }
 

@@ -23,7 +23,7 @@ public class Commands implements CommandExecutor {
 
         switch (args.length) {
             case 0:
-                sender.sendMessage(Book.getCfg().translate.translate("messages.help"));
+                sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.help"));
                 return true;
 
             case 1:
@@ -77,7 +77,7 @@ public class Commands implements CommandExecutor {
                 }
         }
 
-        sender.sendMessage(Book.getCfg().translate.translate("errors.unknown_command"));
+        sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.unknown_command"));
         return false;
     }
 }

@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 
 public class Effect {
     public static boolean call(CommandSender sender) {
-        sender.sendMessage(Book.getCfg().translate.translate("commands.feedback.effect"));
+        sender.sendMessage(Book.Companion.getCfg().translate.translate("commands.feedback.effect"));
         return true;
     }
 
     public static boolean call(CommandSender sender, String playerName, String effectName, String literalPower, String literalTicks) {
-        Player player = Book.getInst().getServer().getPlayer(playerName);
+        Player player = Book.inst.getServer().getPlayer(playerName);
         if (player == null) {
-            sender.sendMessage(Book.getCfg().translate.translate("errors.player_not_found"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.player_not_found"));
             return false;
         }
         try {
@@ -23,26 +23,26 @@ public class Effect {
             double power = Double.parseDouble(literalPower);
             int ticks = Integer.parseInt(literalTicks);
             EffectHandler.apply(type, player, power, ticks);
-            sender.sendMessage(Book.getCfg().translate.translate("messages.effect.applied"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.effect.applied"));
             return true;
         } catch (NumberFormatException e) {
-            sender.sendMessage(Book.getCfg().translate.translate("errors.should_put_number"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.should_put_number"));
             return false;
         }
     }
 
     public static boolean clear(CommandSender sender, String playerName) {
-        Player player = Book.getInst().getServer().getPlayer(playerName);
+        Player player = Book.inst.getServer().getPlayer(playerName);
         if (player == null) {
-            sender.sendMessage(Book.getCfg().translate.translate("errors.player_not_found"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.player_not_found"));
             return false;
         }
         try {
             EffectHandler.remove(player);
-            sender.sendMessage(Book.getCfg().translate.translate("messages.effect.cleared"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.effect.cleared"));
             return true;
         } catch (NullPointerException e) {
-            sender.sendMessage(Book.getCfg().translate.translate("errors.effect.no_active_effect"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.effect.no_active_effect"));
             return false;
         }
     }

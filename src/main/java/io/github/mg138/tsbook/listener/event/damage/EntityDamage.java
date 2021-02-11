@@ -75,7 +75,7 @@ public class EntityDamage implements Listener {
 
         if (event instanceof EntityDamageByEntityEvent) {
             if (mythicMobHelper.isMythicMob(entity)) {
-                ConfigurationSection mob = Book.getCfg().getMMMob(mythicMobHelper.getMythicMobInstance(entity).getType().getInternalName());
+                ConfigurationSection mob = Book.Companion.getCfg().getMMMob(mythicMobHelper.getMythicMobInstance(entity).getType().getInternalName());
                 if (mob != null) {
                     HashMap<StatType, Double> map = new HashMap<>();
                     for (String key : mob.getKeys(false)) {

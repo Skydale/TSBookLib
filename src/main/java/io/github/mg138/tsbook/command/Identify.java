@@ -18,37 +18,37 @@ import java.util.Random;
 public class Identify {
     public static boolean call(CommandSender sender) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Book.getCfg().translate.translate("errors.player_only"));
+            sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.player_only"));
             return false;
         }
         Player player = (Player) sender;
 
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR) {
-            player.sendMessage(Book.getCfg().translate.translate("errors.hand_empty"));
+            player.sendMessage(Book.Companion.getCfg().translate.translate("errors.hand_empty"));
             return false;
         }
 
         String type = ItemUtils.getItemType(item);
-        String ID = ItemUtils.getDataTag(Book.getInst(), item, type);
+        String ID = ItemUtils.getDataTag(Book.inst, item, type);
         if (ID == null || type == null) {
-            player.sendMessage(Book.getCfg().translate.translate("errors.item_not_found"));
+            player.sendMessage(Book.Companion.getCfg().translate.translate("errors.item_not_found"));
             return false;
         }
 
-        ItemInstance inst = identify(Book.getCfg(), ID, type);
+        ItemInstance inst = identify(Book.Companion.getCfg(), ID, type);
         item.setAmount(item.getAmount() - 1);
-        player.getInventory().addItem(inst.createItem(Book.getInst(), "item"));
+        player.getInventory().addItem(inst.createItem(Book.inst));
         return true;
     }
 
     public static ItemInstance identify(Config config, String ID, String type) {
         if (type.equalsIgnoreCase("unid")) {
-            List<String> items = Book.getCfg().getItemConfig().getUnidentifiedByID(ID).getStringList("ITEMS");
+            List<String> items = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(ID).getStringList("ITEMS");
             YamlConfiguration setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
-            return new ItemInstance(config, setting, ItemIdentification.create(setting, true));
+            return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item");
         }
         YamlConfiguration setting = config.getItemConfig().getItemByID(ID);
-        return new ItemInstance(config, setting, ItemIdentification.create(setting, true));
+        return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item");
     }
 }

@@ -1,5 +1,6 @@
 package io.github.mg138.tsbook.listener.packet;
 
+import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -25,7 +26,7 @@ public class ItemPacket {
         String type = ItemUtils.getItemType(item);
         if (type == null) return;
 
-        ItemInstance inst = ItemUtils.getInstByItem(Book.getInst(), item, type);
+        ItemInstance inst = ItemUtils.getInstByItem(Book.inst, item);
         if (inst == null) return;
 
         meta.setLore(inst.getLore());
@@ -34,7 +35,14 @@ public class ItemPacket {
     }
 
     public static void register() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, WrapperPlayServerWindowItems.TYPE) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayServerLogin.TYPE) {
+            @Override
+            public void onPacketSending(PacketEvent event) {
+                System.out.println(event.getPacket().getModifier().getValues());
+            }
+        });
+
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayServerWindowItems.TYPE) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 WrapperPlayServerWindowItems packet = new WrapperPlayServerWindowItems(event.getPacket());
@@ -47,7 +55,7 @@ public class ItemPacket {
         });
 
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, WrapperPlayServerSetSlot.TYPE) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayServerSetSlot.TYPE) {
             @Override
             public void onPacketSending(PacketEvent event) {
                 WrapperPlayServerSetSlot packet = new WrapperPlayServerSetSlot(event.getPacket());
@@ -56,7 +64,7 @@ public class ItemPacket {
             }
         });
 
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.getInst(), ListenerPriority.HIGH, WrapperPlayClientSetCreativeSlot.TYPE) {
+        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayClientSetCreativeSlot.TYPE) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
                 WrapperPlayClientSetCreativeSlot packet = new WrapperPlayClientSetCreativeSlot(event.getPacket());

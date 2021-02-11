@@ -13,6 +13,15 @@ public class Config extends AbstractConfig {
     YamlConfiguration langFile;
     ItemConfig itemConfig;
     HashMap<String, ConfigurationSection> mmMobs;
+    private static Config inst = null;
+
+    private Config(){
+    }
+
+    public static Config getInstance() {
+        if (inst == null) inst = new Config();
+        return inst;
+    }
 
     public ItemConfig getItemConfig() { return itemConfig; }
 
@@ -25,7 +34,7 @@ public class Config extends AbstractConfig {
     }
 
     @Override
-    public void setup(JavaPlugin p, File j) {
+    public void load(JavaPlugin p, File j) {
         plugin = p;
         JAR = j;
 

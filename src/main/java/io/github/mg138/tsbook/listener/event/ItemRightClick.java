@@ -34,12 +34,12 @@ public class ItemRightClick implements Listener {
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item.getType() == Material.AIR) return false;
 
-        String ID = ItemUtils.getDataTag(Book.getInst(), item, "item");
+        String ID = ItemUtils.getDataTag(Book.inst, item, "item");
         if (ID != null) {
             itemIDOperator(ID, event);
         }
 
-        String type = ItemUtils.getDataTag(Book.getInst(), item, "type");
+        String type = ItemUtils.getDataTag(Book.inst, item, "type");
         if (type != null) {
             itemTypeOperator(type, item, player);
         }
@@ -54,7 +54,7 @@ public class ItemRightClick implements Listener {
             if (item == null) return false;
             if (item.getType() == Material.AIR) return false;
 
-            String type = ItemUtils.getDataTag(Book.getInst(), item, "type");
+            String type = ItemUtils.getDataTag(Book.inst, item, "type");
             if (type == null) return false;
 
             itemTypeOperator(type, item, event.getPlayer());
@@ -92,7 +92,7 @@ public class ItemRightClick implements Listener {
         }
         player.setCooldown(item.getType(), 10);
 
-        UUID uuid = ItemUtils.getUUID(item, Book.getInst());
+        UUID uuid = ItemUtils.getUUID(item, Book.inst);
         if (uuid == null) return;
 
         Location loc = player.getLocation();
@@ -101,7 +101,7 @@ public class ItemRightClick implements Listener {
             PersistentDataContainer container = aw.getPersistentDataContainer();
 
             container.set(
-                    new NamespacedKey(Book.getInst(), "item_uuid"),
+                    new NamespacedKey(Book.inst, "item_uuid"),
                     ItemUtils.UUID_TAG_TYPE,
                     uuid
             );
@@ -114,6 +114,6 @@ public class ItemRightClick implements Listener {
             aw.setVelocity(loc.getDirection());
             aw.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
         });
-        Bukkit.getScheduler().runTaskLater(Book.getInst(), arrow::remove, 120);
+        Bukkit.getScheduler().runTaskLater(Book.inst, arrow::remove, 120);
     }
 }

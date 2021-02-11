@@ -43,7 +43,7 @@ public class DamageIndicator {
             indicator.setMarker(true);
             indicator.setCustomNameVisible(true);
             indicator.setCustomName(
-                    Book.getCfg().translate.translate("indicator." + type) + (int) damage
+                    Book.Companion.getCfg().translate.translate("indicator." + type) + (int) damage
             );
         });
 
@@ -78,6 +78,6 @@ public class DamageIndicator {
                 }
                 i++;
             }
-        }.runTaskTimer(Book.getInst(), 0, 3);
+        }.runTaskTimer(Book.inst, 0, 3);
     }
 }
