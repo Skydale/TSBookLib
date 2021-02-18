@@ -4,7 +4,7 @@ import io.github.mg138.tsbook.entities.effect.EffectHandler;
 import io.github.mg138.tsbook.entities.effect.data.EntityStatusEffect;
 import io.github.mg138.tsbook.entities.effect.data.StatusEffect;
 import io.github.mg138.tsbook.items.data.stat.StatType;
-import io.github.mg138.tsbook.listener.event.damage.utils.DamageHandler;
+import io.github.mg138.tsbook.listener.event.damage.DamageHandler;
 import org.bukkit.Particle;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;

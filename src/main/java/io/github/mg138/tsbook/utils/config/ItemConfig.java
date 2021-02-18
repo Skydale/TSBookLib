@@ -2,11 +2,11 @@ package io.github.mg138.tsbook.utils.config;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class ItemConfig extends AbstractItemConfig {
-    public ItemConfig(HashMap<String, YamlConfiguration> items, HashMap<String, YamlConfiguration> unid) {
+    public ItemConfig(Map<String, YamlConfiguration> items, Map<String, YamlConfiguration> unid) {
         super(items, unid);
     }
 

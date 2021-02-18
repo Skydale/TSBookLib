@@ -2,14 +2,17 @@ package io.github.mg138.tsbook
 
 import com.google.gson.Gson
 import dev.reactant.reactant.core.ReactantPlugin
-import io.github.mg138.tsbook.command.Commands
-import io.github.mg138.tsbook.command.CommandsTab
+import io.github.mg138.tsbook.command.Armor
+import io.github.mg138.tsbook.command.admin.AdminCommands
+import io.github.mg138.tsbook.command.admin.AdminTabComplete
 import io.github.mg138.tsbook.entities.effect.EffectHandler
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.listener.event.ItemRightClick
 import io.github.mg138.tsbook.listener.event.ItemUpdate
-import io.github.mg138.tsbook.listener.event.damage.EntityDamage
+import io.github.mg138.tsbook.listener.event.click.RightClickEvent
+import io.github.mg138.tsbook.listener.event.damage.DamageEventHandler
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
+import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle
 import io.github.mg138.tsbook.listener.packet.ItemPacket
 import io.github.mg138.tsbook.players.util.HealthIndicator
@@ -29,6 +32,7 @@ class Book : JavaPlugin() {
         lateinit var jar: File
         var gson = Gson()
         val cfg: Config = Config.getInstance()
+        lateinit var equipmentGUIHandler: EquipmentGUIHandler
     }
 
     override fun onEnable() {
@@ -46,10 +50,11 @@ class Book : JavaPlugin() {
         cfg.unload()
         ItemUtils.unload()
         EffectHandler.unload()
-        EntityDamage.unload()
+        DamageEventHandler.unload()
         ItemRightClick.unload()
         HealthIndicator.unload()
         DamageIndicator.unload()
+        equipmentGUIHandler.unload()
     }
 
     fun load() {
@@ -61,11 +66,17 @@ class Book : JavaPlugin() {
         unid(inst, cfg).register()
         DisableHeartParticle.register()
         ItemPacket.register()
-        Bukkit.getPluginManager().registerEvents(EntityDamage(), inst)
+
+        Bukkit.getPluginManager().registerEvents(DamageEventHandler(), inst)
         Bukkit.getPluginManager().registerEvents(ItemUpdate(), inst)
         Bukkit.getPluginManager().registerEvents(ItemRightClick(), inst)
         Bukkit.getPluginManager().registerEvents(HealthIndicator(), inst)
-        getCommand("tsbook")!!.setExecutor(Commands())
-        getCommand("tsbook")!!.tabCompleter = CommandsTab()
+        equipmentGUIHandler = EquipmentGUIHandler(cfg)
+        Bukkit.getPluginManager().registerEvents(equipmentGUIHandler, inst)
+        Bukkit.getPluginManager().registerEvents(RightClickEvent(cfg), inst)
+
+        getCommand("tsbook")!!.setExecutor(AdminCommands())
+        getCommand("tsbook")!!.tabCompleter = AdminTabComplete()
+        getCommand("armor")!!.setExecutor(Armor())
     }
 }

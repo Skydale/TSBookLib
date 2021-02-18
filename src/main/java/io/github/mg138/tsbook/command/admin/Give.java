@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemIdentification;
@@ -31,7 +31,7 @@ public class Give {
 
         YamlConfiguration item = Book.Companion.getCfg().getItemConfig().getItemByID(i);
         if (item != null) {
-            Commands.setItem(i);
+            AdminCommands.setItem(i);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.Companion.getCfg(), "item", item));

@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 

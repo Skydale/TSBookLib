@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.utils.papi;
 
-import io.github.mg138.tsbook.command.Commands;
+import io.github.mg138.tsbook.command.admin.AdminCommands;
 import io.github.mg138.tsbook.utils.config.Config;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -52,7 +52,7 @@ public class tsbook extends PlaceholderExpansion {
                 if (player == null) return "PLAYER_NOT_FOUND";
                 return player.getName();
             case "item":
-                return Commands.getItem();
+                return AdminCommands.getItem();
             default:
                 return config.translate.translate(identifier);
         }

@@ -5,23 +5,25 @@ import io.github.mg138.tsbook.utils.config.AbstractConfig;
 import io.github.mg138.tsbook.items.data.stat.*;
 import org.bukkit.configuration.ConfigurationSection;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ItemStats {
     private final ItemIdentification IDENTIFICATION;
-    private final HashMap<StatType, StatMap> STATS = new HashMap<>();
-    private final HashMap<String, String> PLACEHOLDER = new HashMap<>();
+    private final Map<StatType, StatMap> STATS = new HashMap<>();
+    private final Map<String, String> PLACEHOLDER = new HashMap<>();
     private final AbstractConfig CONFIG;
 
     public ItemIdentification getIdentification() {
         return IDENTIFICATION;
     }
 
-    public HashMap<String, String> getPlaceholders() {
+    public Map<String, String> getPlaceholders() {
         return PLACEHOLDER;
     }
 
-    public HashMap<StatType, StatMap> getStats() {
+    public Map<StatType, StatMap> getStats() {
         return STATS;
     }
 
@@ -47,6 +49,12 @@ public class ItemStats {
                     .replace("[stat]", String.valueOf((int) (stat.getStat() * percentage)))
                     .replace("[percentage]", String.valueOf((int) (percentage * 100)) + '%');
         }
+    }
+
+    public ItemStats(Map<StatType, StatMap> stats, ItemIdentification identification, AbstractConfig config) {
+        this.STATS.putAll(stats);
+        this.IDENTIFICATION = identification;
+        this.CONFIG = config;
     }
 
     public ItemStats(ConfigurationSection settings, ItemIdentification identification, AbstractConfig config) {

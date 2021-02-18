@@ -1,8 +1,16 @@
 package io.github.mg138.tsbook.items.data.stat;
 
+import java.util.Comparator;
 import java.util.Map;
 
 public class StatMap implements Map.Entry<StatType, Stat> {
+    static class Sort implements Comparator<StatMap> {
+        @Override
+        public int compare(StatMap a, StatMap b) {
+            return Double.compare(a.stat.getStat(), b.stat.getStat());
+        }
+    }
+
     private StatType statType;
     private Stat stat;
 

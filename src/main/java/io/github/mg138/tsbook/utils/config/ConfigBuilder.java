@@ -26,7 +26,7 @@ public class ConfigBuilder {
 
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            plugin.saveResource(target, false);
+            plugin.saveResource(path + target, false);
         }
 
         YamlConfiguration yaml = new YamlConfiguration();
@@ -69,15 +69,15 @@ public class ConfigBuilder {
         return YAMLs;
     }
 
-    public HashMap<String, YamlConfiguration> createFileMap(String path) {
+    public Map<String, YamlConfiguration> createMap(String path, String key) {
         List<File> files = loadJarContent(path);
 
-        HashMap<String, YamlConfiguration> MappedYAML = new HashMap<>();
+        Map<String, YamlConfiguration> MappedYAML = new HashMap<>();
         try {
             for (File file : files) {
                 YamlConfiguration yaml = new YamlConfiguration();
                 yaml.load(file);
-                MappedYAML.put(yaml.getString("ID"), yaml);
+                MappedYAML.put(yaml.getString(key), yaml);
             }
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
@@ -87,10 +87,10 @@ public class ConfigBuilder {
         return MappedYAML;
     }
 
-    public HashMap<String, ConfigurationSection> createSectionMap(String path) {
+    public Map<String, ConfigurationSection> createSectionMap(String path) {
         List<File> files = loadJarContent(path);
 
-        HashMap<String, ConfigurationSection> MappedYAML = new HashMap<>();
+        Map<String, ConfigurationSection> MappedYAML = new HashMap<>();
         try {
             for (File file : files) {
                 YamlConfiguration yaml = new YamlConfiguration();

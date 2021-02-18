@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,9 +102,9 @@ public class ItemRightClick implements Listener {
             PersistentDataContainer container = aw.getPersistentDataContainer();
 
             container.set(
-                    new NamespacedKey(Book.inst, "item_uuid"),
-                    ItemUtils.UUID_TAG_TYPE,
-                    uuid
+                    new NamespacedKey(Book.inst, "item_uuids"),
+                    ItemUtils.UUID_ARRAY_TAG_TYPE,
+                    new UUID[] { uuid }
             );
 
             aw.setGravity(false);

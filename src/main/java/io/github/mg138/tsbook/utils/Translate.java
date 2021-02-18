@@ -2,16 +2,17 @@ package io.github.mg138.tsbook.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import tsp.hexchat.util.RGBUtil;
 
 import java.util.*;
 
 public class Translate {
-    final YamlConfiguration LANG;
+    private final YamlConfiguration language;
 
     public Translate(YamlConfiguration lang) {
-        LANG = lang;
+        language = lang;
     }
 
     public String translateString(String string) {
@@ -28,31 +29,39 @@ public class Translate {
     }
 
     public String translate(String path) {
-        return translate(path, null, LANG);
+        return translate(path, null, language);
     }
 
     public String translate(String path, OfflinePlayer player) {
-        return translate(path, player, LANG);
+        return translate(path, player, language);
     }
 
     public String translate(String path, OfflinePlayer player, YamlConfiguration file) {
         return translateString(file.getString(path), player);
     }
 
+    public String translate(String path, OfflinePlayer player, ConfigurationSection section) {
+        return translateString(section.getString(path), player);
+    }
+
     public List<String> translateList(String path) {
-        return translateList(path, null, LANG);
+        return translateList(path, null, language);
     }
 
     public List<String> translateList(String path, OfflinePlayer player) {
-        return translateList(path, player, LANG);
+        return translateList(path, player, language);
     }
 
     public List<String> translateList(String path, OfflinePlayer player, YamlConfiguration file) {
-        List<String> list = file.getStringList(path);
+        return translateList(path, player, Objects.requireNonNull(file.getConfigurationSection("")));
+    }
+
+    public List<String> translateList(String path, OfflinePlayer player, ConfigurationSection section) {
+        List<String> list = section.getStringList(path);
 
         if (list.isEmpty()) {
             try {
-                String string = file.getString(path);
+                String string = section.getString(path);
                 if (string == null) return null;
                 return translateByList(Arrays.asList(string.split("\\\\n|\\n")), player);
             } catch (NullPointerException e) {

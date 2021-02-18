@@ -17,6 +17,14 @@ public class RegisteredPlaceholder {
         map.put(StatType.DAMAGE_LUMEN, "[damage-lumen]");
         map.put(StatType.DAMAGE_UMBRA, "[damage-umbra]");
         map.put(StatType.DAMAGE_TRUE, "[damage-true]");
+        map.put(StatType.DEFENSE_PHYSICAL, "[defense-physical]");
+        map.put(StatType.DEFENSE_IGNIS, "[defense-ignis]");
+        map.put(StatType.DEFENSE_TEMPUS, "[defense-tempus]");
+        map.put(StatType.DEFENSE_TERRA, "[defense-terra]");
+        map.put(StatType.DEFENSE_AQUA, "[defense-aqua]");
+        map.put(StatType.DEFENSE_LUMEN, "[defense-lumen]");
+        map.put(StatType.DEFENSE_UMBRA, "[defense-umbra]");
+        map.put(StatType.DEFENSE_TRUE, "[defense-true]");
         map.put(StatType.MODIFIER_PLAYER, "[modifier-player]");
         map.put(StatType.CHANCE_DRAIN, "[chance-drain]");
         map.put(StatType.POWER_DRAIN, "[power-drain]");

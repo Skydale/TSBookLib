@@ -7,9 +7,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 public class ItemInstance { //represents a single ItemStack
     private final String ID;
@@ -77,7 +77,7 @@ public class ItemInstance { //represents a single ItemStack
 
     public void putStatsInLore() {
         ListIterator<String> iterator = LORE.listIterator();
-        HashMap<String, String> placeholders = STATS.getPlaceholders();
+        Map<String, String> placeholders = STATS.getPlaceholders();
         while (iterator.hasNext()) {
             String s = iterator.next();
             placeholders.forEach(

@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 
@@ -17,12 +17,13 @@ public class Get extends Give {
             sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.player_only"));
             return false;
         }
+        Player player = (Player) sender;
 
         YamlConfiguration item = Book.Companion.getCfg().getItemConfig().getItemByID(i);
         if (item != null) {
-            Commands.setItem(i);
+            AdminCommands.setItem(i);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", (Player) sender));
-            ((Player) sender).getInventory().addItem(getItem(Book.Companion.getCfg(), "item", item));
+            player.getInventory().addItem(getItem(Book.Companion.getCfg(), "item", item));
             return true;
         }
 

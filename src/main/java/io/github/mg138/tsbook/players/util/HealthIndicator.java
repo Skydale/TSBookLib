@@ -17,18 +17,19 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class HealthIndicator implements Listener {
-    public final static HashMap<LivingEntity, HashMap<Player, BossBar>> healthIndicators = new HashMap<>();
-    public final static HashMap<Player, HashMap<LivingEntity, BukkitRunnable>> removeHealthIndicator = new HashMap<>();
+    public final static Map<LivingEntity, Map<Player, BossBar>> healthIndicators = new HashMap<>();
+    public final static Map<Player, Map<LivingEntity, BukkitRunnable>> removeHealthIndicator = new HashMap<>();
 
     public static void unload() {
         healthIndicators.forEach((entity, map) -> map.forEach((player, bossBar) -> bossBar.removeAll()));
         healthIndicators.clear();
     }
 
-    public static BossBar updateHealth(LivingEntity entity, Player player, HashMap<StatType, Double> damages) {
+    public static BossBar updateHealth(LivingEntity entity, Player player, Map<StatType, Double> damages) {
         String customName = entity.getCustomName();
         customName = customName == null ? entity.getName() : customName;
         double maxHealth = Objects.requireNonNull(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)).getBaseValue();
@@ -50,6 +51,7 @@ public class HealthIndicator implements Listener {
         });
 
         totalDamage[0] = -1 * (Math.round(totalDamage[0] * 10) / 10.0);
+
         if (totalDamage[0] > 0) {
             changeText[0] = (Book.Companion.getCfg().translate.translateString("&a+") + totalDamage[0] + changeText[0]);
         } else if (totalDamage[0] < 0) {
@@ -72,7 +74,7 @@ public class HealthIndicator implements Listener {
         else color = BarColor.RED;
 
         BossBar bar;
-        HashMap<Player, BossBar> players;
+        Map<Player, BossBar> players;
         if (healthIndicators.containsKey(entity)) {
             players = healthIndicators.get(entity);
             if (players.containsKey(player)) {
@@ -96,12 +98,12 @@ public class HealthIndicator implements Listener {
         return bar;
     }
 
-    public static void showToPlayer(Entity entity, Player player, HashMap<StatType, Double> damages) {
+    public static void showToPlayer(Entity entity, Player player, Map<StatType, Double> damages) {
         if (!(entity instanceof LivingEntity)) return;
         LivingEntity livingEntity = (LivingEntity) entity;
 
         if (removeHealthIndicator.containsKey(player)) {
-            HashMap<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.get(player);
+            Map<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.get(player);
             if (runnables.containsKey(entity)) {
                 runnables.get(entity).cancel();
                 runnables.remove(entity);
@@ -114,7 +116,7 @@ public class HealthIndicator implements Listener {
             @Override
             public void run() {
                 if (healthIndicators.containsKey(livingEntity)) {
-                    HashMap<Player, BossBar> players = healthIndicators.get(livingEntity);
+                    Map<Player, BossBar> players = healthIndicators.get(livingEntity);
                     if (players.containsKey(player)) {
                         players.get(player).removeAll();
                         players.remove(player);
@@ -122,7 +124,7 @@ public class HealthIndicator implements Listener {
                 }
             }
         };
-        HashMap<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.getOrDefault(player, new HashMap<>());
+        Map<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.getOrDefault(player, new HashMap<>());
         runnables.put(livingEntity, remove);
         removeHealthIndicator.put(player, runnables);
         remove.runTaskLater(Book.inst, 50);

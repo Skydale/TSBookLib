@@ -1,6 +1,5 @@
 package io.github.mg138.tsbook.listener.packet;
 
-import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
@@ -23,7 +22,7 @@ public class ItemPacket {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
-        String type = ItemUtils.getItemType(item);
+        String type = ItemUtils.getInternalItemType(item);
         if (type == null) return;
 
         ItemInstance inst = ItemUtils.getInstByItem(Book.inst, item);
@@ -35,13 +34,6 @@ public class ItemPacket {
     }
 
     public static void register() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayServerLogin.TYPE) {
-            @Override
-            public void onPacketSending(PacketEvent event) {
-                System.out.println(event.getPacket().getModifier().getValues());
-            }
-        });
-
         ProtocolLibrary.getProtocolManager().addPacketListener(new PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayServerWindowItems.TYPE) {
             @Override
             public void onPacketSending(PacketEvent event) {
@@ -70,7 +62,7 @@ public class ItemPacket {
                 WrapperPlayClientSetCreativeSlot packet = new WrapperPlayClientSetCreativeSlot(event.getPacket());
                 ItemStack item = packet.getClickedItem();
 
-                String type = ItemUtils.getItemType(item);
+                String type = ItemUtils.getInternalItemType(item);
                 if (type == null) return;
 
                 switch (type) {

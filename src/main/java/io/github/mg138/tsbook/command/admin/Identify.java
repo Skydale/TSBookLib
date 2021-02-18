@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemIdentification;
@@ -29,7 +29,7 @@ public class Identify {
             return false;
         }
 
-        String type = ItemUtils.getItemType(item);
+        String type = ItemUtils.getInternalItemType(item);
         String ID = ItemUtils.getDataTag(Book.inst, item, type);
         if (ID == null || type == null) {
             player.sendMessage(Book.Companion.getCfg().translate.translate("errors.item_not_found"));

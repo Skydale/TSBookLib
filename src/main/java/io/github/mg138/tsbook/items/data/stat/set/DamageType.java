@@ -5,7 +5,7 @@ import io.github.mg138.tsbook.items.data.stat.StatType;
 import java.util.EnumSet;
 
 public class DamageType {
-    public static final EnumSet<StatType> DAMAGES = EnumSet.of(
+    public static final EnumSet<StatType> DAMAGE = EnumSet.of(
             StatType.DAMAGE_PHYSICAL,
             StatType.DAMAGE_TEMPUS,
             StatType.DAMAGE_AQUA,

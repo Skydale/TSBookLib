@@ -19,11 +19,9 @@
 package com.comphenix.packetwrapper;
 
 import com.comphenix.protocol.reflect.StructureModifier;
-import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.BukkitConverters;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.entity.Entity;
 
 import com.comphenix.protocol.PacketType;
@@ -131,11 +129,11 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 		handle.getDimensions().write(0, value);
 	}
 
-	public void setResourceKey(World value) {
+	public void setWorld(World value) {
 		handle.getWorldKeys().write(0, value);
 	}
 
-	public World getResourceKey() {
+	public World getWorld() {
 		return handle.getWorldKeys().read(0);
 	}
 
@@ -169,26 +167,6 @@ public class WrapperPlayServerLogin extends AbstractPacket {
 	 */
 	public void setMaxPlayers(int value) {
 		handle.getIntegers().write(0, value);
-	}
-
-	/**
-	 * Retrieve Level Type.
-	 * <p>
-	 * Notes: default, flat, largeBiomes, amplified, default_1_1
-	 *
-	 * @return The current Level Type
-	 */
-	public WorldType getLevelType() {
-		return handle.getWorldTypeModifier().read(0);
-	}
-
-	/**
-	 * Set Level Type.
-	 *
-	 * @param value - new value.
-	 */
-	public void setLevelType(WorldType value) {
-		handle.getWorldTypeModifier().write(0, value);
 	}
 
 	/**

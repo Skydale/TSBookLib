@@ -7,9 +7,15 @@ depend: [PlaceholderAPI, MythicMobs, ProtocolLib, Reactant, ArcticGlobal]
 
 commands:
    tsbook:
-      description: "Just for testing."
-      permission: tsbook.test
+      description: "Admin permissions"
+      permission: tsbook.admin
       aliases: [ts, tb]
+   armor:
+      description: "Equipment Menu"
+      permission: tsbook.armor
+      aliases: [eq, equipment]
 permissions:
-   tsbook.test:
+   tsbook.admin:
       default: op
+   tsbook.armor:
+      default: true

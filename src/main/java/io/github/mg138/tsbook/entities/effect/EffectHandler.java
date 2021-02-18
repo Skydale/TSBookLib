@@ -13,8 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 
 public class EffectHandler implements Listener {
-    private final static HashMap<LivingEntity, HashMap<StatusEffectType, BukkitRunnable>> activeRunnable = new HashMap<>();
-    private final static HashMap<LivingEntity, HashMap<StatusEffectType, StatusEffect>> activeEffect = new HashMap<>();
+    private final static Map<LivingEntity, Map<StatusEffectType, BukkitRunnable>> activeRunnable = new HashMap<>();
+    private final static Map<LivingEntity, Map<StatusEffectType, StatusEffect>> activeEffect = new HashMap<>();
 
     public static void applyRawEffect(Entity target, StatusEffect effect, BukkitRunnable runnable, int delay, int period) {
         if (!(target instanceof LivingEntity)) return;
@@ -28,7 +28,7 @@ public class EffectHandler implements Listener {
         if (!(target instanceof LivingEntity)) return;
 
         if (activeRunnable.containsKey(target)) {
-            HashMap<StatusEffectType, BukkitRunnable> runnables = activeRunnable.get(target);
+            Map<StatusEffectType, BukkitRunnable> runnables = activeRunnable.get(target);
             if (runnables.containsKey(type)) {
                 runnables.get(type).cancel();
                 runnables.remove(type);
@@ -43,7 +43,7 @@ public class EffectHandler implements Listener {
     }
 
     public static void unload() {
-        HashSet<BukkitRunnable> removing = new HashSet<>();
+        Set<BukkitRunnable> removing = new HashSet<>();
         activeRunnable.forEach((entity, runnableMap) ->
                 runnableMap.forEach((type, runnable) ->
                         removing.add(runnable)
@@ -55,32 +55,32 @@ public class EffectHandler implements Listener {
     }
 
     public static void addEffect(LivingEntity entity, StatusEffect effect) {
-        HashMap<StatusEffectType, StatusEffect> effects = activeEffect.getOrDefault(entity, new HashMap<>());
+        Map<StatusEffectType, StatusEffect> effects = activeEffect.getOrDefault(entity, new HashMap<>());
 
         effects.put(effect.type, effect);
         activeEffect.put(entity, effects);
     }
 
     public static StatusEffect getEffect(LivingEntity entity, StatusEffectType type) {
-        HashMap<StatusEffectType, StatusEffect> effects = getEffects(entity);
+        Map<StatusEffectType, StatusEffect> effects = getEffects(entity);
         if (effects == null) return null;
 
         return effects.get(type);
     }
 
-    public static HashMap<StatusEffectType, StatusEffect> getEffects(LivingEntity entity) {
+    public static Map<StatusEffectType, StatusEffect> getEffects(LivingEntity entity) {
         return activeEffect.get(entity);
     }
 
     public static boolean hasEffect(LivingEntity entity, StatusEffectType type) {
-        HashMap<StatusEffectType, StatusEffect> effects = getEffects(entity);
+        Map<StatusEffectType, StatusEffect> effects = getEffects(entity);
         if (effects == null) return false;
 
         return effects.containsKey(type);
     }
 
     public static void addRunnable(LivingEntity entity, StatusEffect effect, BukkitRunnable runnable) {
-        HashMap<StatusEffectType, BukkitRunnable> runnables = activeRunnable.getOrDefault(entity, new HashMap<>());
+        Map<StatusEffectType, BukkitRunnable> runnables = activeRunnable.getOrDefault(entity, new HashMap<>());
 
         BukkitRunnable old = runnables.put(effect.type, runnable);
         if (old != null) old.cancel();
@@ -95,7 +95,7 @@ public class EffectHandler implements Listener {
     }
 
     public static void remove(LivingEntity entity) {
-        HashMap<StatusEffectType, BukkitRunnable> removing;
+        Map<StatusEffectType, BukkitRunnable> removing;
         try {
             removing = new HashMap<>(activeRunnable.get(entity));
         } catch (NullPointerException e) {

@@ -2,6 +2,7 @@ package io.github.mg138.tsbook.items;
 
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
+import io.github.mg138.tsbook.items.data.tag.UUIDArrayTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDTag;
 
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 
 public class ItemUtils {
+    public static final UUIDArrayTag UUID_ARRAY_TAG_TYPE = new UUIDArrayTag();
     public static final UUIDTag UUID_TAG_TYPE = new UUIDTag();
     public static final IdentificationTag IDENTIFICATION_TAG_TYPE = new IdentificationTag();
     public static final Map<UUID, ItemInstance> UUID_ITEM = new HashMap<>();
@@ -120,7 +122,7 @@ public class ItemUtils {
         return meta.getPersistentDataContainer().get(new NamespacedKey(plugin, k), PersistentDataType.STRING);
     }
 
-    public static String getItemType(ItemStack item) {
+    public static String getInternalItemType(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return null;
 
@@ -146,6 +148,8 @@ public class ItemUtils {
     }
 
     public static boolean hasItemID(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) return false;
+
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return false;
 

@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 
@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class CommandsTab implements TabCompleter {
+public class AdminTabComplete implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

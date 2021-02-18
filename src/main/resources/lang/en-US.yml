@@ -9,6 +9,12 @@ errors:
    effect:
       no_active_effect: '&cThe player doesn''t have any active effects!'
    should_put_number: '&cYou should put numbers!'
+   gui:
+      bad_item: "This item isn't for this slot!"
+
+gui:
+  equipment:
+    name: "裝備介面"
 
 commands:
   feedback:

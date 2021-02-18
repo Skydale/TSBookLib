@@ -1,19 +1,16 @@
 package io.github.mg138.tsbook.players
 
-import com.comphenix.packetwrapper.WrapperPlayServerLogin
-import com.comphenix.packetwrapper.WrapperPlayServerPosition
-import com.comphenix.protocol.wrappers.EnumWrappers
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.component.lifecycle.LifeCycleHook
 import dev.reactant.reactant.service.spec.server.EventService
 import io.github.mg138.tsbook.Book
-import org.bukkit.event.player.PlayerQuitEvent
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.players.data.PlayerData
-import org.bukkit.Difficulty
-import org.bukkit.GameRule
+import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig
+import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIElementSetting
 import org.bukkit.Material
-import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import tech.clayclaw.arcticglobal.event.PlayerDataUpdateEvent
 import tech.clayclaw.arcticglobal.service.PlayerDataService
@@ -24,68 +21,66 @@ class ArcticPlayerDataService(
     private val eventService: EventService,
     private val freezePlayer: FreezePlayer
 ) : LifeCycleHook {
+    companion object {
+        lateinit var dataServiceInstance: PlayerDataService
+        val playerDataRef = PlayerData::class
+    }
 
     override fun onEnable() {
-        dataService.register("tsbooklib", PlayerData::class) { PlayerData() }
+        dataServiceInstance = dataService
+
+        dataService.register("tsbooklib", playerDataRef) { PlayerData() }
 
         eventService.registerBy(this) {
-            PlayerJoinEvent::class.observable()
-                .subscribe {
-                    val player = it.player
-                    freezePlayer.frozen.add(player)
-                    val packet = WrapperPlayServerLogin()
-                    packet.entityID = player.entityId
-                    packet.gamemode = EnumWrappers.NativeGameMode.fromBukkit(player.gameMode)
-                    packet.reducedDebugInfo = player.world.getGameRuleValue(GameRule.REDUCED_DEBUG_INFO) == true
-                    packet.resourceKey = player.world
-                    packet.worlds = player.server.worlds.toSet()
-                    packet.dimension = player.world.environment.ordinal
-                    packet.broadcastPacket()
-                }
-
             PlayerDataUpdateEvent::class.observable()
                 .subscribe {
                     val player = Book.inst.server.getPlayer(it.uuid)!!
                     val data = dataService.getData<PlayerData>(player) ?: return@subscribe
                     val inventory = player.inventory
                     inventory.clear()
+
                     for (i in 0 until inventory.size) {
-                        try {
-                            val itemInstance = data.items[i]
-                            if (itemInstance == null) {
-                                val itemStack = data.normalItems[i] ?: continue
-                                inventory.setItem(i, itemStack)
-                                continue
-                            }
-                            inventory.setItem(i, itemInstance.createItem(Book.inst))
-                        } catch (e: ArrayIndexOutOfBoundsException) {
-                            break
+                        val item: ItemStack
+
+                        val itemInstance = data.items[i]
+
+                        item = if (itemInstance == null) {
+                            data.normalItems[i] ?: continue
+                        } else {
+                            itemInstance.createItem(Book.inst)
                         }
+                        inventory.setItem(i, item)
                     }
-                    freezePlayer.frozen.remove(player)
-                    //val packet = WrapperPlayServerPosition()
-                    //packet.sendPacket(player)
+
+                    freezePlayer.remove(player)
                 }
 
             PlayerQuitEvent::class.observable()
                 .subscribe {
                     val player = it.player
                     val inventory = player.inventory
-                    for (i in 0 until inventory.size) {
-                        val item = inventory.getItem(i) ?: ItemStack(Material.AIR)
-                        if (ItemUtils.hasItemID(item)) {
-                            dataService.edit(player) { data: PlayerData ->
-                                data.items.setSize(i + 1)
-                                data.items[i] = ItemUtils.getInstByItem(Book.inst, item)
-                                data.normalItems.setSize(i + 1)
-                                data.normalItems[i] = null
-                            }
-                        } else {
-                            dataService.edit(player) { data: PlayerData ->
-                                data.normalItems.setSize(i + 1)
-                                data.normalItems[i] = item
-                                data.items.setSize(i + 1)
-                                data.items[i] = null
+
+                    dataService.edit(player) { data: PlayerData ->
+                        for (i in 0 until inventory.size) {
+                            if (i in 36..40) continue
+                            if (i == 8) continue
+                            val item = inventory.getItem(i)
+
+                            when {
+                                item == null -> {
+                                    data.normalItems.remove(i)
+                                    data.items.remove(i)
+                                }
+
+                                ItemUtils.hasItemID(item) -> {
+                                    data.normalItems.remove(i)
+                                    data.items[i] = ItemUtils.getInstByItem(Book.inst, item)
+                                }
+
+                                else -> {
+                                    data.items.remove(i)
+                                    data.normalItems[i] = item
+                                }
                             }
                         }
                     }

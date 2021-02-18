@@ -1,0 +1,48 @@
+package io.github.mg138.tsbook.items.data.tag;
+
+import org.bukkit.persistence.PersistentDataAdapterContext;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
+
+import java.nio.ByteBuffer;
+import java.util.*;
+
+public class UUIDArrayTag implements PersistentDataType<byte[][], UUID[]> {
+    @NotNull
+    @Override
+    public Class<byte[][]> getPrimitiveType() {
+        return byte[][].class;
+    }
+
+    @NotNull
+    @Override
+    public Class<UUID[]> getComplexType() {
+        return UUID[].class;
+    }
+
+    @NotNull
+    @Override
+    public byte[][] toPrimitive(UUID[] complex, @NotNull PersistentDataAdapterContext context) {
+        List<byte[]> result = new ArrayList<>();
+        for (UUID uuid : complex) {
+            ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
+            bb.putLong(uuid.getMostSignificantBits());
+            bb.putLong(uuid.getLeastSignificantBits());
+            result.add(bb.array());
+        }
+        return result.toArray(new byte[0][]);
+    }
+
+    @NotNull
+    @Override
+    public UUID[] fromPrimitive(@NotNull byte[][] primitive, @NotNull PersistentDataAdapterContext context) {
+        List<UUID> uuids = new ArrayList<>();
+        for (byte[] byteArray : primitive) {
+            ByteBuffer bb = ByteBuffer.wrap(byteArray);
+            long firstLong = bb.getLong();
+            long secondLong = bb.getLong();
+            uuids.add(new UUID(firstLong, secondLong));
+        }
+        return uuids.toArray(new UUID[0]);
+    }
+}

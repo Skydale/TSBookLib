@@ -7,11 +7,12 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CustomDamageEvent extends Event {
     private LivingEntity entity;
     private LivingEntity damager;
-    private HashMap<StatType, Double> damages = new HashMap<>();
+    private Map<StatType, Double> damages = new HashMap<>();
     private static final HandlerList HANDLERS_LIST = new HandlerList();
 
     public CustomDamageEvent(LivingEntity entity, LivingEntity damager){
@@ -37,11 +38,11 @@ public class CustomDamageEvent extends Event {
         this.entity = entity;
     }
 
-    public HashMap<StatType, Double> getDamages() {
+    public Map<StatType, Double> getDamages() {
         return damages;
     }
 
-    public void setDamages(HashMap<StatType, Double> damages) {
+    public void setDamages(Map<StatType, Double> damages) {
         this.damages = damages;
     }
 

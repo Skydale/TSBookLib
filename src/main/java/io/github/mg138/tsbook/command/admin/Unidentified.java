@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.command;
+package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 
@@ -21,7 +21,7 @@ public class Unidentified extends Give {
 
         YamlConfiguration unid = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(item);
         if (unid != null) {
-            Commands.setItem(item);
+            AdminCommands.setItem(item);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.Companion.getCfg(), "unid", unid));
