@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.listener.event.inventory
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.listener.event.inventory.error.ItemError
-import io.github.mg138.tsbook.players.ArcticPlayerDataService
+import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
 import io.github.mg138.tsbook.utils.config.Config
@@ -56,7 +56,7 @@ class EquipmentGUIHandler(
     private fun constructInventory(inventory: Inventory, player: Player) {
         armorConfig.elementSettings.forEach { (i, setting) ->
             val item: ItemStack
-            val data = ArcticPlayerDataService.dataServiceInstance.getData<PlayerData>(player)
+            val data = ArcticGlobalDataService.dataServiceInstance.getData<PlayerData>(player)
 
             item = if (data != null && setting is ArmorGUIElementSetting && data.equipment.contains(i)) {
                 data.equipment[i]!!.createItem(Book.inst)
@@ -74,40 +74,17 @@ class EquipmentGUIHandler(
         player.openInventory(inventory)
     }
 
-    /*
-    @EventHandler
-    fun onPlayerInventoryClick(event: InventoryClickEvent) {
-        val player = event.whoClicked
-        if (player !is Player) return
-
-        if (event.inventory !is PlayerInventory) return
-        val slot = event.rawSlot
-
-        if (slot in 36..40) {
-            when (event.action) {
-                InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_SOME,
-                InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_ONE -> {
-
-                }
-                InventoryAction.PLACE_ALL -> TODO()
-                InventoryAction.PLACE_SOME -> TODO()
-                InventoryAction.PLACE_ONE -> TODO()
-                InventoryAction.SWAP_WITH_CURSOR -> TODO()
-                InventoryAction.MOVE_TO_OTHER_INVENTORY -> TODO()
-                InventoryAction.HOTBAR_MOVE_AND_READD -> TODO()
-                InventoryAction.HOTBAR_SWAP -> TODO()
-                InventoryAction.NOTHING, InventoryAction.UNKNOWN, InventoryAction.CLONE_STACK,
-                InventoryAction.COLLECT_TO_CURSOR,
-                InventoryAction.DROP_ALL_CURSOR, InventoryAction.DROP_ONE_CURSOR,
-                InventoryAction.DROP_ONE_SLOT, InventoryAction.DROP_ALL_SLOT -> Unit
-            }
-        }
-    }
-     */
-
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        players.remove(event.player)
+        val player = if (event.player is Player) (event.player as Player) else return
+
+        players.remove(player)
+        val runnable = object : BukkitRunnable() {
+            override fun run() {
+                player.updateInventory()
+            }
+        }
+        runnable.runTaskLater(Book.inst, 1)
     }
 
     @EventHandler
@@ -134,26 +111,18 @@ class EquipmentGUIHandler(
             val currentItem = event.currentItem
             val cursor = event.cursor
 
-            val runnable = object : BukkitRunnable() {
-                override fun run() {
-                    player.updateInventory()
-                }
-            }
-            runnable.runTaskLater(Book.inst, 1)
-            runnables.put(player, runnable)?.cancel()
-
             when (event.action) {
                 InventoryAction.MOVE_TO_OTHER_INVENTORY -> {
                     event.isCancelled = true
 
-                    if (slot < 54) {
+                    if (slot in 0..53) {
                         if (ItemUtils.hasItemID(currentItem)) {
                             val setting = armorConfig.elementSettings[slot] ?: return
                             if (setting !is ArmorGUIElementSetting) return
 
                             val failed = playerInventory.addItem(currentItem)
                             if (failed.isNotEmpty()) return
-                            ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                            ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                 data.equipment.remove(slot)
                             }
                             event.currentItem = defaultItem(setting)
@@ -166,7 +135,7 @@ class EquipmentGUIHandler(
                             if (i == -1) return
 
                             inventory.setItem(i, currentItem)
-                            ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                            ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                 data.equipment[i] = instance
                             }
                             event.currentItem = null
@@ -175,11 +144,11 @@ class EquipmentGUIHandler(
                 }
 
                 InventoryAction.PICKUP_ONE, InventoryAction.PICKUP_HALF, InventoryAction.PICKUP_ALL, InventoryAction.PICKUP_SOME -> {
-                    if (slot < 54) {
+                    if (slot in 0..53) {
                         event.isCancelled = true
                         if (ItemUtils.hasItemID(currentItem)) {
                             player.setItemOnCursor(currentItem)
-                            ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                            ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                 data.equipment.remove(slot)
                             }
                             event.currentItem = defaultItem(armorConfig.elementSettings[slot]!!)
@@ -188,7 +157,7 @@ class EquipmentGUIHandler(
                 }
 
                 InventoryAction.PLACE_ALL, InventoryAction.PLACE_ONE, InventoryAction.PLACE_SOME -> {
-                    if (slot < 54) {
+                    if (slot in 0..53) {
                         event.isCancelled = true
                         if (ItemUtils.hasItemID(cursor)) {
                             val setting = armorConfig.elementSettings[slot] ?: return
@@ -198,10 +167,35 @@ class EquipmentGUIHandler(
 
                             if (setting.setting.type == instance.itemType) {
                                 event.currentItem = cursor
-                                ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                                ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                     data.equipment[slot] = instance
                                 }
                                 player.setItemOnCursor(null)
+                                return
+                            }
+                        }
+                        ItemError.badItem(player)
+                    }
+                }
+
+                InventoryAction.SWAP_WITH_CURSOR -> {
+                    if (slot in 0..53) {
+                        event.isCancelled = true
+
+                        if (currentItem == null || currentItem.type == Material.AIR) return
+
+                        if (ItemUtils.hasItemID(cursor)) {
+                            val setting = armorConfig.elementSettings[slot] ?: return
+                            if (setting !is ArmorGUIElementSetting) return
+
+                            val instance = ItemUtils.getInstByItem(Book.inst, cursor)
+
+                            if (setting.setting.type == instance.itemType) {
+                                event.currentItem = cursor
+                                ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                                    data.equipment[slot] = instance
+                                }
+                                player.setItemOnCursor(if (ItemUtils.hasItemID(currentItem)) currentItem else null)
                                 return
                             }
                         }
@@ -213,6 +207,7 @@ class EquipmentGUIHandler(
                     event.isCancelled = true
 
                     val hotbarButton = event.hotbarButton
+                    if (hotbarButton < 0) return
                     val hotbar = playerInventory.getItem(hotbarButton)
 
                     if (ItemUtils.hasItemID(hotbar)) {
@@ -225,7 +220,7 @@ class EquipmentGUIHandler(
                             playerInventory.setItem(hotbarButton,
                                 if (ItemUtils.hasItemID(currentItem)) currentItem else null)
 
-                            ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                            ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                 data.equipment[slot] = instance
                             }
                             inventory.setItem(slot, hotbar)
@@ -240,11 +235,12 @@ class EquipmentGUIHandler(
 
                     val setting = armorConfig.elementSettings[slot] ?: return
                     val hotbarButton = event.hotbarButton
+                    if (hotbarButton < 0) return
                     val hotbar = playerInventory.getItem(hotbarButton)
 
                     if (ItemUtils.hasItemID(currentItem)) {
                         playerInventory.setItem(hotbarButton, currentItem)
-                        ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                        ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                             data.equipment.remove(slot)
                         }
                         inventory.setItem(slot, defaultItem(setting))
@@ -254,38 +250,13 @@ class EquipmentGUIHandler(
 
                         if (setting.setting.type == instance.itemType) {
                             playerInventory.setItem(hotbarButton, null)
-                            ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
+                            ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
                                 data.equipment[slot] = instance
                             }
                             inventory.setItem(slot, hotbar)
                         } else {
                             ItemError.badItem(player)
                         }
-                    }
-                }
-
-                InventoryAction.SWAP_WITH_CURSOR -> {
-                    if (slot < 54) {
-                        event.isCancelled = true
-
-                        if (currentItem == null || currentItem.type == Material.AIR) return
-
-                        if (ItemUtils.hasItemID(cursor)) {
-                            val setting = armorConfig.elementSettings[slot] ?: return
-                            if (setting !is ArmorGUIElementSetting) return
-
-                            val instance = ItemUtils.getInstByItem(Book.inst, cursor)
-
-                            if (setting.setting.type == instance.itemType) {
-                                event.currentItem = cursor
-                                ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) { data ->
-                                    data.equipment[slot] = instance
-                                }
-                                player.setItemOnCursor(if (ItemUtils.hasItemID(currentItem)) currentItem else null)
-                                return
-                            }
-                        }
-                        ItemError.badItem(player)
                     }
                 }
 

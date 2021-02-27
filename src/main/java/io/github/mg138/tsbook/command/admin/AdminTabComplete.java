@@ -6,7 +6,6 @@ import io.github.mg138.tsbook.entities.effect.data.StatusEffectType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,7 +34,7 @@ public class AdminTabComplete implements TabCompleter {
                         case "give":
                         case "unid":
                         case "effect":
-                            StringUtil.copyPartialMatches(args[1], getPlayerNames(), result);
+                            StringUtil.copyPartialMatches(args[1], CommandUtil.getPlayerNames(Book.inst.getServer()), result);
                             break;
                     }
                     break;
@@ -51,31 +50,26 @@ public class AdminTabComplete implements TabCompleter {
                             List<String> matcher = new ArrayList<>(StatusEffectType.names);
                             matcher.add("clear");
                             StringUtil.copyPartialMatches(args[2], matcher, result);
+                            break;
                     }
                     break;
                 case 4:
                     switch (args[0].toLowerCase()) {
                         case "effect":
                             result.add("<power>");
+                            break;
                     }
                     break;
                 case 5:
                     switch (args[0].toLowerCase()) {
                         case "effect":
                             result.add("<ticks>");
+                            break;
                     }
                     break;
             }
             return result;
         }
         return Collections.emptyList();
-    }
-
-    protected List<String> getPlayerNames() {
-        List<String> playerNames = new ArrayList<>();
-        for (Player player : Book.inst.getServer().getOnlinePlayers()) {
-            playerNames.add(player.getName());
-        }
-        return playerNames;
     }
 }

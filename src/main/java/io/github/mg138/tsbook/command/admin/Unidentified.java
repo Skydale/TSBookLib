@@ -12,16 +12,16 @@ public class Unidentified extends Give {
         return true;
     }
 
-    public static boolean call(CommandSender sender, String playerName, String item) {
+    public static boolean call(CommandSender sender, String playerName, String itemName) {
         Player player = Book.inst.getServer().getPlayer(playerName);
         if (player == null) {
             sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.player_not_found"));
             return false;
         }
 
-        YamlConfiguration unid = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(item);
+        YamlConfiguration unid = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(itemName);
         if (unid != null) {
-            AdminCommands.setItem(item);
+            AdminCommands.setItem(itemName);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.getInventory().addItem(getItem(Book.Companion.getCfg(), "unid", unid));

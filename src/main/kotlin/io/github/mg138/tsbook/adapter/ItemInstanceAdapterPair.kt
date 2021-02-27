@@ -15,6 +15,7 @@ import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.utils.config.AbstractConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import java.lang.reflect.Type
+import java.util.*
 
 
 @Component
@@ -32,8 +33,10 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 writer.name("ID")
                 writer.value(instance.id)
 
-                writer.name("iden")
-                writer.value(gson.toJson(instance.stats.identification))
+                if (instance.stats != null) {
+                    writer.name("iden")
+                    writer.value(gson.toJson(instance.stats.identification))
+                }
             }
             writer.endObject()
         }
@@ -56,7 +59,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
             }
             reader.endObject()
 
-            if (internalType == null ||id == null || identification == null) return null
+            if (internalType == null || id == null) return null
 
             var setting: YamlConfiguration? = null
             when (internalType) {
@@ -64,7 +67,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 "unid" -> setting = cfg.itemConfig.getUnidentifiedByID(id)
             }
             if (setting == null) return null
-            return ItemInstance(config, setting, identification, internalType)
+            return ItemInstance(config, setting, identification, internalType, UUID.randomUUID())
         }
     }
 

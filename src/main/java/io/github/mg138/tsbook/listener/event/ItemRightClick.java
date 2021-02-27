@@ -3,6 +3,8 @@ package io.github.mg138.tsbook.listener.event;
 import io.github.mg138.tsbook.items.ItemUtils;
 import io.github.mg138.tsbook.Book;
 
+import io.github.mg138.tsbook.players.ArcticGlobalDataService;
+import io.github.mg138.tsbook.players.data.PlayerData;
 import org.bukkit.*;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -16,16 +18,17 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class ItemRightClick implements Listener {
-    static final Map<Player, Long> damageCD = new HashMap<>();
+    private static final Map<Entity, BukkitRunnable> removing = new HashMap<>();
+    private static final Map<Player, Long> damageCD = new HashMap<>();
 
     public static void unload() {
+        removing.forEach((entity, runnable) -> runnable.run());
+        removing.clear();
         damageCD.clear();
     }
 
@@ -93,8 +96,16 @@ public class ItemRightClick implements Listener {
         }
         player.setCooldown(item.getType(), 10);
 
+        List<UUID> uuids = new ArrayList<>();
+
         UUID uuid = ItemUtils.getUUID(item, Book.inst);
         if (uuid == null) return;
+        uuids.add(uuid);
+
+        PlayerData data = ArcticGlobalDataService.dataServiceInstance.getData(player, ArcticGlobalDataService.Companion.getPlayerDataRef());
+        if (data != null) {
+            data.getEquipment().forEach((i, instance) -> uuids.add(instance.getUUID()));
+        }
 
         Location loc = player.getLocation();
 
@@ -104,7 +115,7 @@ public class ItemRightClick implements Listener {
             container.set(
                     new NamespacedKey(Book.inst, "item_uuids"),
                     ItemUtils.UUID_ARRAY_TAG_TYPE,
-                    new UUID[] { uuid }
+                    uuids.toArray(new UUID[0])
             );
 
             aw.setGravity(false);
@@ -115,6 +126,13 @@ public class ItemRightClick implements Listener {
             aw.setVelocity(loc.getDirection());
             aw.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
         });
-        Bukkit.getScheduler().runTaskLater(Book.inst, arrow::remove, 120);
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                arrow.remove();
+            }
+        };
+        removing.put(arrow, runnable);
+        runnable.runTaskLater(Book.inst, 120);
     }
 }

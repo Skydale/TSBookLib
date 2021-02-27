@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class Identify {
     public static boolean call(CommandSender sender) {
@@ -46,9 +47,9 @@ public class Identify {
         if (type.equalsIgnoreCase("unid")) {
             List<String> items = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(ID).getStringList("ITEMS");
             YamlConfiguration setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
-            return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item");
+            return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item", UUID.randomUUID());
         }
         YamlConfiguration setting = config.getItemConfig().getItemByID(ID);
-        return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item");
+        return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item", UUID.randomUUID());
     }
 }

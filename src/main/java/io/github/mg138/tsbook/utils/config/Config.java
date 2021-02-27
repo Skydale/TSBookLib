@@ -1,8 +1,6 @@
 package io.github.mg138.tsbook.utils.config;
 
-import io.github.mg138.tsbook.command.Armor;
 import io.github.mg138.tsbook.utils.Translate;
-
 import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;

@@ -16,7 +16,7 @@ import io.github.mg138.tsbook.entities.util.MobType;
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent;
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator;
 import io.github.mg138.tsbook.listener.event.damage.utils.StatCalculator;
-import io.github.mg138.tsbook.players.ArcticPlayerDataService;
+import io.github.mg138.tsbook.players.ArcticGlobalDataService;
 import io.github.mg138.tsbook.players.data.PlayerData;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
@@ -83,7 +83,7 @@ public class DamageHandler {
                 }
             }
 
-            PlayerData data = ArcticPlayerDataService.dataServiceInstance.getData(player, ArcticPlayerDataService.Companion.getPlayerDataRef());
+            PlayerData data = ArcticGlobalDataService.dataServiceInstance.getData(player, ArcticGlobalDataService.Companion.getPlayerDataRef());
             if (data != null) {
                 data.getEquipment().forEach((i, armor) -> stats.add(armor.getStats()));
             }
@@ -110,7 +110,6 @@ public class DamageHandler {
     }
 
     public static void complexDamage(EntityDamageByEntityEvent event, ItemStats[] stats, Map<StatType, Double> defense) {
-        event.setDamage(0);
         LivingEntity livingEntity = (LivingEntity) event.getEntity();
 
         if (stats == null) {
@@ -284,10 +283,8 @@ public class DamageHandler {
                 }
             }
         }
-        double health = livingEntity.getHealth();
-        double result = health - damage;
-        livingEntity.setHealth(result < 0 ? 0 : result);
 
+        event.setDamage(damage);
         livingEntity.setMaximumNoDamageTicks(0);
         livingEntity.setNoDamageTicks(0);
 
@@ -299,8 +296,12 @@ public class DamageHandler {
     private static Map<StatType, Double> getStat(Set<StatType> template, ItemStats[] stats) {
         Map<StatType, Double> result = new HashMap<>();
         for (ItemStats stat : stats) {
+            if (stat == null) continue;
+
             template.forEach(type -> {
-                if (stat.getStats().containsKey(type)) {
+                Map<StatType, StatMap> statMap = stat.getStats();
+                if (statMap == null) return;
+                if (statMap.containsKey(type)) {
                     result.put(type, stat.getStat(type) + result.getOrDefault(type, 0.0));
                 }
             });
@@ -320,22 +321,14 @@ public class DamageHandler {
         return getStat(DamageType.DAMAGE, stats);
     }
 
-    public static Map<StatType, Double> getEffectPower(ItemStats[] stats) {
-        return getStat(EffectPowerType.EFFECT_POWER, stats);
-    }
+    public static Map<StatType, Double> getEffectPower(ItemStats[] stats) { return getStat(EffectPowerType.EFFECT_POWER, stats); }
 
-    public static Map<StatType, Double> getEffectChance(ItemStats[] stats) {
-        return getStat(EffectChanceType.EFFECT_CHANCE, stats);
-    }
+    public static Map<StatType, Double> getEffectChance(ItemStats[] stats) { return getStat(EffectChanceType.EFFECT_CHANCE, stats); }
 
     public static boolean simpleDamage(LivingEntity entity, double damage, StatType damageType, boolean display) {
         if (entity.isDead()) return false;
 
-        double health = entity.getHealth();
-        double result = health - damage;
-        entity.setHealth(result < 0 ? 0 : result);
-        entity.damage(0);
-
+        entity.damage(damage);
         entity.setMaximumNoDamageTicks(0);
         entity.setNoDamageTicks(0);
 

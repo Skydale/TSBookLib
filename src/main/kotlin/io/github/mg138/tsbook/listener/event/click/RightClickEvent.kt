@@ -2,7 +2,8 @@ package io.github.mg138.tsbook.listener.event.click
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.items.ItemUtils
-import io.github.mg138.tsbook.players.ArcticPlayerDataService
+import io.github.mg138.tsbook.listener.event.util.ArmorType
+import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
 import io.github.mg138.tsbook.utils.config.Config
@@ -32,10 +33,10 @@ class RightClickEvent(
 
             val i = ArmorUtil.getByType(instance.itemType, player, armorConfig)
             if (i != -1) {
-                ArcticPlayerDataService.dataServiceInstance.edit<PlayerData>(player) {
+                ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) {
                     it.equipment[i] = instance
                 }
-                if (!item.type.isInteractable) player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)
+                if (!ArmorType.isArmor(item.type)) player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)
                 player.inventory.setItemInMainHand(null)
             }
         }

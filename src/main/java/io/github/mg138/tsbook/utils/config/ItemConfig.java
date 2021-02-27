@@ -6,20 +6,15 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemConfig extends AbstractItemConfig {
-    public ItemConfig(Map<String, YamlConfiguration> items, Map<String, YamlConfiguration> unid) {
-        super(items, unid);
-    }
+    final Map<String, YamlConfiguration> unid;
 
-    public Set<String> getItems() {
-        return items.keySet();
+    public ItemConfig(Map<String, YamlConfiguration> items, Map<String, YamlConfiguration> unid) {
+        super(items);
+        this.unid = unid;
     }
 
     public Set<String> getUnidentified() {
         return unid.keySet();
-    }
-
-    public YamlConfiguration getItemByID(String ID) {
-        return items.get(ID);
     }
 
     public YamlConfiguration getUnidentifiedByID(String ID) {

@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.UUID;
 
 public class ItemInstance { //represents a single ItemStack
     private final String ID;
@@ -20,9 +21,11 @@ public class ItemInstance { //represents a single ItemStack
     private final List<String> LORE;
     private final ItemStats STATS;
     private final String INTERNAL_TYPE;
+    private final UUID uuid;
 
-    public ItemInstance(AbstractConfig config, YamlConfiguration setting, ItemIdentification identification, String internalType) {
+    public ItemInstance(AbstractConfig config, YamlConfiguration setting, ItemIdentification identification, String internalType, UUID uuid) {
         INTERNAL_TYPE = internalType;
+        this.uuid = uuid;
 
         ID = setting.getString("ID");
         assert ID != null;
@@ -102,5 +105,9 @@ public class ItemInstance { //represents a single ItemStack
 
     public ItemStack createItem(JavaPlugin plugin) {
         return ItemUtils.createItem(plugin, this);
+    }
+
+    public UUID getUUID() {
+        return uuid;
     }
 }

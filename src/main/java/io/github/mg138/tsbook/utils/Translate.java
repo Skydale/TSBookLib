@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.utils;
 
+import io.github.mg138.tsbook.util.RGBUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import tsp.hexchat.util.RGBUtil;
 
 import java.util.*;
 
@@ -25,7 +25,7 @@ public class Translate {
             if (string.equals(newString)) throw new IllegalArgumentException("Placeholder stuck in a loop.");
             string = newString;
         }
-        return RGBUtil.format(string);
+        return RGBUtil.INSTANCE.translate(string);
     }
 
     public String translate(String path) {

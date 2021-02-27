@@ -12,14 +12,16 @@ import io.github.mg138.tsbook.listener.event.ItemUpdate
 import io.github.mg138.tsbook.listener.event.click.RightClickEvent
 import io.github.mg138.tsbook.listener.event.damage.DamageEventHandler
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
+import io.github.mg138.tsbook.listener.event.DisableArmorAndOffhand
 import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle
 import io.github.mg138.tsbook.listener.packet.ItemPacket
 import io.github.mg138.tsbook.players.util.HealthIndicator
 import io.github.mg138.tsbook.utils.config.Config
-import io.github.mg138.tsbook.utils.papi.tsbook
-import io.github.mg138.tsbook.utils.papi.unid
+import io.github.mg138.tsbook.utils.papi.PlaceholderExpansionTSBook
+import io.github.mg138.tsbook.utils.papi.PlaceholderExpansionUnid
 import org.bukkit.Bukkit
+import org.bukkit.GameRule
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -62,8 +64,9 @@ class Book : JavaPlugin() {
     }
 
     fun reg() {
-        tsbook(inst, cfg).register()
-        unid(inst, cfg).register()
+        server.worlds.forEach { it.setGameRule(GameRule.KEEP_INVENTORY, true) }
+        PlaceholderExpansionTSBook(inst, cfg).register()
+        PlaceholderExpansionUnid(inst, cfg).register()
         DisableHeartParticle.register()
         ItemPacket.register()
 
@@ -74,6 +77,7 @@ class Book : JavaPlugin() {
         equipmentGUIHandler = EquipmentGUIHandler(cfg)
         Bukkit.getPluginManager().registerEvents(equipmentGUIHandler, inst)
         Bukkit.getPluginManager().registerEvents(RightClickEvent(cfg), inst)
+        Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand(), inst)
 
         getCommand("tsbook")!!.setExecutor(AdminCommands())
         getCommand("tsbook")!!.tabCompleter = AdminTabComplete()

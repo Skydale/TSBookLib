@@ -43,7 +43,7 @@ public class AdminCommands implements CommandExecutor {
                     case "effect":
                         return Effect.call(sender);
                 }
-
+                break;
             case 2:
                 switch (args[0].toLowerCase()) {
                     case "get":
@@ -55,6 +55,7 @@ public class AdminCommands implements CommandExecutor {
                     case "effect":
                         return Effect.call(sender);
                 }
+                break;
             case 3:
                 switch (args[0].toLowerCase()) {
                     case "give":
@@ -62,19 +63,25 @@ public class AdminCommands implements CommandExecutor {
                     case "unid":
                         return Unidentified.call(sender, args[1], args[2]);
                     case "effect":
-                        if (args[2].equals("clear")) return Effect.clear(sender, args[1]);
-                        return Effect.call(sender);
+                        if (args[2].equals("clear")) {
+                            return Effect.clear(sender, args[1]);
+                        } else {
+                            return Effect.call(sender);
+                        }
                 }
+                break;
             case 4:
                 switch (args[0].toLowerCase()) {
                     case "effect":
                         return Effect.call(sender);
                 }
+                break;
             case 5:
                 switch (args[0].toLowerCase()) {
                     case "effect":
                         return Effect.call(sender, args[1], args[2], args[3], args[4]);
                 }
+                break;
         }
 
         sender.sendMessage(Book.Companion.getCfg().translate.translate("errors.unknown_command"));

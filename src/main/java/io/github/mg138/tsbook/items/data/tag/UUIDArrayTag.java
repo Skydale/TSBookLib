@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 import java.util.*;
 
-public class UUIDArrayTag implements PersistentDataType<byte[][], UUID[]> {
+public class UUIDArrayTag implements PersistentDataType<byte[], UUID[]> {
     @NotNull
     @Override
-    public Class<byte[][]> getPrimitiveType() {
-        return byte[][].class;
+    public Class<byte[]> getPrimitiveType() {
+        return byte[].class;
     }
 
     @NotNull
@@ -22,23 +22,23 @@ public class UUIDArrayTag implements PersistentDataType<byte[][], UUID[]> {
 
     @NotNull
     @Override
-    public byte[][] toPrimitive(UUID[] complex, @NotNull PersistentDataAdapterContext context) {
+    public byte[] toPrimitive(UUID[] complex, @NotNull PersistentDataAdapterContext context) {
         List<byte[]> result = new ArrayList<>();
+        ByteBuffer bb = ByteBuffer.wrap(new byte[16 * complex.length]);
         for (UUID uuid : complex) {
-            ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
             bb.putLong(uuid.getMostSignificantBits());
             bb.putLong(uuid.getLeastSignificantBits());
-            result.add(bb.array());
+            //result.add(bb.array());
         }
-        return result.toArray(new byte[0][]);
+        return bb.array(); //result.toArray(new byte[0][]);
     }
 
     @NotNull
     @Override
-    public UUID[] fromPrimitive(@NotNull byte[][] primitive, @NotNull PersistentDataAdapterContext context) {
+    public UUID[] fromPrimitive(@NotNull byte[] primitive, @NotNull PersistentDataAdapterContext context) {
         List<UUID> uuids = new ArrayList<>();
-        for (byte[] byteArray : primitive) {
-            ByteBuffer bb = ByteBuffer.wrap(byteArray);
+        ByteBuffer bb = ByteBuffer.wrap(primitive);
+        for (int i = 0; i < primitive.length / 16; i++) {
             long firstLong = bb.getLong();
             long secondLong = bb.getLong();
             uuids.add(new UUID(firstLong, secondLong));

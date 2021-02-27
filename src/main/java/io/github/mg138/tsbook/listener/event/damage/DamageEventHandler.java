@@ -8,12 +8,10 @@ import io.github.mg138.tsbook.items.data.stat.StatType;
 import io.github.mg138.tsbook.entities.effect.EffectHandler;
 
 import io.github.mg138.tsbook.items.data.stat.set.DefenseType;
-import io.github.mg138.tsbook.players.ArcticPlayerDataService;
+import io.github.mg138.tsbook.players.ArcticGlobalDataService;
 import io.github.mg138.tsbook.players.data.PlayerData;
-import io.github.mg138.tsbook.players.util.Particles;
 import io.lumine.xikage.mythicmobs.MythicMobs;
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
-import org.bukkit.Particle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -23,8 +21,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +95,7 @@ public class DamageEventHandler implements Listener {
             } else if (livingEntity instanceof Player) {
                 Player player = (Player) livingEntity;
                 List<ItemStats> stats = new ArrayList<>();
-                PlayerData data = ArcticPlayerDataService.dataServiceInstance.getData(player, ArcticPlayerDataService.Companion.getPlayerDataRef());
+                PlayerData data = ArcticGlobalDataService.dataServiceInstance.getData(player, ArcticGlobalDataService.Companion.getPlayerDataRef());
                 if (data != null) {
                     data.getEquipment().forEach((i, armor) -> stats.add(armor.getStats()));
                 }

@@ -23,10 +23,14 @@ import java.util.Objects;
 public class HealthIndicator implements Listener {
     public final static Map<LivingEntity, Map<Player, BossBar>> healthIndicators = new HashMap<>();
     public final static Map<Player, Map<LivingEntity, BukkitRunnable>> removeHealthIndicator = new HashMap<>();
+    private final static Map<Player, BukkitRunnable> showingQueue = new HashMap<>();
 
     public static void unload() {
+        showingQueue.forEach((entity, runnable) -> runnable.cancel());
+        showingQueue.clear();
         healthIndicators.forEach((entity, map) -> map.forEach((player, bossBar) -> bossBar.removeAll()));
         healthIndicators.clear();
+        removeHealthIndicator.clear();
     }
 
     public static BossBar updateHealth(LivingEntity entity, Player player, Map<StatType, Double> damages) {
@@ -110,24 +114,37 @@ public class HealthIndicator implements Listener {
             }
         }
 
-        BossBar bossBar = updateHealth(livingEntity, player, damages);
-        bossBar.addPlayer(player);
-        BukkitRunnable remove = new BukkitRunnable() {
+        if (showingQueue.containsKey(player)) {
+            showingQueue.get(player).cancel();
+            showingQueue.remove(player);
+        }
+
+        BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
-                if (healthIndicators.containsKey(livingEntity)) {
-                    Map<Player, BossBar> players = healthIndicators.get(livingEntity);
-                    if (players.containsKey(player)) {
-                        players.get(player).removeAll();
-                        players.remove(player);
+                BossBar bossBar = updateHealth(livingEntity, player, damages);
+                bossBar.addPlayer(player);
+                BukkitRunnable remove = new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if (healthIndicators.containsKey(livingEntity)) {
+                            Map<Player, BossBar> players = healthIndicators.get(livingEntity);
+                            if (players.containsKey(player)) {
+                                players.get(player).removeAll();
+                                players.remove(player);
+                            }
+                        }
                     }
-                }
+                };
+
+                Map<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.getOrDefault(player, new HashMap<>());
+                runnables.put(livingEntity, remove);
+                removeHealthIndicator.put(player, runnables);
+                remove.runTaskLater(Book.inst, 50);
             }
         };
-        Map<LivingEntity, BukkitRunnable> runnables = removeHealthIndicator.getOrDefault(player, new HashMap<>());
-        runnables.put(livingEntity, remove);
-        removeHealthIndicator.put(player, runnables);
-        remove.runTaskLater(Book.inst, 50);
+        showingQueue.put(player, runnable);
+        runnable.runTaskLater(Book.inst, 1);
     }
 
     @EventHandler
