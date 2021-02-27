@@ -13,7 +13,7 @@ public class Config extends AbstractConfig {
     private static Config inst = null;
     ItemConfig itemConfig;
     Map<String, ConfigurationSection> mmMobs;
-    ArmorGUIConfig armorGUIConfig = ArmorGUIConfig.getInstance();
+    final ArmorGUIConfig armorGUIConfig = ArmorGUIConfig.getInstance();
 
     private Config(){
     }

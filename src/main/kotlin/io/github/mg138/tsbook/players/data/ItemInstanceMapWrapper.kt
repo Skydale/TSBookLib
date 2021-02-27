@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.players.data
 
 import io.github.mg138.tsbook.items.ItemInstance
-import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class ItemInstanceMapWrapper: HashMap<Int, ItemInstance>() {

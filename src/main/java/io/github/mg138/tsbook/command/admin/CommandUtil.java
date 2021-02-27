@@ -1,6 +1,5 @@
 package io.github.mg138.tsbook.command.admin;
 
-import io.github.mg138.tsbook.Book;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 

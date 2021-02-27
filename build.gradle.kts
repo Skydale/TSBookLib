@@ -5,17 +5,17 @@ import java.net.URI
 group = "io.github.mg138"
 version = "0.0.1"
 
-val kotlinVersion = "1.3.61"
+val kotlinVersion = "1.4.31"
 
 plugins {
     java
-    kotlin("jvm") version "1.3.61"
+    kotlin("jvm") version "1.4.31"
     id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 tasks.withType<KotlinCompile> {

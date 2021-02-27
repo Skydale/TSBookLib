@@ -5,7 +5,6 @@ import io.github.mg138.tsbook.utils.config.AbstractConfig;
 import io.github.mg138.tsbook.items.data.stat.*;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 

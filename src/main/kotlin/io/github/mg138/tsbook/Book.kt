@@ -63,7 +63,7 @@ class Book : JavaPlugin() {
         cfg.load(inst, jar)
     }
 
-    fun reg() {
+    private fun reg() {
         server.worlds.forEach { it.setGameRule(GameRule.KEEP_INVENTORY, true) }
         PlaceholderExpansionTSBook(inst, cfg).register()
         PlaceholderExpansionUnid(inst, cfg).register()

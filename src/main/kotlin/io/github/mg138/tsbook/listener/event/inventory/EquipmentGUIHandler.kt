@@ -29,7 +29,6 @@ class EquipmentGUIHandler(
 ) : Listener {
     companion object {
         private val players: MutableSet<Player> = HashSet()
-        private val runnables: MutableMap<Player, BukkitRunnable> = HashMap()
     }
 
     fun unload() {
