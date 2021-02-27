@@ -5,11 +5,11 @@ import java.net.URI
 group = "io.github.mg138"
 version = "0.0.1"
 
-val kotlinVersion = "1.4.31"
+val kotlinVersion = "1.3.72"
 
 plugins {
     java
-    kotlin("jvm") version "1.4.31"
+    kotlin("jvm") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
