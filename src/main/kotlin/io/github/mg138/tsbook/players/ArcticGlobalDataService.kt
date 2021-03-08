@@ -6,10 +6,6 @@ import dev.reactant.reactant.service.spec.server.EventService
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIElementSetting
-import org.bukkit.Material
-import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import tech.clayclaw.arcticglobal.event.PlayerDataUpdateEvent

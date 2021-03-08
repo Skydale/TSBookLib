@@ -1,10 +1,15 @@
 package io.github.mg138.tsbook.players
 
+import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.events.ListenerPriority
+import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketContainer
+import com.comphenix.protocol.events.PacketEvent
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.component.lifecycle.LifeCycleHook
 import dev.reactant.reactant.service.spec.server.EventService
+import io.github.mg138.tsbook.Book
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDamageByEntityEvent
@@ -13,16 +18,6 @@ import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryInteractEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
-import org.bukkit.Bukkit
-
-import com.comphenix.protocol.events.PacketEvent
-
-import com.comphenix.protocol.PacketType
-
-import com.comphenix.protocol.events.ListenerPriority
-
-import com.comphenix.protocol.events.PacketAdapter
-import io.github.mg138.tsbook.Book
 
 
 @Component

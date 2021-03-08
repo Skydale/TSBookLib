@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.utils.config;
+package io.github.mg138.tsbook.utils.config.item;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -6,22 +6,22 @@ import java.util.Map;
 import java.util.Set;
 
 public class ItemConfig extends AbstractItemConfig {
-    final Map<String, YamlConfiguration> unid;
+    final Map<String, UnidentifiedSetting> unid;
 
     public ItemConfig(Map<String, YamlConfiguration> items, Map<String, YamlConfiguration> unid) {
         super(items);
-        this.unid = unid;
+        unid.forEach((string, setting) -> this.items.put(string, new UnidentifiedSetting(setting)));
     }
 
     public Set<String> getUnidentified() {
         return unid.keySet();
     }
 
-    public YamlConfiguration getUnidentifiedByID(String ID) {
+    public UnidentifiedSetting getUnidentifiedByID(String ID) {
         return unid.get(ID);
     }
 
-    public YamlConfiguration getAnyItemByID(String ID) {
+    public ItemSetting getAnyItemByID(String ID) {
         if (items.containsKey(ID)) return getItemByID(ID);
         if (unid.containsKey(ID)) return getUnidentifiedByID(ID);
         return null;

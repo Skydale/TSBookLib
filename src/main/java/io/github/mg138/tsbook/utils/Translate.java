@@ -72,6 +72,10 @@ public class Translate {
         return translateByList(list, null);
     }
 
+    public List<String> translateByList(List<String> list) {
+        return translateByList(list, null);
+    }
+
     public List<String> translateByList(List<String> list, OfflinePlayer player) {
         List<String> result = new ArrayList<>();
         try {

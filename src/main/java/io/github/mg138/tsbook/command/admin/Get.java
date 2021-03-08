@@ -2,8 +2,8 @@ package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 
+import io.github.mg138.tsbook.utils.config.item.ItemSetting;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import static io.github.mg138.tsbook.command.admin.Give.getItem;
@@ -21,11 +21,11 @@ public class Get {
         }
         Player player = (Player) sender;
 
-        YamlConfiguration item = Book.Companion.getCfg().getItemConfig().getItemByID(itemName);
+        ItemSetting item = Book.Companion.getCfg().getItemConfig().getItemByID(itemName);
         if (item != null) {
             AdminCommands.setItem(itemName);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", (Player) sender));
-            player.getInventory().addItem(getItem(Book.Companion.getCfg(), "item", item));
+            player.getInventory().addItem(getItem("item", item));
             return true;
         }
 

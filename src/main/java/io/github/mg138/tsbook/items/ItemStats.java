@@ -3,6 +3,7 @@ package io.github.mg138.tsbook.items;
 import io.github.mg138.tsbook.items.data.stat.map.RegisteredPlaceholder;
 import io.github.mg138.tsbook.utils.config.AbstractConfig;
 import io.github.mg138.tsbook.items.data.stat.*;
+import io.github.mg138.tsbook.utils.config.item.StatedItemSetting;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.HashMap;
@@ -10,8 +11,7 @@ import java.util.Map;
 
 public class ItemStats {
     private final ItemIdentification IDENTIFICATION;
-    private final Map<StatType, StatMap> STATS = new HashMap<>();
-    private final Map<String, String> PLACEHOLDER = new HashMap<>();
+    private final StatedItemSetting
     private final AbstractConfig CONFIG;
 
     public ItemIdentification getIdentification() {

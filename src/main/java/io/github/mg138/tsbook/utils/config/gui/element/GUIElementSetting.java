@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.utils.config.gui;
+package io.github.mg138.tsbook.utils.config.gui.element;
 
 import org.bukkit.Material;
 

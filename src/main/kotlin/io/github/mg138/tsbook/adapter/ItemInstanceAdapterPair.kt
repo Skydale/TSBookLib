@@ -8,10 +8,11 @@ import com.google.gson.stream.JsonWriter
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
-import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.Book.Companion.cfg
 import io.github.mg138.tsbook.items.ItemIdentification
 import io.github.mg138.tsbook.items.ItemInstance
+import io.github.mg138.tsbook.utils.config.item.ItemSetting
+import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.utils.config.AbstractConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import java.lang.reflect.Type
@@ -67,7 +68,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 "unid" -> setting = cfg.itemConfig.getUnidentifiedByID(id)
             }
             if (setting == null) return null
-            return ItemInstance(config, setting, identification, internalType, UUID.randomUUID())
+            return ItemInstance(ItemSetting(setting), ItemStats(setting, identification, cfg), internalType, UUID.randomUUID())
         }
     }
 

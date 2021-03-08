@@ -2,8 +2,8 @@ package io.github.mg138.tsbook.players.util
 
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIElementSetting
+import io.github.mg138.tsbook.utils.config.gui.ArmorGUIConfig
+import io.github.mg138.tsbook.utils.config.gui.element.ArmorGUIElementSetting
 import org.bukkit.entity.Player
 
 object ArmorUtil {

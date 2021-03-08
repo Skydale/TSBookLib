@@ -1,7 +1,9 @@
 package io.github.mg138.tsbook.utils.config;
 
 import io.github.mg138.tsbook.utils.Translate;
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig;
+import io.github.mg138.tsbook.utils.config.gui.ArmorGUIConfig;
+import io.github.mg138.tsbook.utils.config.item.ItemConfig;
+import io.github.mg138.tsbook.utils.config.util.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -10,7 +12,7 @@ import java.io.File;
 import java.util.Map;
 
 public class Config extends AbstractConfig {
-    private static Config inst = null;
+    private static final Config inst = new Config();
     ItemConfig itemConfig;
     Map<String, ConfigurationSection> mmMobs;
     final ArmorGUIConfig armorGUIConfig = ArmorGUIConfig.getInstance();
@@ -19,7 +21,6 @@ public class Config extends AbstractConfig {
     }
 
     public static Config getInstance() {
-        if (inst == null) inst = new Config();
         return inst;
     }
 
@@ -67,7 +68,7 @@ public class Config extends AbstractConfig {
 
     @Override
     public void unload() {
-        itemConfig.items.clear();
+        itemConfig.unload();
         mmMobs.clear();
     }
 }

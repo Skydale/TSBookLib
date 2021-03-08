@@ -1,7 +1,9 @@
-package io.github.mg138.tsbook.utils.config.gui.armor;
+package io.github.mg138.tsbook.utils.config.gui;
 
 import io.github.mg138.tsbook.utils.Translate;
-import io.github.mg138.tsbook.utils.config.gui.GUIElementSetting;
+import io.github.mg138.tsbook.utils.config.gui.element.ArmorGUIElementSetting;
+import io.github.mg138.tsbook.utils.config.gui.element.ArmorElementSetting;
+import io.github.mg138.tsbook.utils.config.gui.element.GUIElementSetting;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,10 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.util.*;
 
 public class ArmorGUIConfig {
-    private static ArmorGUIConfig instance = null;
+    private static final ArmorGUIConfig instance = new ArmorGUIConfig();
 
     public static ArmorGUIConfig getInstance() {
-        if (instance == null) instance = new ArmorGUIConfig();
         return instance;
     }
 
@@ -49,7 +50,7 @@ public class ArmorGUIConfig {
                 if (equipment == null)
                     throw new NullPointerException("Something wrong happened when iterating through the config!");
 
-                elementSetting = new ArmorGUIElementSetting(i, material, count, name, lore, model, new ArmorSetting(equipment));
+                elementSetting = new ArmorGUIElementSetting(i, material, count, name, lore, model, new ArmorElementSetting(equipment));
             } else {
                 elementSetting = new GUIElementSetting(i, material, count, name, lore, model);
             }

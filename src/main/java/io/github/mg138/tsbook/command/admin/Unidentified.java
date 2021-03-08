@@ -24,7 +24,7 @@ public class Unidentified extends Give {
             AdminCommands.setItem(itemName);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.Companion.getCfg(), "unid", unid));
+            player.getInventory().addItem(getItem("unid", unid));
             return true;
         }
 

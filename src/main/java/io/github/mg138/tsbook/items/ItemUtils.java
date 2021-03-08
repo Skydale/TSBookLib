@@ -5,8 +5,11 @@ import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDArrayTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDTag;
 
+import io.github.mg138.tsbook.utils.config.item.ItemSetting;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -68,6 +71,8 @@ public class ItemUtils {
         if (uuid != null) {
             ItemInstance inst = UUID_ITEM.get(uuid);
             if (inst != null) return inst;
+        } else {
+            uuid = UUID.randomUUID();
         }
 
         String internalType = container.get(new NamespacedKey(plugin, "internal"), PersistentDataType.STRING);
@@ -76,9 +81,24 @@ public class ItemUtils {
         String ID = container.get(new NamespacedKey(plugin, internalType), PersistentDataType.STRING);
         if (ID == null) return null;
 
-        UUID newUUID = UUID.randomUUID();
-        ItemInstance inst = new ItemInstance(Book.Companion.getCfg(), Book.Companion.getCfg().getItemConfig().getAnyItemByID(ID), getIdentification(plugin, item), internalType, newUUID);
-        UUID_ITEM.put(newUUID, inst);
+        YamlConfiguration setting = Book.Companion.getCfg().getItemConfig().getAnyItemByID(ID);
+        if (setting == null) return null;
+
+        ItemStats stats;
+        ConfigurationSection statSetting = setting.getConfigurationSection("stats");
+        if (statSetting == null) stats = null; else stats = new ItemStats(
+                statSetting,
+                getIdentification(plugin, item),
+                Book.Companion.getCfg()
+        );
+
+        ItemInstance inst = new ItemInstance(
+                new ItemSetting(setting),
+                stats,
+                internalType,
+                uuid
+        );
+        UUID_ITEM.put(uuid, inst);
 
         return inst;
     }

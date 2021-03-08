@@ -1,11 +1,10 @@
 package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.items.ItemIdentification;
-import io.github.mg138.tsbook.items.ItemInstance;
-import io.github.mg138.tsbook.items.ItemUtils;
+import io.github.mg138.tsbook.items.*;
 
 import io.github.mg138.tsbook.utils.config.Config;
+import io.github.mg138.tsbook.utils.config.item.ItemSetting;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -44,12 +43,22 @@ public class Identify {
     }
 
     public static ItemInstance identify(Config config, String ID, String type) {
+        ItemSetting setting;
         if (type.equalsIgnoreCase("unid")) {
-            List<String> items = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(ID).getStringList("ITEMS");
-            YamlConfiguration setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
-            return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item", UUID.randomUUID());
+            List<String> items = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(ID).iden;
+            setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
+        } else {
+            setting = config.getItemConfig().getItemByID(ID);
         }
-        YamlConfiguration setting = config.getItemConfig().getItemByID(ID);
-        return new ItemInstance(config, setting, ItemIdentification.create(setting, true), "item", UUID.randomUUID());
+        return new ItemInstance(
+                setting,
+                new ItemStats(
+                        setting,
+                        ItemIdentification.create(setting, true),
+                        Book.Companion.getCfg()
+                ),
+                "item",
+                UUID.randomUUID()
+        );
     }
 }

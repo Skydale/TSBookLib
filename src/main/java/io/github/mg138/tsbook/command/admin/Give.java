@@ -3,8 +3,10 @@ package io.github.mg138.tsbook.command.admin;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemIdentification;
 import io.github.mg138.tsbook.items.ItemInstance;
-import io.github.mg138.tsbook.utils.config.AbstractConfig;
+import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.items.ItemStats;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -12,8 +14,21 @@ import org.bukkit.inventory.ItemStack;
 import java.util.UUID;
 
 public class Give {
-    public static ItemStack getItem(AbstractConfig config, String internalType, YamlConfiguration setting) {
-        ItemInstance inst = new ItemInstance(config, setting, ItemIdentification.create(setting, false), internalType, UUID.randomUUID());
+    public static ItemStack getItem(String internalType, YamlConfiguration setting) {
+        ItemStats stats;
+        ConfigurationSection statSetting = setting.getConfigurationSection("stats");
+        if (statSetting == null) stats = null; else stats = new ItemStats(
+                statSetting,
+                ItemIdentification.create(setting, false),
+                Book.Companion.getCfg()
+        );
+
+        ItemInstance inst = new ItemInstance(
+                new ItemSetting(setting),
+                stats,
+                internalType,
+                UUID.randomUUID()
+        );
 
         return inst.createItem(Book.inst);
     }
@@ -35,7 +50,7 @@ public class Give {
             AdminCommands.setItem(itemName);
             sender.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
             player.sendMessage(Book.Companion.getCfg().translate.translate("messages.get", player));
-            player.getInventory().addItem(getItem(Book.Companion.getCfg(), "item", item));
+            player.getInventory().addItem(getItem("item", item));
             return true;
         }
 

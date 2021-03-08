@@ -7,7 +7,7 @@ import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
 import io.github.mg138.tsbook.utils.config.Config
-import io.github.mg138.tsbook.utils.config.gui.armor.ArmorGUIConfig
+import io.github.mg138.tsbook.utils.config.gui.ArmorGUIConfig
 import org.bukkit.Sound
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler

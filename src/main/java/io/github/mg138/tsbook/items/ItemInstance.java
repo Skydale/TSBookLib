@@ -1,9 +1,7 @@
 package io.github.mg138.tsbook.items;
 
-import io.github.mg138.tsbook.utils.config.AbstractConfig;
+import io.github.mg138.tsbook.utils.config.item.ItemSetting;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,73 +11,26 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ItemInstance { //represents a single ItemStack
-    private final String ID;
-    private final String ITEM_TYPE;
-    private final Material MATERIAL;
-    private final Integer MODEL;
-    private final String NAME;
-    private final List<String> LORE;
+    private final ItemSetting SETTING;
     private final ItemStats STATS;
     private final String INTERNAL_TYPE;
     private final UUID uuid;
 
-    public ItemInstance(AbstractConfig config, YamlConfiguration setting, ItemIdentification identification, String internalType, UUID uuid) {
-        INTERNAL_TYPE = internalType;
+    public ItemStack createItem(JavaPlugin plugin) {
+        return ItemUtils.createItem(plugin, this);
+    }
+
+    public ItemInstance(ItemSetting setting, ItemStats stats, String internalType, UUID uuid) {
+        this.SETTING = setting;
+        this.INTERNAL_TYPE = internalType;
         this.uuid = uuid;
+        this.STATS = stats;
 
-        ID = setting.getString("ID");
-        assert ID != null;
-
-        NAME = config.translate.translate("FORMAT.NAME", null, setting);
-        assert NAME != null;
-
-        LORE = config.translate.translateList("FORMAT.LORE", null, setting);
-        assert LORE != null;
-
-        String material = setting.getString("MATERIAL");
-        assert material != null;
-
-        MATERIAL = Material.getMaterial(material);
-
-        if (setting.contains("MODEL")) {
-            MODEL = setting.getInt("MODEL");
-        } else MODEL = null;
-
-        if (setting.contains("ITEM_TYPE")) {
-            ITEM_TYPE = setting.getString("ITEM_TYPE");
-        } else ITEM_TYPE = null;
-
-        if (setting.contains("stat")) {
-            ConfigurationSection stats = setting.getConfigurationSection("stat");
-            if (stats == null) throw new IllegalArgumentException("I cannot properly get Damage of the item");
-
-            STATS = new ItemStats(stats, identification, config);
-            putStatsInLore();
-        } else STATS = null;
-    }
-
-    public String getName() {
-        return NAME;
-    }
-
-    public List<String> getLore() {
-        return LORE;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public String getItemType() {
-        return ITEM_TYPE;
-    }
-
-    public String getInternalType() {
-        return INTERNAL_TYPE;
+        if (this.STATS != null) putStatsInLore();
     }
 
     public void putStatsInLore() {
-        ListIterator<String> iterator = LORE.listIterator();
+        ListIterator<String> iterator = SETTING.LORE.listIterator();
         Map<String, String> placeholders = STATS.getPlaceholders();
         while (iterator.hasNext()) {
             String s = iterator.next();
@@ -91,20 +42,36 @@ public class ItemInstance { //represents a single ItemStack
         }
     }
 
+    public String getName() {
+        return SETTING.NAME;
+    }
+
+    public List<String> getLore() {
+        return SETTING.LORE;
+    }
+
+    public String getID() {
+        return SETTING.ID;
+    }
+
+    public String getItemType() {
+        return SETTING.ITEM_TYPE;
+    }
+
+    public String getInternalType() {
+        return INTERNAL_TYPE;
+    }
+
     public Material getMaterial() {
-        return MATERIAL;
+        return SETTING.MATERIAL;
     }
 
     public Integer getModel() {
-        return MODEL;
+        return SETTING.MODEL;
     }
 
     public ItemStats getStats() {
         return STATS;
-    }
-
-    public ItemStack createItem(JavaPlugin plugin) {
-        return ItemUtils.createItem(plugin, this);
     }
 
     public UUID getUUID() {
