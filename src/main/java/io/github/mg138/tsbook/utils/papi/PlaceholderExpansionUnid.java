@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.utils.papi;
 
-import io.github.mg138.tsbook.utils.config.Config;
+import io.github.mg138.tsbook.config.Config;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.configuration.file.YamlConfiguration;

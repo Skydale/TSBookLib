@@ -1,5 +1,7 @@
-package io.github.mg138.tsbook.utils.config.item;
+package io.github.mg138.tsbook.config.item;
 
+import io.github.mg138.tsbook.config.gui.ArmorGUIConfig;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.util.HashMap;
@@ -17,9 +19,5 @@ public abstract class AbstractItemConfig {
 
     public ItemSetting getItemByID(String ID) {
         return items.get(ID);
-    }
-
-    public AbstractItemConfig(Map<String, YamlConfiguration> items) {
-        items.forEach((string, setting) -> this.items.put(string, new ItemSetting(setting)));
     }
 }

@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.utils.config.util;
+package io.github.mg138.tsbook.config.util;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;

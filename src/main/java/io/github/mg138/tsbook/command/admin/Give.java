@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.command.admin;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.ItemIdentification;
 import io.github.mg138.tsbook.items.ItemInstance;
-import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
 import io.github.mg138.tsbook.items.ItemStats;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,7 +18,6 @@ public class Give {
         ItemStats stats;
         ConfigurationSection statSetting = setting.getConfigurationSection("stats");
         if (statSetting == null) stats = null; else stats = new ItemStats(
-                statSetting,
                 ItemIdentification.create(setting, false),
                 Book.Companion.getCfg()
         );

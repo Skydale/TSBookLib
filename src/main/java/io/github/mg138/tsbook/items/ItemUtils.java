@@ -5,7 +5,7 @@ import io.github.mg138.tsbook.items.data.tag.IdentificationTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDArrayTag;
 import io.github.mg138.tsbook.items.data.tag.UUIDTag;
 
-import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.ConfigurationSection;
@@ -81,19 +81,14 @@ public class ItemUtils {
         String ID = container.get(new NamespacedKey(plugin, internalType), PersistentDataType.STRING);
         if (ID == null) return null;
 
-        YamlConfiguration setting = Book.Companion.getCfg().getItemConfig().getAnyItemByID(ID);
-        if (setting == null) return null;
-
-        ItemStats stats;
-        ConfigurationSection statSetting = setting.getConfigurationSection("stats");
-        if (statSetting == null) stats = null; else stats = new ItemStats(
-                statSetting,
+        ItemStats stats = ItemStats.create(
                 getIdentification(plugin, item),
-                Book.Companion.getCfg()
+                Book.Companion.getCfg(),
+                ID
         );
 
         ItemInstance inst = new ItemInstance(
-                new ItemSetting(setting),
+                ID,
                 stats,
                 internalType,
                 uuid

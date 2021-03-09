@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.utils.config;
+package io.github.mg138.tsbook.config;
 
 import io.github.mg138.tsbook.utils.Translate;
 import org.bukkit.configuration.file.YamlConfiguration;

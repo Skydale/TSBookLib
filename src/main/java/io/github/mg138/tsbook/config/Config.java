@@ -1,9 +1,9 @@
-package io.github.mg138.tsbook.utils.config;
+package io.github.mg138.tsbook.config;
 
 import io.github.mg138.tsbook.utils.Translate;
-import io.github.mg138.tsbook.utils.config.gui.ArmorGUIConfig;
-import io.github.mg138.tsbook.utils.config.item.ItemConfig;
-import io.github.mg138.tsbook.utils.config.util.ConfigBuilder;
+import io.github.mg138.tsbook.config.gui.ArmorGUIConfig;
+import io.github.mg138.tsbook.config.item.ItemConfig;
+import io.github.mg138.tsbook.config.util.ConfigBuilder;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,9 +13,6 @@ import java.util.Map;
 
 public class Config extends AbstractConfig {
     private static final Config inst = new Config();
-    ItemConfig itemConfig;
-    Map<String, ConfigurationSection> mmMobs;
-    final ArmorGUIConfig armorGUIConfig = ArmorGUIConfig.getInstance();
 
     private Config(){
     }
@@ -24,11 +21,9 @@ public class Config extends AbstractConfig {
         return inst;
     }
 
-    public ArmorGUIConfig getArmorConfig() {
-        return armorGUIConfig;
-    }
-
-    public ItemConfig getItemConfig() { return itemConfig; }
+    Map<String, ConfigurationSection> mmMobs;
+    public final ArmorGUIConfig armorGUIConfig = ArmorGUIConfig.getInstance();
+    public final ItemConfig itemConfig = ItemConfig.getInstance();
 
     public YamlConfiguration getConfig() {
         return config;
@@ -55,7 +50,7 @@ public class Config extends AbstractConfig {
         translate = new Translate(langFile);
 
         p.getLogger().info("Loading item settings...");
-        itemConfig = new ItemConfig(cb.createMap("Items", "ID"), cb.createMap("Unidentified", "ID"));
+        itemConfig.load(cb.createMap("Items", "ID"), cb.createMap("Unidentified", "ID"));
 
         p.getLogger().info("Loading MythicMobs settings...");
         mmMobs = cb.createSectionMap("MythicMobs");

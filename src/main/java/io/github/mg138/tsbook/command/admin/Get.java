@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.command.admin;
 
 import io.github.mg138.tsbook.Book;
 
-import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

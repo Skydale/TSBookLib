@@ -47,16 +47,16 @@ public class DamageHandler {
         if (mythicMobHelper.isMythicMob(damager)) {
             ConfigurationSection mob = Book.Companion.getCfg().getMMMob(mythicMobHelper.getMythicMobInstance(damager).getType().getInternalName());
             if (mob != null) {
-                Map<StatType, StatMap> map = new HashMap<>();
+                StatMap stats = new StatMap();
                 Map<StatType, Float> identification = new HashMap<>();
 
                 for (String literalType : mob.getKeys(false)) {
                     StatType type = StatType.valueOf(literalType.toUpperCase());
-                    map.put(type, new StatMap(type, new StatSingle(mob.getDouble(literalType))));
+                    stats.put(type, new StatSingle(mob.getDouble(literalType)));
                     identification.put(type, 1F);
                 }
-                ItemStats[] stats = { new ItemStats(map, new ItemIdentification(identification), Book.Companion.getCfg()) };
-                complexDamage(event, stats, defense);
+                ItemStats[] fakeItemStats = { new ItemStats(new ItemIdentification(identification), Book.Companion.getCfg(), stats) };
+                complexDamage(event, fakeItemStats, defense);
             }
         } else if (damager instanceof Player) {
             Player player = (Player) damager;
@@ -293,16 +293,16 @@ public class DamageHandler {
         }
     }
 
-    private static Map<StatType, Double> getStat(Set<StatType> template, ItemStats[] stats) {
+    private static Map<StatType, Double> getStat(Set<StatType> template, ItemStats[] itemStats) {
         Map<StatType, Double> result = new HashMap<>();
-        for (ItemStats stat : stats) {
-            if (stat == null) continue;
+        for (ItemStats itemStat : itemStats) {
+            if (itemStat == null) continue;
 
             template.forEach(type -> {
-                Map<StatType, StatMap> statMap = stat.getStats();
-                if (statMap == null) return;
-                if (statMap.containsKey(type)) {
-                    result.put(type, stat.getStat(type) + result.getOrDefault(type, 0.0));
+                StatMap stats = itemStat.getStats();
+                if (stats == null) return;
+                if (stats.containsKey(type)) {
+                    result.put(type, itemStat.getStat(type) + result.getOrDefault(type, 0.0));
                 }
             });
         }

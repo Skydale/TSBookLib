@@ -17,7 +17,7 @@ import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle
 import io.github.mg138.tsbook.listener.packet.ItemPacket
 import io.github.mg138.tsbook.players.util.HealthIndicator
-import io.github.mg138.tsbook.utils.config.Config
+import io.github.mg138.tsbook.config.Config
 import io.github.mg138.tsbook.utils.papi.PlaceholderExpansionTSBook
 import io.github.mg138.tsbook.utils.papi.PlaceholderExpansionUnid
 import org.bukkit.Bukkit

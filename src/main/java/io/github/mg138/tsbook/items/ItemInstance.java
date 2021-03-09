@@ -1,6 +1,8 @@
 package io.github.mg138.tsbook.items;
 
-import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.Book;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
+import io.github.mg138.tsbook.items.data.stat.map.RegisteredPlaceholder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +22,15 @@ public class ItemInstance { //represents a single ItemStack
         return ItemUtils.createItem(plugin, this);
     }
 
+    public ItemInstance(String ID, ItemStats stats, String internalType, UUID uuid){
+        this(
+                Book.Companion.getCfg().itemConfig.getAnyItemByID(ID),
+                stats,
+                internalType,
+                uuid
+        );
+    }
+
     public ItemInstance(ItemSetting setting, ItemStats stats, String internalType, UUID uuid) {
         this.SETTING = setting;
         this.INTERNAL_TYPE = internalType;
@@ -31,12 +42,13 @@ public class ItemInstance { //represents a single ItemStack
 
     public void putStatsInLore() {
         ListIterator<String> iterator = SETTING.LORE.listIterator();
-        Map<String, String> placeholders = STATS.getPlaceholders();
+
         while (iterator.hasNext()) {
             String s = iterator.next();
-            placeholders.forEach(
-                    (placeholder, stat) -> {
-                        if (s.contains(placeholder)) iterator.set(s.replace(placeholder, stat));
+            STATS.getStats().forEach(
+                    (type, stat) -> {
+                        String placeholder = RegisteredPlaceholder.HOLDER.get(type);
+                        if (s.contains(placeholder)) iterator.set(s.replace(placeholder, STATS.translate(type, stat)));
                     }
             );
         }

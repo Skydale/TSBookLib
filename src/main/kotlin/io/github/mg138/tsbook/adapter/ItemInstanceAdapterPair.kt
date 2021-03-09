@@ -11,9 +11,9 @@ import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
 import io.github.mg138.tsbook.Book.Companion.cfg
 import io.github.mg138.tsbook.items.ItemIdentification
 import io.github.mg138.tsbook.items.ItemInstance
-import io.github.mg138.tsbook.utils.config.item.ItemSetting
+import io.github.mg138.tsbook.config.item.element.ItemSetting
 import io.github.mg138.tsbook.items.ItemStats
-import io.github.mg138.tsbook.utils.config.AbstractConfig
+import io.github.mg138.tsbook.config.AbstractConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import java.lang.reflect.Type
 import java.util.*
@@ -68,7 +68,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 "unid" -> setting = cfg.itemConfig.getUnidentifiedByID(id)
             }
             if (setting == null) return null
-            return ItemInstance(ItemSetting(setting), ItemStats(setting, identification, cfg), internalType, UUID.randomUUID())
+            return ItemInstance(ItemSetting(setting), ItemStats(identification, cfg), internalType, UUID.randomUUID())
         }
     }
 

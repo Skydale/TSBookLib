@@ -1,42 +1,32 @@
 package io.github.mg138.tsbook.items;
 
-import io.github.mg138.tsbook.items.data.stat.map.RegisteredPlaceholder;
-import io.github.mg138.tsbook.utils.config.AbstractConfig;
+import io.github.mg138.tsbook.Book;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
+import io.github.mg138.tsbook.config.item.element.StatedItemSetting;
+import io.github.mg138.tsbook.config.AbstractConfig;
 import io.github.mg138.tsbook.items.data.stat.*;
-import io.github.mg138.tsbook.utils.config.item.StatedItemSetting;
-import org.bukkit.configuration.ConfigurationSection;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ItemStats {
-    private final ItemIdentification IDENTIFICATION;
-    private final StatedItemSetting
-    private final AbstractConfig CONFIG;
-
-    public ItemIdentification getIdentification() {
-        return IDENTIFICATION;
-    }
-
-    public Map<String, String> getPlaceholders() {
-        return PLACEHOLDER;
-    }
-
-    public Map<StatType, StatMap> getStats() {
-        return STATS;
-    }
+    private final ItemIdentification identification;
+    private final AbstractConfig config;
+    private final StatMap stats;
 
     public Double getStat(StatType type) {
-        StatMap statMap = STATS.get(type);
-        if (statMap == null) return null;
-        return statMap.getValue().getStat() * getIdentification().getStatPercentage(type);
+        return getStats().get(type).getStat() * getIdentification().getStatPercentage(type);
     }
 
-    public String translate(StatMap statMap) {
-        String format = CONFIG.translate.translate("format." + statMap.getKey().toString());
-        double percentage = IDENTIFICATION.getStatPercentage(statMap.getKey());
+    public StatMap getStats() {
+        return stats;
+    }
 
-        Stat stat = statMap.getValue();
+    public ItemIdentification getIdentification() {
+        return identification;
+    }
+
+    public String translate(StatType type, Stat stat) {
+        String format = config.translate.translate("format." + type.toString());
+        double percentage = identification.getStatPercentage(type);
+
         if (stat instanceof StatRange) {
             StatRange statRange = (StatRange) stat;
             return format
@@ -50,31 +40,23 @@ public class ItemStats {
         }
     }
 
-    public ItemStats(Map<StatType, StatMap> stats, ItemIdentification identification, AbstractConfig config) {
-        this.STATS.putAll(stats);
-        this.IDENTIFICATION = identification;
-        this.CONFIG = config;
+    public ItemStats(ItemIdentification identification, AbstractConfig config, StatMap stats) {
+        this.identification = identification;
+        this.config = config;
+        this.stats = stats;
     }
 
-    public ItemStats(ConfigurationSection settings, ItemIdentification identification, AbstractConfig config) {
-        CONFIG = config;
-        IDENTIFICATION = identification;
-        for (String literalType : settings.getKeys(false)) {
-            StatType type = StatType.valueOf(literalType.toUpperCase());
-            StatMap statMap;
+    public static ItemStats create(ItemIdentification identification, AbstractConfig config, ItemSetting setting) {
+        if (setting instanceof StatedItemSetting) {
+            return new ItemStats(identification, config, ((StatedItemSetting) setting).STATS);
+        } else return null;
+    }
 
-            if (settings.contains(literalType + ".min")) {
-                statMap = new StatMap(type, new StatRange(
-                        settings.getDouble(literalType + ".max"), settings.getDouble(literalType + ".min"))
-                );
-            } else {
-                statMap = new StatMap(type, new StatSingle(
-                        settings.getDouble(literalType))
-                );
-            }
-
-            STATS.put(type, statMap);
-            PLACEHOLDER.put(RegisteredPlaceholder.HOLDER.get(type), translate(statMap));
-        }
+    public static ItemStats create(ItemIdentification identification, AbstractConfig config, String ID) {
+        return create(
+                identification,
+                config,
+                Book.Companion.getCfg().itemConfig.getAnyItemByID(ID)
+        );
     }
 }

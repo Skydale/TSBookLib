@@ -1,45 +1,31 @@
 package io.github.mg138.tsbook.items.data.stat;
 
-import java.util.Comparator;
+import org.bukkit.configuration.ConfigurationSection;
+
+import java.util.HashMap;
 import java.util.Map;
 
-public class StatMap implements Map.Entry<StatType, Stat> {
-    static class Sort implements Comparator<StatMap> {
-        @Override
-        public int compare(StatMap a, StatMap b) {
-            return Double.compare(a.stat.getStat(), b.stat.getStat());
+public class StatMap extends HashMap<StatType, Stat> {
+    public static StatMap from(ConfigurationSection setting) {
+        if (setting == null) return null;
+
+        StatMap stats = new StatMap();
+        for (String literalType : setting.getKeys(false)) {
+            StatType type = StatType.valueOf(literalType.toUpperCase());
+            Stat stat;
+
+            if (setting.contains(literalType + ".min")) {
+                stat = new StatRange(
+                        setting.getDouble(literalType + ".max"),
+                        setting.getDouble(literalType + ".min")
+                );
+            } else {
+                stat = new StatSingle(
+                        setting.getDouble(literalType)
+                );
+            }
+            stats.put(type, stat);
         }
-    }
-
-    private StatType statType;
-    private Stat stat;
-
-    public StatMap(StatType key, Stat value) {
-        statType = key;
-        stat = value;
-    }
-
-    @Override
-    public StatType getKey() {
-        return statType;
-    }
-
-    @Override
-    public Stat getValue() {
-        return stat;
-    }
-
-    @Override
-    public Stat setValue(Stat value) {
-        if (stat.equals(value)) return stat;
-
-        final Stat oldStat = stat;
-        stat = value;
-        return oldStat;
-    }
-
-    public void set(StatType key, Stat value) {
-        statType = key;
-        stat = value;
+        return stats;
     }
 }

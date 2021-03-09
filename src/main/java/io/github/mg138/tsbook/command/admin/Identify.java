@@ -3,11 +3,10 @@ package io.github.mg138.tsbook.command.admin;
 import io.github.mg138.tsbook.Book;
 import io.github.mg138.tsbook.items.*;
 
-import io.github.mg138.tsbook.utils.config.Config;
-import io.github.mg138.tsbook.utils.config.item.ItemSetting;
+import io.github.mg138.tsbook.config.Config;
+import io.github.mg138.tsbook.config.item.element.ItemSetting;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -45,16 +44,16 @@ public class Identify {
     public static ItemInstance identify(Config config, String ID, String type) {
         ItemSetting setting;
         if (type.equalsIgnoreCase("unid")) {
-            List<String> items = Book.Companion.getCfg().getItemConfig().getUnidentifiedByID(ID).iden;
-            setting = config.getItemConfig().getItemByID(items.get(new Random().nextInt(items.size())));
+            List<String> items = Book.Companion.getCfg().itemConfig.getUnidentifiedByID(ID).iden;
+            setting = config.itemConfig.getItemByID(items.get(new Random().nextInt(items.size())));
         } else {
-            setting = config.getItemConfig().getItemByID(ID);
+            setting = config.itemConfig.getItemByID(ID);
         }
+
         return new ItemInstance(
                 setting,
                 new ItemStats(
-                        setting,
-                        ItemIdentification.create(setting, true),
+                        new ItemIdentification(setting, true),
                         Book.Companion.getCfg()
                 ),
                 "item",

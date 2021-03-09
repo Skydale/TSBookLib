@@ -1,9 +1,9 @@
-package io.github.mg138.tsbook.utils.config.gui;
+package io.github.mg138.tsbook.config.gui;
 
 import io.github.mg138.tsbook.utils.Translate;
-import io.github.mg138.tsbook.utils.config.gui.element.ArmorGUIElementSetting;
-import io.github.mg138.tsbook.utils.config.gui.element.ArmorElementSetting;
-import io.github.mg138.tsbook.utils.config.gui.element.GUIElementSetting;
+import io.github.mg138.tsbook.config.gui.element.ArmorGUIElementSetting;
+import io.github.mg138.tsbook.config.gui.element.ArmorElementSetting;
+import io.github.mg138.tsbook.config.gui.element.GUIElementSetting;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
