@@ -1,7 +1,7 @@
 prefix: '&7[&eTwilight''s Book&7]&r'
 
 errors:
-   unknown_command: '&cUnknown command "%tsbook_command%"!'
+   unknown_command: '&cUnknown command!'
    item_not_found: '&cUnknown item!'
    player_only: '&cThis command is for players only!'
    player_not_found: '&cCannot find that player!'
@@ -50,6 +50,14 @@ format:
    DAMAGE_LUMEN:      "&f[min] &7- &f[max] &7([percentage])"
    DAMAGE_UMBRA:      "&8[min] &7- &8[max] &7([percentage])"
    DAMAGE_TRUE:       "&f[min] &7- &f[max] &7([percentage])"
+   DEFENSE_PHYSICAL:  "&6[min] &7- &6[max] &7([percentage])"
+   DEFENSE_TERRA:     "&2[min] &7- &2[max] &7([percentage])"
+   DEFENSE_TEMPUS:    "&e[min] &7- &e[max] &7([percentage])"
+   DEFENSE_IGNIS:     "&c[min] &7- &c[max] &7([percentage])"
+   DEFENSE_AQUA:      "&b[min] &7- &b[max] &7([percentage])"
+   DEFENSE_LUMEN:     "&f[min] &7- &f[max] &7([percentage])"
+   DEFENSE_UMBRA:     "&8[min] &7- &8[max] &7([percentage])"
+   DEFENSE_TRUE:      "&f[min] &7- &f[max] &7([percentage])"
    CHANCE_CRITICAL:   "&a[stat]% &7([percentage])"
    POWER_CRITICAL:    "&a[stat]% &7([percentage])"
    MODIFIER_PLAYER:   "&a[stat]% &7([percentage])"
@@ -64,6 +72,15 @@ format:
    AFFINITY_ELEMENT:  "&a[stat]% &7([percentage])"
    
 stat:
+   defense:
+      physical: "&f⚔ &6物理防禦"
+      terra:    "&f⛰ &2大地防禦"
+      tempus:   "&f💨 &e風暴防禦"
+      ignis:    "&f🔥 &c烈焰防禦"
+      aqua:     "&f🌊 &b洪水防禦"
+      lumen:    "&f✳ &f光明防禦"
+      umbra:    "&7❇ &8黑暗防禦"
+      true:     "&f✨ &f真實防禦"
    damage:
       physical: "&f⚔ &6物理傷害"
       terra:    "&f⛰ &2大地傷害"

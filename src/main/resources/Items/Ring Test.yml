@@ -1,0 +1,16 @@
+ID: 'RING_TEST'
+ITEM_TYPE: 'RING'
+MATERIAL: 'GOLD_NUGGET'
+MODEL: 1
+
+FORMAT:
+  NAME: '&6戒指測試'
+  LORE: |
+          %tsbook_stat.damage.ignis% [damage-ignis]
+  
+          %tsbook_mythic%
+
+stat:
+    DAMAGE_IGNIS:
+        min: 10
+        max: 10

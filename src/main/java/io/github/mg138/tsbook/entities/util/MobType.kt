@@ -1,126 +1,66 @@
-package io.github.mg138.tsbook.entities.util;
+package io.github.mg138.tsbook.entities.util
 
-import org.bukkit.entity.EntityType;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.EntityType.*
 
-public class MobType {
-    @Contract(pure = true)
-    public static boolean isHellish(@NotNull EntityType type) {
-        switch (type) {
-            case PIGLIN:
-            case PIGLIN_BRUTE:
-            case ZOMBIFIED_PIGLIN:
-            case ZOGLIN:
-            case MAGMA_CUBE:
-            case BLAZE:
-            case GHAST:
-            case HOGLIN:
-            case STRIDER:
-            case WITHER:
-            case WITHER_SKELETON:
-            case WITHER_SKULL:
-                return true;
+object MobType {
+    fun isHellish(type: EntityType): Boolean {
+        return when (type) {
+            PIGLIN, PIGLIN_BRUTE,
+            ZOMBIFIED_PIGLIN, ZOGLIN,
+            MAGMA_CUBE, BLAZE, GHAST,
+            HOGLIN, STRIDER, WITHER,
+            WITHER_SKELETON, WITHER_SKULL -> true
+            else -> false
         }
-        return false;
     }
 
-    @Contract(pure = true)
-    public static boolean isMob(@NotNull EntityType type) {
-        switch (type) {
-            case PIGLIN:
-            case PIGLIN_BRUTE:
-            case ZOMBIFIED_PIGLIN:
-            case ZOGLIN:
-            case MAGMA_CUBE:
-            case BLAZE:
-            case GHAST:
-            case HOGLIN:
-            case STRIDER:
-            case WITHER:
-            case WITHER_SKELETON:
-            case WITHER_SKULL:
-            case SPIDER:
-            case CAVE_SPIDER:
-            case ENDER_DRAGON:
-            case ENDERMAN:
-            case ENDERMITE:
-            case ZOMBIE:
-            case ZOMBIE_HORSE:
-            case ZOMBIE_VILLAGER:
-            case CREEPER:
-            case DROWNED:
-            case ELDER_GUARDIAN:
-            case EVOKER:
-            case HUSK:
-            case PHANTOM:
-            case PILLAGER:
-            case RAVAGER:
-            case SHULKER:
-            case SILVERFISH:
-            case SLIME:
-            case STRAY:
-            case VEX:
-            case VINDICATOR:
-            case WITCH:
-            case GIANT:
-            case GUARDIAN:
-            case ILLUSIONER:
-                return true;
+    fun isMob(type: EntityType): Boolean {
+        return when (type) {
+            PIGLIN, PIGLIN_BRUTE,
+            ZOMBIFIED_PIGLIN, ZOGLIN,
+            MAGMA_CUBE, BLAZE,
+            GHAST, HOGLIN, STRIDER,
+            WITHER, WITHER_SKELETON,
+            WITHER_SKULL, SPIDER, CAVE_SPIDER,
+            ENDER_DRAGON, ENDERMAN, ENDERMITE,
+            ZOMBIE, ZOMBIE_HORSE, ZOMBIE_VILLAGER,
+            CREEPER, DROWNED, ELDER_GUARDIAN,
+            EVOKER, HUSK, PHANTOM,
+            PILLAGER, RAVAGER, SHULKER,
+            SILVERFISH, SLIME, STRAY,
+            VEX, VINDICATOR, WITCH, GIANT,
+            GUARDIAN, ILLUSIONER -> true
+            else -> false
         }
-        return false;
-
     }
 
-    @Contract(pure = true)
-    public static boolean isArthropod(@NotNull EntityType type) {
-        switch (type) {
-            case SPIDER:
-            case CAVE_SPIDER:
-            case BEE:
-            case ENDERMITE:
-            case SILVERFISH:
-                return true;
+    fun isArthropod(type: EntityType): Boolean {
+        return when (type) {
+            SPIDER, CAVE_SPIDER,
+            BEE, ENDERMITE, SILVERFISH -> true
+            else -> false
         }
-        return false;
     }
 
-    @Contract(pure = true)
-    public static boolean isWatery(@NotNull EntityType type) {
-        switch (type) {
-            case SQUID:
-            case DOLPHIN:
-            case GUARDIAN:
-            case ELDER_GUARDIAN:
-            case TURTLE:
-            case COD:
-            case SALMON:
-            case PUFFERFISH:
-            case TROPICAL_FISH:
-                return true;
+    fun isWatery(type: EntityType): Boolean {
+        return when (type) {
+            SQUID, DOLPHIN,
+            GUARDIAN, ELDER_GUARDIAN,
+            TURTLE, COD, SALMON,
+            PUFFERFISH, TROPICAL_FISH -> true
+            else -> false
         }
-        return false;
     }
 
-
-    @Contract(pure = true)
-    public static boolean isUndead(@NotNull EntityType type) {
-        switch (type) {
-            case ZOMBIE:
-            case DROWNED:
-            case HUSK:
-            case PHANTOM:
-            case SKELETON:
-            case SKELETON_HORSE:
-            case STRAY:
-            case WITHER:
-            case WITHER_SKELETON:
-            case ZOGLIN:
-            case ZOMBIE_HORSE:
-            case ZOMBIE_VILLAGER:
-            case ZOMBIFIED_PIGLIN:
-                return true;
+    fun isUndead(type: EntityType): Boolean {
+        return when (type) {
+            ZOMBIE, DROWNED, HUSK,
+            PHANTOM, SKELETON, SKELETON_HORSE,
+            STRAY, WITHER, WITHER_SKELETON,
+            ZOGLIN, ZOMBIE_HORSE,
+            ZOMBIE_VILLAGER, ZOMBIFIED_PIGLIN -> true
+            else -> false
         }
-        return false;
     }
 }

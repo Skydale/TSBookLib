@@ -1,41 +1,35 @@
-package io.github.mg138.tsbook.entities.effect.data.effect;
+package io.github.mg138.tsbook.entities.effect.data.effect
 
-import io.github.mg138.tsbook.entities.effect.EffectHandler;
-import io.github.mg138.tsbook.entities.effect.data.EntityStatusEffect;
-import io.github.mg138.tsbook.entities.effect.data.StatusEffect;
-import io.github.mg138.tsbook.listener.event.damage.utils.StatCalculator;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.scheduler.BukkitRunnable;
+import io.github.mg138.tsbook.entities.effect.data.EntityStatusEffect
+import org.bukkit.entity.LivingEntity
+import io.github.mg138.tsbook.entities.effect.data.StatusEffect
+import org.bukkit.scheduler.BukkitRunnable
+import io.github.mg138.tsbook.listener.event.damage.DamageHandler
+import io.github.mg138.tsbook.items.data.stat.StatType
+import org.bukkit.Bukkit
+import org.bukkit.Material
+import io.github.mg138.tsbook.entities.effect.EffectHandler
+import org.bukkit.potion.PotionEffectType
+import org.bukkit.potion.PotionEffect
+import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
+import com.comphenix.packetwrapper.WrapperPlayServerEntityLook
+import org.bukkit.attribute.AttributeInstance
+import io.github.mg138.tsbook.listener.event.damage.utils.StatCalculator
+import org.bukkit.attribute.Attribute
+import java.util.*
+import java.util.function.Consumer
 
-import java.util.Objects;
-import java.util.function.Consumer;
-
-public class Slowness {
-    public static final Consumer<EntityStatusEffect> slowness = effect -> {
-        if (!(effect.target instanceof LivingEntity)) return;
-        LivingEntity target = (LivingEntity) effect.target;
-        StatusEffect statusEffect = effect.statusEffect;
-
-        AttributeInstance attributeInstance = Objects.requireNonNull(target.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED));
-        double old = attributeInstance.getBaseValue();
-        attributeInstance.setBaseValue(StatCalculator.calculateModifier(old, -1 * statusEffect.power));
-
-        BukkitRunnable runnable = new BukkitRunnable() {
-            @Override
-            public void run() {
-                cancel();
-            }
-
-            @Override
-            public void cancel() {
-                super.cancel();
-                attributeInstance.setBaseValue(old);
-                EffectHandler.remove(target, statusEffect.type);
-            }
-        };
-
-        EffectHandler.applyRawEffect(target, statusEffect, runnable, statusEffect.ticks, 0);
-    };
-}
+object Slowness : Effect(
+    delay = { it.ticks },
+    period = { 0 },
+    runBefore = lambda@{ target, statusEffect ->
+        val attributeInstance = target.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)!!
+        val old = attributeInstance.baseValue
+        attributeInstance.baseValue = StatCalculator.calculateModifier(old, -1 * statusEffect.power)
+        return@lambda old
+    },
+    whenExpire = { target, _, old ->
+        target.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)!!.baseValue = old as Double
+    },
+    condition = { _, _ -> true }
+)

@@ -1,83 +1,77 @@
-package io.github.mg138.tsbook.listener.event.damage.utils;
+package io.github.mg138.tsbook.listener.event.damage.utils
 
-import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.items.data.stat.StatType;
+import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.items.data.stat.StatType
+import org.bukkit.Location
+import org.bukkit.entity.ArmorStand
+import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.util.Vector
+import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-public class DamageIndicator {
-    private static final List<ArmorStand> indicators = new ArrayList<>();
-
-    public static void unload() {
-        if (indicators.isEmpty()) return;
-
-        indicators.forEach(Entity::remove);
-        indicators.clear();
+object DamageIndicator {
+    private val indicators: MutableList<ArmorStand> = ArrayList()
+    fun unload() {
+        if (indicators.isEmpty()) return
+        indicators.forEach { it.remove() }
+        indicators.clear()
     }
 
-    public static void displayDamage(double damage, String type, Location loc) {
-        displayDamage(damage, StatType.valueOf(type.toUpperCase()), loc);
+    fun displayDamage(damage: Double, type: String, loc: Location) {
+        displayDamage(damage, StatType.valueOf(type.toUpperCase()), loc)
     }
 
-    public static void displayDamage(double damage, StatType type, Location loc) {
-        World world = loc.getWorld();
-        double r = new Random().nextDouble() * Math.PI * 2;
-        double x = Math.cos(r) / 6;
-        double z = Math.sin(r) / 6;
+    fun displayDamage(damage: Double, type: StatType, loc: Location) {
+        val world = loc.world!!
+        val r = Random().nextDouble() * Math.PI * 2
+        val x = cos(r) / 6
+        val z = sin(r) / 6
 
-        assert world != null;
-        ArmorStand indic = world.spawn(loc.add(new Vector(x * 2, new Random().nextDouble() / 2, z * 2)), ArmorStand.class, indicator -> {
-            indicators.add(indicator);
-            indicator.setInvulnerable(true);
-            indicator.setVisible(false);
-            indicator.setGravity(false);
-            indicator.setMarker(true);
-            indicator.setCustomNameVisible(true);
-            indicator.setCustomName(
-                    Book.Companion.getCfg().translate.translate("indicator." + type) + (int) damage
-            );
-        });
+        val indic = world.spawn(
+            loc.add(Vector(x * 2, Random().nextDouble() / 2, z * 2)),
+            ArmorStand::class.java
+        ) { indicator: ArmorStand ->
+            indicators.add(indicator)
+            indicator.isInvulnerable = true
+            indicator.isVisible = false
+            indicator.setGravity(false)
+            indicator.isMarker = true
+            indicator.isCustomNameVisible = true
+            indicator.customName = setting.translate.translate("indicator.$type") + damage.toInt()
+        }
 
-        new BukkitRunnable() {
-            int i = 0;
-
-            @Override
-            public void run() {
-                Location currentLoc = indic.getLocation();
-
+        object : BukkitRunnable() {
+            var i = 0
+            override fun run() {
+                val currentLoc = indic.location
                 if (i < 4) {
-                    indic.teleport(new Location(
-                                    world,
-                                    currentLoc.getX() + (x * 2),
-                                    currentLoc.getY() + 0.3,
-                                    currentLoc.getZ() + (z * 2)
-                            )
-                    );
+                    indic.teleport(
+                        Location(
+                            world,
+                            currentLoc.x + x * 2,
+                            currentLoc.y + 0.3,
+                            currentLoc.z + z * 2
+                        )
+                    )
                 } else {
-                    indic.teleport(new Location(
-                                    world,
-                                    currentLoc.getX(),
-                                    currentLoc.getY() + 0.3,
-                                    currentLoc.getZ()
-                            )
-                    );
+                    indic.teleport(
+                        Location(
+                            world,
+                            currentLoc.x,
+                            currentLoc.y + 0.3,
+                            currentLoc.z
+                        )
+                    )
                 }
                 if (i > 10) {
-                    indicators.remove(indic);
-                    indic.remove();
-                    cancel();
+                    indicators.remove(indic)
+                    indic.remove()
+                    cancel()
                 }
-                i++;
+                i++
             }
-        }.runTaskTimer(Book.inst, 0, 3);
+        }.runTaskTimer(Book.inst, 0, 3)
     }
 }

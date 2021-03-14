@@ -1,36 +1,25 @@
-package io.github.mg138.tsbook.items.data.stat;
+package io.github.mg138.tsbook.items.data.stat
 
-import java.util.Random;
+import java.util.*
 
-public class StatRange implements Stat {
-    private final double max;
-    private final double min;
+class StatRange(max: Double, min: Double) : Stat {
+    val max: Double
+    val min: Double
 
-    public StatRange(double max, double min) {
+    override val stat: Double
+        get() = if (max == min) { max } else { getStat(Random().nextDouble()) }
+
+    private fun getStat(percentage: Double): Double {
+        return if (max == min) max else percentage * (max - min) + min
+    }
+
+    init {
         if (max > min) {
-            this.max = max;
-            this.min = min;
+            this.max = max
+            this.min = min
         } else {
-            this.max = min;
-            this.min = max;
+            this.max = min
+            this.min = max
         }
-    }
-
-    public double getStat() {
-        if (max == min) return max;
-        return getStat(new Random().nextDouble());
-    }
-
-    public double getStat(double percentage) {
-        if (max == min) return max;
-        return ((percentage) * (max - min)) + min;
-    }
-
-    public double getMax() {
-        return max;
-    }
-
-    public double getMin() {
-        return min;
     }
 }

@@ -11,4 +11,4 @@ FORMAT:
 DAMAGE: |
     %tsbook_stat.damage.ignis% [damage-ignis]
 
-stat:
+stats:

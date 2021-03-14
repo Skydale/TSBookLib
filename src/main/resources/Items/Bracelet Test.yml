@@ -1,0 +1,16 @@
+ID: 'BRACELET_TEST'
+ITEM_TYPE: 'BRACELET'
+MATERIAL: 'MUSIC_DISC_WAIT'
+MODEL: 1
+
+FORMAT:
+  NAME: '&6手鐲測試'
+  LORE: |
+          %tsbook_stat.damage.terra% [damage-terra]
+  
+          %tsbook_mythic%
+
+stat:
+    DAMAGE_TERRA:
+        min: 20
+        max: 20

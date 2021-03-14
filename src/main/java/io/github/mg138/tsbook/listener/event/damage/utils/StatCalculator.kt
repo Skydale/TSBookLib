@@ -1,34 +1,35 @@
-package io.github.mg138.tsbook.listener.event.damage.utils;
+package io.github.mg138.tsbook.listener.event.damage.utils
 
-public class StatCalculator {
-    public static double calculateModifier(double stat, double modifier) {
-        if (modifier > 0) {
-            stat *= modifier;
+object StatCalculator {
+    fun calculateModifier(stat: Double, modifier: Double): Double {
+        var statCopy = stat
+        var modifierCopy = modifier
+        if (modifierCopy > 0) {
+            statCopy *= modifierCopy
         } else {
-            modifier *= -1;
-            stat *= (1 - (modifier / (modifier + 2)));
+            modifierCopy *= -1.0
+            statCopy *= 1 - modifierCopy / (modifierCopy + 2)
         }
-
-        return stat;
+        return statCopy
     }
 
-    public static double calculateTrueDamage(double damage, double defense, double modifier) {
-        damage = calculateModifier(damage, modifier);
-
-        damage -= defense;
-        return damage < 0 ? 0 : damage;
+    fun calculateTrueDamage(damage: Double, defense: Double, modifier: Double): Double {
+        var damageCopy = damage
+        damageCopy = calculateModifier(damageCopy, modifier)
+        damageCopy -= defense
+        return if (damageCopy < 0) 0.0 else damageCopy
     }
 
-    public static double calculateDamage(double damage, double defense, double modifier) {
-        damage = calculateModifier(damage, modifier);
-
-        if (defense > 0) {
-            damage *= (1 - (defense / (defense + 100)));
-        } else if (defense < 0) {
-            defense *= -1;
-            damage *= (1 + (defense / (defense + 100)));
+    fun calculateDamage(damage: Double, defense: Double, modifier: Double): Double {
+        var damageCopy = damage
+        var defenseCopy = defense
+        damageCopy = calculateModifier(damageCopy, modifier)
+        if (defenseCopy > 0) {
+            damageCopy *= 1 - defenseCopy / (defenseCopy + 100)
+        } else if (defenseCopy < 0) {
+            defenseCopy *= -1.0
+            damageCopy *= 1 + defenseCopy / (defenseCopy + 100)
         }
-
-        return damage;
+        return damageCopy
     }
 }

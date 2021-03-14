@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.utils.papi;
 
 import io.github.mg138.tsbook.command.admin.AdminCommands;
-import io.github.mg138.tsbook.config.Config;
+import io.github.mg138.tsbook.setting.BookSetting;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlaceholderExpansionTSBook extends PlaceholderExpansion {
     final JavaPlugin plugin;
-    final Config config;
+    final BookSetting bookSetting;
 
-    public PlaceholderExpansionTSBook(JavaPlugin p, Config c) {
+    public PlaceholderExpansionTSBook(JavaPlugin p, BookSetting c) {
         plugin = p;
-        config = c;
+        bookSetting = c;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class PlaceholderExpansionTSBook extends PlaceholderExpansion {
             case "item":
                 return AdminCommands.getItem();
             default:
-                return config.translate.translate(identifier);
+                return bookSetting.translate.translate(identifier);
         }
     }
 }

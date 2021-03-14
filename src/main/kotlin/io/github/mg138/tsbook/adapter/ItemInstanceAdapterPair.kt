@@ -8,20 +8,21 @@ import com.google.gson.stream.JsonWriter
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
-import io.github.mg138.tsbook.Book.Companion.cfg
+import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.setting.AbstractSetting
+import io.github.mg138.tsbook.setting.item.element.ItemSetting
+import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.items.ItemIdentification
 import io.github.mg138.tsbook.items.ItemInstance
-import io.github.mg138.tsbook.config.item.element.ItemSetting
 import io.github.mg138.tsbook.items.ItemStats
-import io.github.mg138.tsbook.config.AbstractConfig
-import org.bukkit.configuration.file.YamlConfiguration
 import java.lang.reflect.Type
 import java.util.*
 
 
 @Component
 class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
-    class ItemInstanceAdapter(private var config: AbstractConfig) : TypeAdapter<ItemInstance>() {
+    class ItemInstanceAdapter(private var setting: AbstractSetting) : TypeAdapter<ItemInstance>() {
         private var gson: Gson = Gson()
 
         override fun write(writer: JsonWriter, instance: ItemInstance?) {
@@ -62,16 +63,26 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
 
             if (internalType == null || id == null) return null
 
-            var setting: YamlConfiguration? = null
+            var setting: ItemSetting? = null
             when (internalType) {
-                "item" -> setting = cfg.itemConfig.getItemByID(id)
-                "unid" -> setting = cfg.itemConfig.getUnidentifiedByID(id)
+                "item" -> setting = Book.setting.itemConfig.getItemByID(id)
+                "unid" -> setting = Book.setting.itemConfig.getUnidentifiedByID(id)
             }
             if (setting == null) return null
-            return ItemInstance(ItemSetting(setting), ItemStats(identification, cfg), internalType, UUID.randomUUID())
+            return if (setting is StatedItemSetting) ItemInstance(
+                setting,
+                ItemStats(identification, Book.setting, setting.stats),
+                internalType,
+                UUID.randomUUID()
+            ) else ItemInstance(
+                setting,
+                null,
+                internalType,
+                UUID.randomUUID()
+            )
         }
     }
 
     override val type: Type = ItemInstance::class.java
-    override val typeAdapter = ItemInstanceAdapter(cfg)
+    override val typeAdapter = ItemInstanceAdapter(setting)
 }

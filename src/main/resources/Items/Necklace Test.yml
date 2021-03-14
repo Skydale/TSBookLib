@@ -1,0 +1,16 @@
+ID: 'NECKLACE_TEST'
+ITEM_TYPE: 'NECKLACE'
+MATERIAL: 'STRING'
+MODEL: 1
+
+FORMAT:
+  NAME: '&6項鍊測試'
+  LORE: |
+          %tsbook_stat.damage.lumen% [damage-lumen]
+  
+          %tsbook_mythic%
+
+stat:
+    DAMAGE_LUMEN:
+        min: 20
+        max: 20

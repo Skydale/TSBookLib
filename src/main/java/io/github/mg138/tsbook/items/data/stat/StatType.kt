@@ -1,6 +1,6 @@
-package io.github.mg138.tsbook.items.data.stat;
+package io.github.mg138.tsbook.items.data.stat
 
-public enum StatType {
+enum class StatType {
     SPEED_ATTACK,
     DAMAGE_TRUE,
     DAMAGE_PHYSICAL,

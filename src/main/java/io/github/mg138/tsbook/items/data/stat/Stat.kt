@@ -1,5 +1,5 @@
-package io.github.mg138.tsbook.items.data.stat;
+package io.github.mg138.tsbook.items.data.stat
 
-public interface Stat {
-    double getStat();
+interface Stat {
+    val stat: Double
 }

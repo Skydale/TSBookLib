@@ -1,21 +1,20 @@
-package io.github.mg138.tsbook.items.data.stat.set;
+package io.github.mg138.tsbook.items.data.stat.util.set
 
-import io.github.mg138.tsbook.items.data.stat.StatType;
+import io.github.mg138.tsbook.items.data.stat.StatType
+import java.util.*
 
-import java.util.EnumSet;
-
-public class DamageType {
-    public static final EnumSet<StatType> DAMAGE = EnumSet.of(
-            StatType.DAMAGE_PHYSICAL,
-            StatType.DAMAGE_TEMPUS,
-            StatType.DAMAGE_AQUA,
-            StatType.DAMAGE_TERRA,
-            StatType.DAMAGE_IGNIS,
-            StatType.DAMAGE_UMBRA,
-            StatType.DAMAGE_LUMEN,
-            StatType.DAMAGE_TRUE,
-            StatType.DAMAGE_NONE,
-            StatType.DAMAGE_BLEED,
-            StatType.DAMAGE_THUNDER
-    );
+object DamageType {
+    val types: EnumSet<StatType> = EnumSet.of(
+        StatType.DAMAGE_PHYSICAL,
+        StatType.DAMAGE_TEMPUS,
+        StatType.DAMAGE_AQUA,
+        StatType.DAMAGE_TERRA,
+        StatType.DAMAGE_IGNIS,
+        StatType.DAMAGE_UMBRA,
+        StatType.DAMAGE_LUMEN,
+        StatType.DAMAGE_TRUE,
+        StatType.DAMAGE_NONE,
+        StatType.DAMAGE_BLEED,
+        StatType.DAMAGE_THUNDER
+    )
 }

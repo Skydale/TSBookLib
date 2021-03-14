@@ -1,0 +1,16 @@
+ID: 'BOOTS_TEST'
+ITEM_TYPE: 'BOOTS'
+MATERIAL: 'IRON_BOOTS'
+MODEL: 1
+
+FORMAT:
+  NAME: '&6鞋子測試'
+  LORE: |
+          %tsbook_stat.defense.terra% [defense-terra]
+  
+          %tsbook_mythic%
+
+stat:
+    DEFENSE_TERRA:
+        min: 20
+        max: 20

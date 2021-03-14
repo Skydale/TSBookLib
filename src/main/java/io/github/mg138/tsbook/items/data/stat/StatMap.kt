@@ -1,31 +1,26 @@
-package io.github.mg138.tsbook.items.data.stat;
+package io.github.mg138.tsbook.items.data.stat
 
-import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.ConfigurationSection
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
+class StatMap : HashMap<StatType, Stat>() {
+    fun from(setting: ConfigurationSection): StatMap {
+        val stats = StatMap()
 
-public class StatMap extends HashMap<StatType, Stat> {
-    public static StatMap from(ConfigurationSection setting) {
-        if (setting == null) return null;
-
-        StatMap stats = new StatMap();
-        for (String literalType : setting.getKeys(false)) {
-            StatType type = StatType.valueOf(literalType.toUpperCase());
-            Stat stat;
-
-            if (setting.contains(literalType + ".min")) {
-                stat = new StatRange(
-                        setting.getDouble(literalType + ".max"),
-                        setting.getDouble(literalType + ".min")
-                );
+        for (literalType in setting.getKeys(false)) {
+            val type = StatType.valueOf(literalType.toUpperCase())
+            val stat: Stat = if (setting.contains("$literalType.min")) {
+                StatRange(
+                    setting.getDouble("$literalType.max"),
+                    setting.getDouble("$literalType.min")
+                )
             } else {
-                stat = new StatSingle(
-                        setting.getDouble(literalType)
-                );
+                StatSingle(
+                    setting.getDouble(literalType)
+                )
             }
-            stats.put(type, stat);
+            stats[type] = stat
         }
-        return stats;
+        return stats
     }
 }

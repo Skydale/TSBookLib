@@ -1,2 +1,5 @@
 True_Defense:
     DEFENSE_TRUE: 6
+    DAMAGE_TRUE: 10
+Test_100:
+    DAMAGE_TERRA: 5

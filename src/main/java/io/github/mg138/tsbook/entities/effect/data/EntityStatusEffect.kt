@@ -1,13 +1,7 @@
-package io.github.mg138.tsbook.entities.effect.data;
+package io.github.mg138.tsbook.entities.effect.data
 
-import org.bukkit.entity.Entity;
+import org.bukkit.entity.Entity
 
-public class EntityStatusEffect {
-    public final Entity target;
-    public final StatusEffect statusEffect;
-
-    public EntityStatusEffect(Entity target, StatusEffectType type, double power, int ticks) {
-        this.target = target;
-        this.statusEffect = new StatusEffect(type, power, ticks);
-    }
+class EntityStatusEffect(val target: Entity, type: StatusEffectType, power: Double, ticks: Int) {
+    val statusEffect: StatusEffect = StatusEffect(type, power, ticks)
 }

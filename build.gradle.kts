@@ -25,21 +25,18 @@ tasks.withType<KotlinCompile> {
 
 repositories {
     mavenCentral()
-    maven (url = URI.create("https://hub.spigotmc.org/nexus/content/repositories/snapshots"))
-    maven (url = URI.create("https://oss.sonatype.org/content/repositories/snapshots/"))
+    maven { url = URI.create("https://hub.spigotmc.org/nexus/content/repositories/snapshots") }
+    maven { url = URI.create("https://oss.sonatype.org/content/repositories/snapshots/") }
 }
 
 dependencies {
     compileOnly(kotlin("stdlib-jdk8", kotlinVersion))
     compileOnly("dev.reactant:reactant:0.2.0")
-    compileOnly("org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT")
-
+    compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
     /** The external library you would like to use */
     /** implementation("...")    */
 }
-
 
 val sourcesJar by tasks.registering(Jar::class) {
     dependsOn(JavaPlugin.CLASSES_TASK_NAME)

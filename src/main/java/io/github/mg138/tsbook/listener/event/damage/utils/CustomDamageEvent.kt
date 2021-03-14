@@ -1,60 +1,30 @@
-package io.github.mg138.tsbook.listener.event.damage.utils;
+package io.github.mg138.tsbook.listener.event.damage.utils
 
-import io.github.mg138.tsbook.items.data.stat.StatType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
+import io.github.mg138.tsbook.items.data.stat.StatType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.event.Event
+import org.bukkit.event.HandlerList
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class CustomDamageEvent extends Event {
-    private LivingEntity entity;
-    private LivingEntity damager;
-    private Map<StatType, Double> damages = new HashMap<>();
-    private static final HandlerList HANDLERS_LIST = new HandlerList();
-
-    public CustomDamageEvent(LivingEntity entity, LivingEntity damager){
-        this.entity = entity;
-        this.damager = damager;
+class CustomDamageEvent(var entity: LivingEntity, var damager: LivingEntity) : Event() {
+    private var damages: MutableMap<StatType, Double> = EnumMap(StatType::class.java)
+    override fun getHandlers(): HandlerList {
+        return handlerList
     }
 
-    @NotNull
-    @Override
-    public HandlerList getHandlers() {
-        return HANDLERS_LIST;
+    fun getDamages(): Map<StatType, Double> {
+        return damages
     }
 
-    public static HandlerList getHandlerList() {
-        return HANDLERS_LIST;
+    fun setDamages(damages: MutableMap<StatType, Double>) {
+        this.damages = damages
     }
 
-    public LivingEntity getEntity() {
-        return entity;
+    fun addDamage(type: StatType, damage: Double) {
+        damages[type] = damage
     }
 
-    public void setEntity(LivingEntity entity) {
-        this.entity = entity;
-    }
-
-    public Map<StatType, Double> getDamages() {
-        return damages;
-    }
-
-    public void setDamages(Map<StatType, Double> damages) {
-        this.damages = damages;
-    }
-
-    public void addDamage(StatType type, Double damage) {
-        this.damages.put(type, damage);
-    }
-
-    public LivingEntity getDamager() {
-        return damager;
-    }
-
-    public void setDamager(LivingEntity damager) {
-        this.damager = damager;
+    companion object {
+        val handlerList = HandlerList()
     }
 }

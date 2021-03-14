@@ -6,10 +6,10 @@ import io.github.mg138.tsbook.listener.event.inventory.error.ItemError
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
-import io.github.mg138.tsbook.config.Config
-import io.github.mg138.tsbook.config.gui.element.GUIElementSetting
-import io.github.mg138.tsbook.config.gui.ArmorGUIConfig
-import io.github.mg138.tsbook.config.gui.element.ArmorGUIElementSetting
+import io.github.mg138.tsbook.setting.BookSetting
+import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
+import io.github.mg138.tsbook.setting.gui.ArmorGUIConfig
+import io.github.mg138.tsbook.setting.gui.element.ArmorGUIElementSetting
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -24,8 +24,8 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
 class EquipmentGUIHandler(
-    private val config: Config,
-    private val armorConfig: ArmorGUIConfig = config.armorConfig
+    private val bookSetting: BookSetting,
+    private val armorConfig: ArmorGUIConfig = bookSetting.armorGUIConfig
 ) : Listener {
     companion object {
         private val players: MutableSet<Player> = HashSet()
@@ -67,7 +67,7 @@ class EquipmentGUIHandler(
     }
 
     fun openEquipmentGUI(player: Player) {
-        val inventory = Bukkit.createInventory(player, 54, config.translate.translate("gui.equipment.name"))
+        val inventory = Bukkit.createInventory(player, 54, bookSetting.translate.translate("gui.equipment.name"))
         constructInventory(inventory, player)
         players.add(player)
         player.openInventory(inventory)

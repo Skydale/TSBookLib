@@ -6,8 +6,8 @@ import io.github.mg138.tsbook.listener.event.util.ArmorType
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
-import io.github.mg138.tsbook.config.Config
-import io.github.mg138.tsbook.config.gui.ArmorGUIConfig
+import io.github.mg138.tsbook.setting.BookSetting
+import io.github.mg138.tsbook.setting.gui.ArmorGUIConfig
 import org.bukkit.Sound
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -17,8 +17,8 @@ import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 
 class RightClickEvent(
-    private val config: Config,
-    private val armorConfig: ArmorGUIConfig = config.armorConfig
+    private val bookSetting: BookSetting,
+    private val armorConfig: ArmorGUIConfig = bookSetting.armorGUIConfig
 ) : Listener {
     @EventHandler (priority = EventPriority.HIGHEST)
     fun onRightClick(event: PlayerInteractEvent) {

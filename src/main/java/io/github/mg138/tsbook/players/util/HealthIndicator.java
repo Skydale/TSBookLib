@@ -51,20 +51,20 @@ public class HealthIndicator implements Listener {
             }
             damage = (Math.round(damage * 10) / 10.0);
             totalDamage[0] += damage;
-            changeText[0] += (Book.Companion.getCfg().translate.translate("indicator." + type));
+            changeText[0] += (Book.Companion.getSetting().translate.translate("indicator." + type));
         });
 
         totalDamage[0] = -1 * (Math.round(totalDamage[0] * 10) / 10.0);
 
         if (totalDamage[0] > 0) {
-            changeText[0] = (Book.Companion.getCfg().translate.translateString("&a+") + totalDamage[0] + changeText[0]);
+            changeText[0] = (Book.Companion.getSetting().translate.translateString("&a+") + totalDamage[0] + changeText[0]);
         } else if (totalDamage[0] < 0) {
-            changeText[0] = (Book.Companion.getCfg().translate.translate("indicator." + largestType[0]) + totalDamage[0] + " " + changeText[0]);
+            changeText[0] = (Book.Companion.getSetting().translate.translate("indicator." + largestType[0]) + totalDamage[0] + " " + changeText[0]);
         } else {
             changeText[0] = "";
         }
 
-        String title = Book.Companion.getCfg().translate.translate("health_indicator.title")
+        String title = Book.Companion.getSetting().translate.translate("health_indicator.title")
                 .replace("[name]", customName)
                 .replace("[health]", String.valueOf(health))
                 .replace("[max_health]", String.valueOf(maxHealth))

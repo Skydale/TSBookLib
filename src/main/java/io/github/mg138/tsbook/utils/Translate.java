@@ -20,12 +20,20 @@ public class Translate {
     }
 
     public String translateString(String string, OfflinePlayer player) {
-        while (PlaceholderAPI.containsPlaceholders(string)) {
-            String newString = PlaceholderAPI.setPlaceholders(player, string);
-            if (string.equals(newString)) throw new IllegalArgumentException("Placeholder stuck in a loop.");
-            string = newString;
+        String copy = string;
+        String newString;
+        while (PlaceholderAPI.containsPlaceholders(copy)) {
+            newString = PlaceholderAPI.setPlaceholders(player, copy);
+
+            if (copy.equals(newString)) {
+                throw new IllegalArgumentException(
+                        "Placeholder stuck in a loop. (Does it contain placeholders that don't exist?)\n\t\t" +
+                        "The error string: " + newString
+                );
+            }
+            copy = newString;
         }
-        return RGBUtil.INSTANCE.translate(string);
+        return RGBUtil.INSTANCE.translate(copy);
     }
 
     public String translate(String path) {

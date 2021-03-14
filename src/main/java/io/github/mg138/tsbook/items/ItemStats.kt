@@ -1,62 +1,56 @@
-package io.github.mg138.tsbook.items;
+package io.github.mg138.tsbook.items
 
-import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.config.item.element.ItemSetting;
-import io.github.mg138.tsbook.config.item.element.StatedItemSetting;
-import io.github.mg138.tsbook.config.AbstractConfig;
-import io.github.mg138.tsbook.items.data.stat.*;
+import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.items.data.stat.Stat
+import io.github.mg138.tsbook.items.data.stat.StatMap
+import io.github.mg138.tsbook.items.data.stat.StatRange
+import io.github.mg138.tsbook.items.data.stat.StatType
+import io.github.mg138.tsbook.setting.AbstractSetting
+import io.github.mg138.tsbook.setting.item.element.ItemSetting
+import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 
-public class ItemStats {
-    private final ItemIdentification identification;
-    private final AbstractConfig config;
-    private final StatMap stats;
-
-    public Double getStat(StatType type) {
-        return getStats().get(type).getStat() * getIdentification().getStatPercentage(type);
+class ItemStats(val identification: ItemIdentification, private val config: AbstractSetting, val statMap: StatMap) {
+    operator fun get(type: StatType): Double {
+        return statMap[type]!!.stat * identification[type]
     }
 
-    public StatMap getStats() {
-        return stats;
-    }
+    fun translate(type: StatType, stat: Stat): String {
+        val format = config.translate.translate("format.$type")
+        val percentage = identification[type].toDouble()
 
-    public ItemIdentification getIdentification() {
-        return identification;
-    }
-
-    public String translate(StatType type, Stat stat) {
-        String format = config.translate.translate("format." + type.toString());
-        double percentage = identification.getStatPercentage(type);
-
-        if (stat instanceof StatRange) {
-            StatRange statRange = (StatRange) stat;
-            return format
-                    .replace("[min]", String.valueOf((int) (statRange.getMin() * percentage)))
-                    .replace("[max]", String.valueOf((int) (statRange.getMax() * percentage)))
-                    .replace("[percentage]", String.valueOf((int) (percentage * 100)) + '%');
+        return if (stat is StatRange) {
+            format
+                .replace("[min]", (stat.min * percentage).toInt().toString())
+                .replace("[max]", (stat.max * percentage).toInt().toString())
+                .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
         } else {
-            return format
-                    .replace("[stat]", String.valueOf((int) (stat.getStat() * percentage)))
-                    .replace("[percentage]", String.valueOf((int) (percentage * 100)) + '%');
+            format
+                .replace("[stat]", (stat.stat * percentage).toInt().toString())
+                .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
         }
     }
 
-    public ItemStats(ItemIdentification identification, AbstractConfig config, StatMap stats) {
-        this.identification = identification;
-        this.config = config;
-        this.stats = stats;
-    }
+    companion object {
+        fun create(identification: ItemIdentification?, config: AbstractSetting, setting: ItemSetting): ItemStats? {
+            return if (setting is StatedItemSetting && identification != null) {
+                ItemStats(identification, config, setting.stats)
+            } else null
+        }
 
-    public static ItemStats create(ItemIdentification identification, AbstractConfig config, ItemSetting setting) {
-        if (setting instanceof StatedItemSetting) {
-            return new ItemStats(identification, config, ((StatedItemSetting) setting).STATS);
-        } else return null;
-    }
+        fun create(config: AbstractSetting, setting: ItemSetting, isRandom: Boolean): ItemStats? {
+            return create(
+                ItemIdentification.create(setting, isRandom),
+                config,
+                setting
+            )
+        }
 
-    public static ItemStats create(ItemIdentification identification, AbstractConfig config, String ID) {
-        return create(
+        fun create(identification: ItemIdentification?, config: AbstractSetting, ID: String): ItemStats? {
+            return create(
                 identification,
                 config,
-                Book.Companion.getCfg().itemConfig.getAnyItemByID(ID)
-        );
+                setting.itemConfig.getAnyItemByID(ID)
+            )
+        }
     }
 }
