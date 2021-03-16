@@ -1,49 +1,43 @@
-package io.github.mg138.tsbook.setting.item;
+package io.github.mg138.tsbook.setting.item
 
-import io.github.mg138.tsbook.setting.item.element.ItemSetting;
-import io.github.mg138.tsbook.setting.item.element.SimpleItemSetting;
-import io.github.mg138.tsbook.setting.item.element.StatedItemSetting;
-import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting;
-import org.bukkit.configuration.file.YamlConfiguration;
+import io.github.mg138.tsbook.setting.item.element.ItemSetting
+import io.github.mg138.tsbook.setting.item.element.SimpleItemSetting
+import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
+import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting
+import org.bukkit.configuration.file.YamlConfiguration
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+object ItemConfig : AbstractItemConfig() {
+    private val unid: MutableMap<String, UnidentifiedSetting> = HashMap()
 
-public class ItemConfig extends AbstractItemConfig {
-    private static final ItemConfig instance = new ItemConfig();
-
-    public static ItemConfig getInstance() {
-        return instance;
-    }
-
-    private ItemConfig() {
-    }
-
-    final Map<String, UnidentifiedSetting> unid = new HashMap<>();
-
-    public void load(Map<String, YamlConfiguration> items, Map<String, YamlConfiguration> unid) {
-        items.forEach((string, setting) -> {
-            if (setting.contains("stats")) {
-                this.items.put(string, new StatedItemSetting(setting));
-            } else {
-                this.items.put(string, new SimpleItemSetting(setting));
+    fun load(items: Map<String, YamlConfiguration>, unid: Map<String, YamlConfiguration>) {
+        items.forEach { (key, setting) ->
+            when {
+                setting.contains("stats") -> {
+                    this.items[key] = StatedItemSetting(setting)
+                }
+                else -> {
+                    this.items[key] = SimpleItemSetting(setting)
+                }
             }
-        });
-        unid.forEach((string, setting) -> this.items.put(string, new UnidentifiedSetting(setting)));
+        }
+        unid.forEach { (key, setting) ->
+            this.unid[key] = UnidentifiedSetting(setting)
+        }
     }
 
-    public Set<String> getUnidentified() {
-        return unid.keySet();
+    val unidKey: Set<String>
+        get() = unid.keys
+
+    fun getUnidentifiedByID(id: String): UnidentifiedSetting? {
+        return unid[id]
     }
 
-    public UnidentifiedSetting getUnidentifiedByID(String ID) {
-        return unid.get(ID);
-    }
-
-    public ItemSetting getAnyItemByID(String ID) {
-        if (items.containsKey(ID)) return getItemByID(ID);
-        if (unid.containsKey(ID)) return getUnidentifiedByID(ID);
-        return null;
+    fun getAnyItemByID(id: String): ItemSetting? {
+        return when {
+            items.containsKey(id) -> getItemByID(id)!!
+            unid.containsKey(id) -> getUnidentifiedByID(id)!!
+            else -> null
+        }
     }
 }

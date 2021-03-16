@@ -18,12 +18,12 @@ class ArcticGlobalDataService(
     private val freezePlayer: FreezePlayer
 ) : LifeCycleHook {
     companion object {
-        lateinit var dataServiceInstance: PlayerDataService
+        lateinit var inst: PlayerDataService
         val playerDataRef = PlayerData::class
     }
 
     override fun onEnable() {
-        dataServiceInstance = dataService
+        inst = dataService
 
         dataService.register("tsbooklib", playerDataRef) { PlayerData() }
 

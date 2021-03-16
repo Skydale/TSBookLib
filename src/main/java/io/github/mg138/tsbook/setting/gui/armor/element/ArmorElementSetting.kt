@@ -1,14 +1,14 @@
-package io.github.mg138.tsbook.setting.gui.element;
+package io.github.mg138.tsbook.setting.gui.armor.element
 
-import org.bukkit.Material;
+import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
+import org.bukkit.Material
 
-import java.util.List;
-
-public class ArmorGUIElementSetting extends GUIElementSetting {
-    public final ArmorElementSetting setting;
-
-    public ArmorGUIElementSetting(int slot, Material material, int count, String name, List<String> lore, int model, ArmorElementSetting setting) {
-        super(slot, material, count, name, lore, model);
-        this.setting = setting;
-    }
-}
+class ArmorElementSetting(
+    slot: Int,
+    material: Material,
+    count: Int,
+    name: String,
+    lore: List<String>,
+    model: Int,
+    val setting: ArmorSetting
+) : GUIElementSetting(slot, material, count, name, lore, model)

@@ -1,21 +1,20 @@
-package io.github.mg138.tsbook.setting.item;
+package io.github.mg138.tsbook.setting.item
 
-import io.github.mg138.tsbook.setting.item.element.ItemSetting;
+import io.github.mg138.tsbook.setting.item.element.ItemSetting
+import java.util.*
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+abstract class AbstractItemConfig {
+    protected val items: MutableMap<String, ItemSetting> = HashMap()
 
-public abstract class AbstractItemConfig {
-    final Map<String, ItemSetting> items = new HashMap<>();
-
-    public void unload() { items.clear(); }
-
-    public Set<String> getItems() {
-        return items.keySet();
+    fun unload() {
+        items.clear()
     }
 
-    public ItemSetting getItemByID(String ID) {
-        return items.get(ID);
+    fun getItems(): Set<String> {
+        return items.keys
+    }
+
+    fun getItemByID(id: String): ItemSetting? {
+        return items[id]
     }
 }

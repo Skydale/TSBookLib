@@ -25,7 +25,6 @@ import org.bukkit.attribute.Attribute
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import org.bukkit.inventory.EntityEquipment
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -33,51 +32,40 @@ object DamageHandler {
     private val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
     private val rand = Random()
     private val bookSetting: BookSetting = Book.setting
-    @JvmField
-    val damageCD: MutableMap<Player, Long?> = HashMap()
-    @JvmStatic
+    val damageCD: MutableMap<Player, Long> = HashMap()
+
     fun damagedByEntity(event: EntityDamageByEntityEvent, defense: Map<StatType, Double>) {
         if (event.entity !is LivingEntity) return
         val damager = event.damager
         when {
             mythicMobHelper.isMythicMob(damager) -> {
-                val mob: ConfigurationSection? =
-                    bookSetting.getMMMob(mythicMobHelper.getMythicMobInstance(damager).type.internalName)
-                if (mob != null) {
-                    val stats = StatMap()
-                    val identification = ItemIdentification()
-                    for (literalType in mob.getKeys(false)) {
-                        val type: StatType = StatType.valueOf(literalType.toUpperCase())
-                        stats[type] = StatSingle(mob.getDouble(literalType))
-                        identification[type] = 1f
-                    }
-                    val fakeItemStats: Array<ItemStats> = arrayOf(ItemStats(identification, bookSetting, stats))
-                    complexDamage(event, fakeItemStats, defense)
-                }
+                val mobSetting = bookSetting.getMMMob(mythicMobHelper.getMythicMobInstance(damager).type.internalName) ?: return
+
+
+                val fakeItemStats = arrayOf(ItemStats(identification, bookSetting, stats))
+                complexDamage(event, fakeItemStats, defense)
             }
             damager is Player -> {
-                if (damageCD.putIfAbsent(damager, System.currentTimeMillis()) != null) {
-                    if (System.currentTimeMillis() - damageCD[damager]!! < 500) {
-                        event.isCancelled = true
-                        return
-                    }
-                    damageCD.replace(damager, System.currentTimeMillis())
+                damageCD.putIfAbsent(damager, System.currentTimeMillis())
+                if ((System.currentTimeMillis() - damageCD[damager]!!) < 500) {
+                    event.isCancelled = true
+                    return
                 }
-                val stats: MutableList<ItemStats> = ArrayList()
-                val equipment: EntityEquipment? = damager.equipment
-                if (equipment != null) {
-                    val item = equipment.itemInMainHand
-                    if (ItemUtils.checkItem(item) {}) {
-                        ItemUtils.getInstByItem(Book.inst, item)?.stats?.let { stats.add(it) }
-                    }
+                damageCD[damager] = System.currentTimeMillis()
+
+                val stats: Stack<ItemStats> = Stack()
+                val equipment = damager.equipment ?: return
+                val item = equipment.itemInMainHand
+                if (ItemUtils.checkItem(item) {}) {
+                    ItemUtils.getInstByItem(Book.inst, item)?.stats?.let { stats.add(it) }
                 }
-                val data: PlayerData? = ArcticGlobalDataService.dataServiceInstance.getData(damager, PlayerData::class)
-                data?.equipment?.forEach { _, armor -> armor.stats?.let { stats.add(it) } }
+                ArcticGlobalDataService.inst.getData<PlayerData>(damager, PlayerData::class)
+                    ?.equipment?.forEach { _, armor -> armor.stats?.let { stats.add(it) } }
+
                 complexDamage(event, stats.toTypedArray(), defense)
             }
             damager is Arrow -> {
-                val arrow: Arrow = damager
-                val container = arrow.persistentDataContainer
+                val container = damager.persistentDataContainer
                 val uuids: Array<UUID> = container[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag] ?: return
                 val stats: MutableList<ItemStats> = ArrayList()
                 for (uuid in uuids) {

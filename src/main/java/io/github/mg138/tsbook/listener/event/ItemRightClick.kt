@@ -77,7 +77,7 @@ class ItemRightClick : Listener {
         val uuids: MutableList<UUID> = ArrayList()
         val uuid = getUUID(item) ?: return
         uuids.add(uuid)
-        val data = ArcticGlobalDataService.dataServiceInstance.getData<PlayerData>(player, playerDataRef)
+        val data = ArcticGlobalDataService.inst.getData<PlayerData>(player, playerDataRef)
         data?.equipment?.forEach { i: Int?, instance: ItemInstance -> uuids.add(instance.uuid) }
         val loc = player.location
         val arrow = player.world.spawn(player.eyeLocation, Arrow::class.java) { aw: Arrow ->

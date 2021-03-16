@@ -7,7 +7,7 @@ import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.players.util.ArmorUtil
 import io.github.mg138.tsbook.setting.BookSetting
-import io.github.mg138.tsbook.setting.gui.ArmorGUIConfig
+import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
 import org.bukkit.Sound
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -33,7 +33,7 @@ class RightClickEvent(
 
             val i = ArmorUtil.getByType(instance.itemType, player, armorConfig)
             if (i != -1) {
-                ArcticGlobalDataService.dataServiceInstance.edit<PlayerData>(player) {
+                ArcticGlobalDataService.inst.edit<PlayerData>(player) {
                     it.equipment[i] = instance
                 }
                 if (!ArmorType.isArmor(item.type)) player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)

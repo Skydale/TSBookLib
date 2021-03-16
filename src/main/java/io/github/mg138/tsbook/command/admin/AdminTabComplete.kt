@@ -43,7 +43,7 @@ class AdminTabComplete : TabCompleter {
                     )
                     "unid" -> StringUtil.copyPartialMatches(
                         args[2],
-                        setting.itemConfig.unidentified,
+                        setting.itemConfig.unidKey,
                         result
                     )
                     "effect" -> {

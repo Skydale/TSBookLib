@@ -35,7 +35,7 @@ class Book : JavaPlugin() {
         lateinit var equipmentGUIHandler: EquipmentGUIHandler
 
         var gson = Gson()
-        val setting: BookSetting = BookSetting.getInstance()
+        val setting: BookSetting = BookSetting.instance
     }
 
     override fun onEnable() {

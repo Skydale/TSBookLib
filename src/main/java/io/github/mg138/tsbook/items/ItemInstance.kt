@@ -23,7 +23,7 @@ class ItemInstance( //represents a single ItemStack
     )
 
     private fun putStatsInLore() {
-        val iterator = setting.LORE.listIterator()
+        val iterator = setting.lore.listIterator()
         while (iterator.hasNext()) {
             val s = iterator.next()
             stats!!.statMap.forEach { (type, stat) ->
@@ -34,17 +34,17 @@ class ItemInstance( //represents a single ItemStack
     }
 
     val name: String
-        get() = setting.NAME
+        get() = setting.name
     val lore: List<String>
-        get() = setting.LORE
+        get() = setting.lore
     val id: String
-        get() = setting.ID
+        get() = setting.id
     val itemType: String
-        get() = setting.ITEM_TYPE
+        get() = setting.item_type
     val material: Material
-        get() = setting.MATERIAL
+        get() = setting.material
     val model: Int
-        get() = setting.MODEL
+        get() = setting.model
 
     init {
         if (stats != null) putStatsInLore()

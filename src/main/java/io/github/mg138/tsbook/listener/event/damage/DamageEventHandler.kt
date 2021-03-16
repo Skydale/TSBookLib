@@ -5,7 +5,6 @@ import io.github.mg138.tsbook.entities.effect.EffectHandler.hasEffect
 import io.github.mg138.tsbook.entities.effect.EffectHandler.getEffect
 import io.github.mg138.tsbook.Book.Companion.setting
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.damagedByEntity
-import io.github.mg138.tsbook.players.ArcticGlobalDataService.Companion.playerDataRef
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.getDefense
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -18,7 +17,6 @@ import io.github.mg138.tsbook.items.data.stat.StatType
 import io.github.mg138.tsbook.items.data.stat.util.set.DefenseType
 import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
-import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.lumine.xikage.mythicmobs.MythicMobs
 import org.bukkit.entity.*
@@ -74,7 +72,7 @@ class DamageEventHandler : Listener {
                 }
             } else if (entity is Player) {
                 val stats: MutableList<ItemStats> = ArrayList()
-                val data = ArcticGlobalDataService.dataServiceInstance.getData<PlayerData>(
+                val data = ArcticGlobalDataService.inst.getData<PlayerData>(
                     entity, PlayerData::class
                 )
                 data?.equipment?.forEach { _, armor -> armor.stats?.let { stats.add(it) } }

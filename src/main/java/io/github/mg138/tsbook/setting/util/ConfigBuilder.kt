@@ -1,148 +1,128 @@
-package io.github.mg138.tsbook.setting.util;
+package io.github.mg138.tsbook.setting.util
 
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.ConfigurationSection
+import org.bukkit.configuration.InvalidConfigurationException
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.IOException
+import java.util.*
+import java.util.jar.JarFile
+import java.util.function.Consumer
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class ConfigBuilder {
-    final JavaPlugin plugin;
-    final File jar;
-
-    public ConfigBuilder(JavaPlugin plugin, File jar) {
-        this.plugin = plugin;
-        this.jar = jar;
-    }
-
-    public YamlConfiguration create(String path, String target) {
-        File file = new File(plugin.getDataFolder(), path + target);
-
+class ConfigBuilder(private val plugin: JavaPlugin, private val jar: File) {
+    fun create(path: String, target: String): YamlConfiguration {
+        val file = File(plugin.dataFolder, path + target)
         if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            plugin.saveResource(path + target, false);
+            file.parentFile.mkdirs()
+            plugin.saveResource(path + target, false)
         }
-
-        YamlConfiguration yaml = new YamlConfiguration();
-
+        val yaml = YamlConfiguration()
         try {
-            yaml.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            yaml.load(file)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: InvalidConfigurationException) {
+            e.printStackTrace()
         }
-        return yaml;
+        return yaml
     }
 
-    public YamlConfiguration createFolder(String path, String target) {
-        List<File> files = loadJarContent(path);
-
-        YamlConfiguration yaml = new YamlConfiguration();
-
-        files.forEach((value) -> {
-            if (value.getName().equals(target)) {
+    fun createFolder(path: String, target: String): YamlConfiguration {
+        val files = loadJarContent(path)
+        val yaml = YamlConfiguration()
+        files!!.forEach(Consumer { value: File ->
+            if (value.name == target) {
                 try {
-                    yaml.load(value);
-                } catch (IOException | InvalidConfigurationException e) {
-                    e.printStackTrace();
+                    yaml.load(value)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } catch (e: InvalidConfigurationException) {
+                    e.printStackTrace()
                 }
             }
-        });
-
-        return yaml;
+        })
+        return yaml
     }
 
-    public List<YamlConfiguration> createFolder(String path) {
-        List<File> files = loadJarContent(path);
-
-        List<YamlConfiguration> YAMLs = new ArrayList<>();
-
-        for (File t : files) {
-            YAMLs.add(YamlConfiguration.loadConfiguration(t));
+    fun createFolder(path: String): List<YamlConfiguration> {
+        val files = loadJarContent(path)
+        val yamlList: MutableList<YamlConfiguration> = ArrayList()
+        for (t in files!!) {
+            yamlList.add(YamlConfiguration.loadConfiguration(t))
         }
-
-        return YAMLs;
+        return yamlList
     }
 
-    public Map<String, YamlConfiguration> createMap(String path, String key) {
-        List<File> files = loadJarContent(path);
-
-        Map<String, YamlConfiguration> MappedYAML = new HashMap<>();
+    fun createMap(path: String, key: String): Map<String, YamlConfiguration>? {
+        val files = loadJarContent(path)
+        val yamlMap: MutableMap<String, YamlConfiguration> = HashMap()
         try {
-            for (File file : files) {
-                YamlConfiguration yaml = new YamlConfiguration();
-                yaml.load(file);
-                MappedYAML.put(yaml.getString(key), yaml);
+            for (file in files!!) {
+                val yaml = YamlConfiguration()
+                yaml.load(file)
+                yamlMap[yaml.getString(key)!!] = yaml
             }
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-            return null;
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        } catch (e: InvalidConfigurationException) {
+            e.printStackTrace()
+            return null
         }
-
-        return MappedYAML;
+        return yamlMap
     }
 
-    public Map<String, ConfigurationSection> createSectionMap(String path) {
-        List<File> files = loadJarContent(path);
-
-        Map<String, ConfigurationSection> MappedYAML = new HashMap<>();
+    fun createSectionMap(path: String): Map<String, ConfigurationSection>? {
+        val files = loadJarContent(path)
+        val yamlMap: MutableMap<String, ConfigurationSection> = HashMap()
         try {
-            for (File file : files) {
-                YamlConfiguration yaml = new YamlConfiguration();
-                yaml.load(file);
-                for (String section : yaml.getKeys(false)) {
-                    MappedYAML.put(section, yaml.getConfigurationSection(section));
+            for (file in files!!) {
+                val yaml = YamlConfiguration()
+                yaml.load(file)
+                for (section in yaml.getKeys(false)) {
+                    yamlMap[section] = yaml.getConfigurationSection(section)!!
                 }
             }
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-            return null;
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return null
+        } catch (e: InvalidConfigurationException) {
+            e.printStackTrace()
+            return null
         }
-
-        return MappedYAML;
+        return yamlMap
     }
 
-    List<File> loadJarContent(String directory) {
-        File folder = new File(plugin.getDataFolder(), directory);
-
+    private fun loadJarContent(directory: String): List<File>? {
+        val folder = File(plugin.dataFolder, directory)
         if (!folder.exists()) {
-            folder.mkdirs();
-
-            JarFile jarFile;
-            try {
-                jarFile = new JarFile(jar);
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
+            folder.mkdirs()
+            val jarFile = try {
+                JarFile(jar)
+            } catch (e: IOException) {
+                e.printStackTrace()
+                return null
             }
-            Enumeration<JarEntry> entries = jarFile.entries();
-
+            val entries = jarFile.entries()
             while (entries.hasMoreElements()) {
-                JarEntry entry = entries.nextElement();
-                String name = entry.getName();
-
-                if (!(name.startsWith(directory + "/")) || entry.isDirectory()) continue;
-
-                if (!(new File(plugin.getDataFolder(), name).exists())) plugin.saveResource(name, false);
+                val entry = entries.nextElement()
+                val name = entry.name
+                if (!name.startsWith("$directory/") || entry.isDirectory) continue
+                if (!File(plugin.dataFolder, name).exists()) plugin.saveResource(name, false)
             }
         }
-
-        return listFolderContent(new ArrayList<>(), folder);
+        return recursiveListFolder(ArrayList(), folder)
     }
 
-    List<File> listFolderContent(List<File> list, File folder) {
-        for (File file : Objects.requireNonNull(folder.listFiles())) {
-            if (file.isDirectory()) {
-                listFolderContent(list, file);
+    private fun recursiveListFolder(list: MutableList<File>, folder: File): List<File> {
+        for (file in folder.listFiles()!!) {
+            if (file.isDirectory) {
+                recursiveListFolder(list, file)
             } else {
-                list.add(file);
+                list.add(file)
             }
         }
-        return list;
+        return list
     }
 }
