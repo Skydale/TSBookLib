@@ -5,14 +5,12 @@ import org.bukkit.entity.LivingEntity
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import io.github.mg138.tsbook.entities.effect.data.StatusEffect
-import io.github.mg138.tsbook.entities.effect.EffectHandler
 import io.github.mg138.tsbook.entities.effect.data.map.RegisteredEffects
 import io.github.mg138.tsbook.entities.effect.data.EntityStatusEffect
 import org.bukkit.entity.Entity
-import org.bukkit.event.Listener
 import java.lang.NullPointerException
 import java.util.*
-import java.util.function.Consumer
+import kotlin.collections.HashMap
 
 object EffectHandler {
     private val activeRunnable: MutableMap<LivingEntity, MutableMap<StatusEffectType, BukkitRunnable>> = HashMap()
@@ -25,7 +23,7 @@ object EffectHandler {
         runnable.runTaskTimer(Book.inst, delay, period)
     }
 
-    fun apply(type: StatusEffectType, target: Entity, power: Double, time: Int) {
+    fun apply(type: StatusEffectType, target: Entity, power: Double, time: Long) {
         if (target !is LivingEntity) return
         activeRunnable[target]?.get(type)?.cancel()
         activeEffect[target]?.remove(type)
@@ -73,7 +71,7 @@ object EffectHandler {
     }
 
     fun remove(entity: LivingEntity) {
-        val removing: MutableMap<StatusEffectType, BukkitRunnable> = try {
+        val removing = try {
             activeRunnable[entity]!!
         } catch (e: NullPointerException) {
             throw NullPointerException("The entity doesn't have any active effects")

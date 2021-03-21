@@ -1,14 +1,14 @@
 package io.github.mg138.tsbook.items
 
-import io.github.mg138.tsbook.items.data.stat.Stat
-import io.github.mg138.tsbook.items.data.stat.StatType
+import io.github.mg138.tsbook.stat.Stat
+import io.github.mg138.tsbook.stat.StatType
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import java.util.*
 import kotlin.math.roundToInt
 
 class ItemIdentification {
-    private val percentageMap: MutableMap<StatType, Float> = EnumMap(StatType::class.java)
+    private val percentageMap = EnumMap<StatType, Float>(StatType::class.java)
 
     private constructor(setting: StatedItemSetting, isRandom: Boolean) {
         if (isRandom) {

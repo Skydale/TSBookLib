@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.items
 
-import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.items.ItemUtils.createItem
-import io.github.mg138.tsbook.items.data.stat.util.map.RegisteredPlaceholder
+import io.github.mg138.tsbook.stat.util.map.RegisteredPlaceholder
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -16,19 +16,19 @@ class ItemInstance( //represents a single ItemStack
     }
 
     constructor(ID: String, stats: ItemStats?, internalType: String, uuid: UUID) : this(
-        Book.setting.itemConfig.getAnyItemByID(ID),
+        ItemConfig.getAnyItemByID(ID),
         stats,
         internalType,
         uuid
     )
 
     private fun putStatsInLore() {
-        val iterator = setting.lore.listIterator()
-        while (iterator.hasNext()) {
-            val s = iterator.next()
-            stats!!.statMap.forEach { (type, stat) ->
+        stats ?: return
+
+        setting.lore.forEach { s ->
+            stats.statMap.forEach { (type, stat) ->
                 val placeholder = RegisteredPlaceholder.placeholders[type]!!
-                if (s.contains(placeholder)) iterator.set(s.replace(placeholder, stats.translate(type, stat)))
+                if (s.contains(placeholder)) s.replace(placeholder, stats.translate(type, stat))
             }
         }
     }

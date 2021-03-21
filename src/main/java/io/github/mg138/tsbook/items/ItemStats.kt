@@ -1,55 +1,69 @@
 package io.github.mg138.tsbook.items
 
-import io.github.mg138.tsbook.Book.Companion.setting
-import io.github.mg138.tsbook.items.data.stat.Stat
-import io.github.mg138.tsbook.items.data.stat.StatMap
-import io.github.mg138.tsbook.items.data.stat.StatRange
-import io.github.mg138.tsbook.items.data.stat.StatType
-import io.github.mg138.tsbook.setting.AbstractSetting
+import io.github.mg138.tsbook.setting.AbstractConfig
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
+import io.github.mg138.tsbook.stat.*
+import java.lang.IllegalArgumentException
 
-class ItemStats(val identification: ItemIdentification, private val config: AbstractSetting, val statMap: StatMap) {
-    operator fun get(type: StatType): Double {
-        return statMap[type]!!.stat * identification[type]
+class ItemStats(statMap: StatMap, val identification: ItemIdentification, private val config: AbstractConfig) {
+    val statOut = StatMap()
+
+    init {
+        statMap.forEach { (type, stat) ->
+            val multiplier = identification[type]
+            statOut[type] = when {
+                multiplier == 0.0F -> stat
+                multiplier > 0.0F -> stat * multiplier
+                else -> throw IllegalArgumentException("Identification must be >= 0! (is $multiplier, keyed to $type)")
+            }
+        }
+    }
+
+    operator fun get(type: StatType): Stat {
+        return statOut[type] ?: throw NullPointerException("No value keyed to $type.")
     }
 
     fun translate(type: StatType, stat: Stat): String {
         val format = config.translate.translate("format.$type")
-        val percentage = identification[type].toDouble()
-
-        return if (stat is StatRange) {
-            format
-                .replace("[min]", (stat.min * percentage).toInt().toString())
-                .replace("[max]", (stat.max * percentage).toInt().toString())
-                .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
-        } else {
-            format
-                .replace("[stat]", (stat.stat * percentage).toInt().toString())
-                .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
+        val percentage = identification[type]
+        return when (val that = stat * percentage) {
+            is StatRange -> {
+                format
+                    .replace("[min]", (that.min).toInt().toString())
+                    .replace("[max]", (that.max).toInt().toString())
+                    .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
+            }
+            is StatSingle -> {
+                format
+                    .replace("[stat]", (that.stat).toInt().toString())
+                    .replace("[percentage]", (percentage * 100).toInt().toString() + '%')
+            }
+            else -> throw IllegalArgumentException("Unsupported implementation of Stat interface. (Did someone forget to add it?)")
         }
     }
 
     companion object {
-        fun create(identification: ItemIdentification?, config: AbstractSetting, setting: ItemSetting): ItemStats? {
+        fun create(setting: ItemSetting, identification: ItemIdentification?, config: AbstractConfig): ItemStats? {
             return if (setting is StatedItemSetting && identification != null) {
-                ItemStats(identification, config, setting.stats)
+                ItemStats(setting.stats, identification, config)
             } else null
         }
 
-        fun create(config: AbstractSetting, setting: ItemSetting, isRandom: Boolean): ItemStats? {
+        fun create(setting: ItemSetting, config: AbstractConfig, isRandom: Boolean): ItemStats? {
             return create(
+                setting,
                 ItemIdentification.create(setting, isRandom),
-                config,
-                setting
+                config
             )
         }
 
-        fun create(identification: ItemIdentification?, config: AbstractSetting, ID: String): ItemStats? {
+        fun create(identification: ItemIdentification?, config: AbstractConfig, ID: String): ItemStats? {
             return create(
+                ItemConfig.getAnyItemByID(ID),
                 identification,
-                config,
-                setting.itemConfig.getAnyItemByID(ID)
+                config
             )
         }
     }

@@ -17,7 +17,7 @@ import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle
 import io.github.mg138.tsbook.listener.packet.ItemPacket
 import io.github.mg138.tsbook.players.util.HealthIndicator
-import io.github.mg138.tsbook.setting.BookSetting
+import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.utils.papi.PlaceholderExpansionTSBook
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
@@ -35,7 +35,6 @@ class Book : JavaPlugin() {
         lateinit var equipmentGUIHandler: EquipmentGUIHandler
 
         var gson = Gson()
-        val setting: BookSetting = BookSetting.instance
     }
 
     override fun onEnable() {
@@ -51,7 +50,7 @@ class Book : JavaPlugin() {
     }
 
     fun unload() {
-        setting.unload()
+        BookConfig.unload()
         ItemUtils.unload()
         EffectHandler.unload()
         DamageEventHandler.unload()
@@ -62,11 +61,11 @@ class Book : JavaPlugin() {
     }
 
     fun load() {
-        setting.load(inst, jar)
+        BookConfig.load(inst, jar)
     }
 
     private fun preReg() {
-        PlaceholderExpansionTSBook(inst, setting).register()
+        PlaceholderExpansionTSBook(inst).register()
     }
 
     private fun reg() {
@@ -74,13 +73,13 @@ class Book : JavaPlugin() {
         DisableHeartParticle.register()
         ItemPacket.register()
 
-        equipmentGUIHandler = EquipmentGUIHandler(setting)
+        equipmentGUIHandler = EquipmentGUIHandler()
         Bukkit.getPluginManager().registerEvents(DamageEventHandler(), inst)
         Bukkit.getPluginManager().registerEvents(ItemUpdate(), inst)
         Bukkit.getPluginManager().registerEvents(ItemRightClick(), inst)
         Bukkit.getPluginManager().registerEvents(HealthIndicator(), inst)
         Bukkit.getPluginManager().registerEvents(equipmentGUIHandler, inst)
-        Bukkit.getPluginManager().registerEvents(RightClickEvent(setting), inst)
+        Bukkit.getPluginManager().registerEvents(RightClickEvent(), inst)
         Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand(), inst)
 
         getCommand("tsbook")!!.setExecutor(AdminCommands())

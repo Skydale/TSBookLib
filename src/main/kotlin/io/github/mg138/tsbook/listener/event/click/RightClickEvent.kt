@@ -2,12 +2,9 @@ package io.github.mg138.tsbook.listener.event.click
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.items.ItemUtils
-import io.github.mg138.tsbook.listener.event.util.ArmorType
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.players.util.ArmorUtil
-import io.github.mg138.tsbook.setting.BookSetting
-import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
+import io.github.mg138.tsbook.utils.ArmorUtil
 import org.bukkit.Sound
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
@@ -16,10 +13,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 
-class RightClickEvent(
-    private val bookSetting: BookSetting,
-    private val armorConfig: ArmorGUIConfig = bookSetting.armorGUIConfig
-) : Listener {
+class RightClickEvent : Listener {
     @EventHandler (priority = EventPriority.HIGHEST)
     fun onRightClick(event: PlayerInteractEvent) {
         val action = event.action
@@ -31,11 +25,9 @@ class RightClickEvent(
             event.isCancelled = true
             event.setUseItemInHand(Event.Result.DENY)
 
-            val i = ArmorUtil.getByType(instance.itemType, player, armorConfig)
+            val i = ArmorUtil.getByType(instance.itemType, player)
             if (i != -1) {
-                ArcticGlobalDataService.inst.edit<PlayerData>(player) {
-                    it.equipment[i] = instance
-                }
+                ArcticGlobalDataService.inst.edit<PlayerData>(player) { it.equipment[i] = instance }
                 if (!ArmorType.isArmor(item.type)) player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)
                 player.inventory.setItemInMainHand(null)
             }

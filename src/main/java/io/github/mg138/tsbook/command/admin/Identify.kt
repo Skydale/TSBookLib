@@ -7,7 +7,7 @@ import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.items.ItemUtils
-import io.github.mg138.tsbook.setting.BookSetting
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
@@ -37,7 +37,7 @@ object Identify {
         return true
     }
 
-    private fun identify(bookSetting: BookSetting, ID: String, type: String): ItemInstance {
+    private fun identify(bookSetting: BookConfig, ID: String, type: String): ItemInstance {
         val setting: ItemSetting = if (type == "unid") {
             val items = setting.itemConfig.getUnidentifiedByID(ID).iden
             bookSetting.itemConfig.getItemByID(items[rand.nextInt(items.size)])

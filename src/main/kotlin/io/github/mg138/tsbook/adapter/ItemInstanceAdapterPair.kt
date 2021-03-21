@@ -9,20 +9,20 @@ import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.Book.Companion.setting
-import io.github.mg138.tsbook.setting.AbstractSetting
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.items.ItemIdentification
 import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.items.ItemStats
+import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import java.lang.reflect.Type
 import java.util.*
 
 
 @Component
 class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
-    class ItemInstanceAdapter(private var setting: AbstractSetting) : TypeAdapter<ItemInstance>() {
+    class ItemInstanceAdapter : TypeAdapter<ItemInstance>() {
         private var gson: Gson = Gson()
 
         override fun write(writer: JsonWriter, instance: ItemInstance?) {
@@ -61,17 +61,18 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
             }
             reader.endObject()
 
-            if (internalType == null || id == null) return null
+            if (internalType == null || id == null || identification == null) return null
 
             var setting: ItemSetting? = null
             when (internalType) {
-                "item" -> setting = Book.setting.itemConfig.getItemByID(id)
-                "unid" -> setting = Book.setting.itemConfig.getUnidentifiedByID(id)
+                "item" -> setting = ItemConfig.getItemByID(id)
+                "unid" -> setting = ItemConfig.getUnidentifiedByID(id)
             }
             if (setting == null) return null
+
             return if (setting is StatedItemSetting) ItemInstance(
                 setting,
-                ItemStats(identification, Book.setting, setting.stats),
+                ItemStats(setting.stats, identification, BookConfig),
                 internalType,
                 UUID.randomUUID()
             ) else ItemInstance(
@@ -84,5 +85,5 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
     }
 
     override val type: Type = ItemInstance::class.java
-    override val typeAdapter = ItemInstanceAdapter(setting)
+    override val typeAdapter = ItemInstanceAdapter()
 }

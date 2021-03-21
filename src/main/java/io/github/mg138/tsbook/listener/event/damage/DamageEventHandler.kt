@@ -3,9 +3,7 @@ package io.github.mg138.tsbook.listener.event.damage
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.simpleDamage
 import io.github.mg138.tsbook.entities.effect.EffectHandler.hasEffect
 import io.github.mg138.tsbook.entities.effect.EffectHandler.getEffect
-import io.github.mg138.tsbook.Book.Companion.setting
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.damagedByEntity
-import io.github.mg138.tsbook.listener.event.damage.DamageHandler.getDefense
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.EventPriority
@@ -13,81 +11,93 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import io.github.mg138.tsbook.items.data.stat.StatType
-import io.github.mg138.tsbook.items.data.stat.util.set.DefenseType
 import io.github.mg138.tsbook.items.ItemStats
+import io.github.mg138.tsbook.stat.StatMap
+import io.github.mg138.tsbook.stat.util.StatUtil
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
+import io.github.mg138.tsbook.setting.mob.MobConfig
+import io.github.mg138.tsbook.stat.util.set.DefenseType
 import io.lumine.xikage.mythicmobs.MythicMobs
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import java.util.*
+import kotlin.math.max
 
 class DamageEventHandler : Listener {
+    companion object {
+        private val damageCD: MutableMap<Entity, Long> = HashMap()
+
+        fun unload() {
+            damageCD.clear()
+            DamageHandler.unload()
+        }
+    }
+
     @EventHandler
     fun onEntityDeath(event: EntityDeathEvent) {
-        lastDamageTime.remove(event.entity)
+        damageCD.remove(event.entity)
     }
 
     @EventHandler
     fun onPlayerQuit(event: PlayerQuitEvent) {
-        DamageHandler.damageCD.remove(event.player)
+        val player = event.player
+        DamageHandler.remove(player)
+        damageCD.remove(player)
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     fun onDamage(event: EntityDamageEvent) {
         val entity = event.entity
         if (entity !is LivingEntity || entity is ArmorStand || entity is Item) return
+
         entity.maximumNoDamageTicks = 0
         entity.noDamageTicks = 0
+
         when (event.cause) {
             DamageCause.FIRE_TICK, DamageCause.FIRE, DamageCause.LAVA -> {
                 event.isCancelled = true
-                if (System.currentTimeMillis() - lastDamageTime.getOrDefault(entity, 0L) > 500) {
+                if (System.currentTimeMillis() - damageCD.getOrDefault(entity, 0L) > 500) {
                     simpleDamage(entity, 2.0)
-                    lastDamageTime[entity] = System.currentTimeMillis()
+                    damageCD[entity] = System.currentTimeMillis()
                 }
                 return
             }
-            DamageCause.FALL -> if (hasEffect(entity, StatusEffectType.FALL_DAMAGE_RESISTANCE)) {
-                event.isCancelled = true
-                val effect = getEffect(entity, StatusEffectType.FALL_DAMAGE_RESISTANCE)!!
-                simpleDamage(entity, event.damage * (1 - effect.power))
-                return
+            DamageCause.FALL -> {
+                getEffect(entity, StatusEffectType.FALL_DAMAGE_RESISTANCE)?.let {
+                    event.isCancelled = true
+                    simpleDamage(entity, StatUtil.calculateModifier(event.damage, max((1 - it.power), 0.0)))
+                    return
+                }
             }
             else -> Unit
         }
         if (event is EntityDamageByEntityEvent) {
-            if (mythicMobHelper.isMythicMob(entity)) {
-                val mob = setting.getMMMob(mythicMobHelper.getMythicMobInstance(entity).type.internalName)
-                if (mob != null) {
-                    val map: MutableMap<StatType, Double> = EnumMap(StatType::class.java)
-                    for (literalType in mob.getKeys(false)) {
-                        val type = StatType.valueOf(literalType.toUpperCase())
-                        if (DefenseType.types.contains(type)) map[type] = mob.getDouble(literalType)
+            when {
+                DamageHandler.mythicMobHelper.isMythicMob(entity) -> {
+                    MobConfig[DamageHandler.mythicMobHelper.getMythicMobInstance(entity).type.internalName]?.let {
+                        damagedByEntity(event, StatUtil.getDefense(it.itemStats.statOut))
+                        return
                     }
-                    damagedByEntity(event, map)
+                }
+                entity is Player -> {
+                    val stats = StatMap()
+                    ArcticGlobalDataService.inst.getData<PlayerData>(entity, PlayerData::class)
+                        ?.equipment?.forEach { _, armor ->
+                            armor.stats?.let { itemStat ->
+                                itemStat.statOut.forEach { (type, stat) ->
+                                    if (DefenseType.types.contains(type)) {
+                                        stats[type] = stat + stats[type]
+                                    }
+                                }
+                            }
+                        }
+                    damagedByEntity(event, stats)
                     return
                 }
-            } else if (entity is Player) {
-                val stats: MutableList<ItemStats> = ArrayList()
-                val data = ArcticGlobalDataService.inst.getData<PlayerData>(
-                    entity, PlayerData::class
-                )
-                data?.equipment?.forEach { _, armor -> armor.stats?.let { stats.add(it) } }
-                damagedByEntity(event, getDefense(stats.toTypedArray()))
-                return
             }
-            damagedByEntity(event, emptyMap())
-        }
-    }
-
-    companion object {
-        private val mythicMobHelper = MythicMobs.inst().apiHelper
-        private val lastDamageTime: MutableMap<Entity, Long> = HashMap()
-        fun unload() {
-            lastDamageTime.clear()
+            damagedByEntity(event, StatMap())
         }
     }
 }

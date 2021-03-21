@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.listener.event.damage.utils
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.Book.Companion.setting
-import io.github.mg138.tsbook.items.data.stat.StatType
+import io.github.mg138.tsbook.stat.StatType
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.scheduler.BukkitRunnable
@@ -13,6 +13,7 @@ import kotlin.math.sin
 
 object DamageIndicator {
     private val indicators: MutableList<ArmorStand> = ArrayList()
+
     fun unload() {
         if (indicators.isEmpty()) return
         indicators.forEach { it.remove() }
@@ -39,7 +40,7 @@ object DamageIndicator {
             indicator.setGravity(false)
             indicator.isMarker = true
             indicator.isCustomNameVisible = true
-            indicator.customName = setting.translate.translate("indicator.$type") + damage.toInt()
+            indicator.customName = BookConfig.translate.translate("indicator.$type") + damage.toInt()
         }
 
         object : BukkitRunnable() {

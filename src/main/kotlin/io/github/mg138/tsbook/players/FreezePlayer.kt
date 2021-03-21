@@ -19,7 +19,6 @@ import org.bukkit.event.inventory.InventoryInteractEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 import org.bukkit.event.player.*
 
-
 @Component
 class FreezePlayer(
     private val eventService: EventService

@@ -1,6 +1,5 @@
 package io.github.mg138.tsbook.listener.event
 
-import io.github.mg138.tsbook.listener.event.util.ArmorType
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event

@@ -7,11 +7,11 @@ import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 open class Effect(
-    delay: (StatusEffect) -> Int,
-    period: (StatusEffect) -> Int,
+    delay: (StatusEffect) -> Long,
+    period: (StatusEffect) -> Long,
     runBefore: (LivingEntity, StatusEffect) -> Any = { _, _ -> },
     condition: (LivingEntity, StatusEffect) -> Boolean,
-    action: (Int, LivingEntity, StatusEffect) -> Boolean = { _, _, _ -> true },
+    action: (Long, LivingEntity, StatusEffect) -> Boolean = { _, _, _ -> true },
     whenExpire: (LivingEntity, StatusEffect, Any) -> Unit = { _, _, _ -> }
 ) {
     val effect = label@{ effect: EntityStatusEffect ->
@@ -25,7 +25,7 @@ open class Effect(
 
         val temp = runBefore(target, statusEffect)
         val runnable = object : BukkitRunnable() {
-            var i = 0
+            var i = 0L
 
             override fun run() {
                 if (i > ticks || condition(target, statusEffect)) { cancel(); return }

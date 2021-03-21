@@ -4,9 +4,9 @@ import org.bukkit.Material
 
 abstract class ItemSetting(
     val id: String,
-    val item_type: String,
+    val item_type: String = "NONE",
     val material: Material,
-    val model: Int,
+    val model: Int = 0,
     val name: String,
     val lore: List<String>
 ) {

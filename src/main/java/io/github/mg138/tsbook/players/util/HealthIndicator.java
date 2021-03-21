@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.players.util;
 
 import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.items.data.stat.StatType;
+import io.github.mg138.tsbook.stat.StatType;
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+// TODO UPDATE THIS PLZ
 public class HealthIndicator implements Listener {
     public final static Map<LivingEntity, Map<Player, BossBar>> healthIndicators = new HashMap<>();
     public final static Map<Player, Map<LivingEntity, BukkitRunnable>> removeHealthIndicator = new HashMap<>();

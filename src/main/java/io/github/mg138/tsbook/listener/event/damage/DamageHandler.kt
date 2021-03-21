@@ -3,198 +3,115 @@ package io.github.mg138.tsbook.listener.event.damage
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.entities.effect.EffectHandler
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
-import io.github.mg138.tsbook.entities.util.MobType
-import io.github.mg138.tsbook.items.ItemIdentification
-import io.github.mg138.tsbook.items.ItemInstance
+import io.github.mg138.tsbook.utils.MobType
 import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.items.ItemUtils
-import io.github.mg138.tsbook.items.data.stat.StatMap
-import io.github.mg138.tsbook.items.data.stat.StatSingle
-import io.github.mg138.tsbook.items.data.stat.StatType
-import io.github.mg138.tsbook.items.data.stat.util.set.*
+import io.github.mg138.tsbook.stat.*
+import io.github.mg138.tsbook.stat.util.StatUtil
+import io.github.mg138.tsbook.stat.util.set.*
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
-import io.github.mg138.tsbook.listener.event.damage.utils.StatCalculator
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.setting.BookSetting
+import io.github.mg138.tsbook.setting.mob.MobConfig
+import io.github.mg138.tsbook.stat.util.map.DamageDefenseRelation
 import io.lumine.xikage.mythicmobs.MythicMobs
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
-import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.*
 import kotlin.collections.HashMap
 
 object DamageHandler {
-    private val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
+    val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
     private val rand = Random()
-    private val bookSetting: BookSetting = Book.setting
-    val damageCD: MutableMap<Player, Long> = HashMap()
+    private val damageCD: MutableMap<Player, Long> = HashMap()
 
-    fun damagedByEntity(event: EntityDamageByEntityEvent, defense: Map<StatType, Double>) {
-        if (event.entity !is LivingEntity) return
+    fun remove(player: Player) {
+        damageCD.remove(player)
+    }
+
+    fun unload() {
+        damageCD.clear()
+    }
+
+    fun damagedByEntity(event: EntityDamageByEntityEvent, defense: StatMap) {
         val damager = event.damager
+
         when {
             mythicMobHelper.isMythicMob(damager) -> {
-                val mobSetting = bookSetting.getMMMob(mythicMobHelper.getMythicMobInstance(damager).type.internalName) ?: return
-
-
-                val fakeItemStats = arrayOf(ItemStats(identification, bookSetting, stats))
-                complexDamage(event, fakeItemStats, defense)
+                MobConfig[mythicMobHelper.getMythicMobInstance(damager).type.internalName]?.let {
+                    complexDamage(event, it.itemStats.statOut, defense)
+                }
             }
             damager is Player -> {
-                damageCD.putIfAbsent(damager, System.currentTimeMillis())
-                if ((System.currentTimeMillis() - damageCD[damager]!!) < 500) {
+                if (System.currentTimeMillis() - damageCD.getOrDefault(damager, 0L) <= 500) {
                     event.isCancelled = true
                     return
                 }
                 damageCD[damager] = System.currentTimeMillis()
 
-                val stats: Stack<ItemStats> = Stack()
-                val equipment = damager.equipment ?: return
-                val item = equipment.itemInMainHand
-                if (ItemUtils.checkItem(item) {}) {
-                    ItemUtils.getInstByItem(Book.inst, item)?.stats?.let { stats.add(it) }
+                val itemStats: MutableList<ItemStats> = LinkedList()
+                damager.equipment?.itemInMainHand?.let { item ->
+                    if (ItemUtils.checkItem(item)) {
+                        ItemUtils.getInstByItem(Book.inst, item)?.stats?.let { itemStats.add(it) }
+                    }
                 }
                 ArcticGlobalDataService.inst.getData<PlayerData>(damager, PlayerData::class)
-                    ?.equipment?.forEach { _, armor -> armor.stats?.let { stats.add(it) } }
+                    ?.equipment?.forEach { _, armor -> armor.stats?.let { itemStats.add(it) } }
 
-                complexDamage(event, stats.toTypedArray(), defense)
+                complexDamage(event, StatUtil.combine(itemStats), defense)
             }
             damager is Arrow -> {
-                val container = damager.persistentDataContainer
-                val uuids: Array<UUID> = container[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag] ?: return
-                val stats: MutableList<ItemStats> = ArrayList()
-                for (uuid in uuids) {
-                    val inst: ItemInstance = ItemUtils.itemCache[uuid] ?: continue
-                    inst.stats?.let { stats.add(it) }
-                }
-                complexDamage(event, stats.toTypedArray(), defense)
+                val itemStats: MutableList<ItemStats> = LinkedList()
+                damager.persistentDataContainer[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag]
+                    ?.forEach { uuid ->
+                        ItemUtils.itemCache[uuid]?.let { inst ->
+                            inst.stats?.let { itemStats.add(it) }
+                        }
+                    }
+                complexDamage(event, StatUtil.combine(itemStats), defense)
             }
         }
     }
 
-    fun complexDamage(event: EntityDamageByEntityEvent, stats: Array<ItemStats>?, defense: Map<StatType, Double>) {
-        val livingEntity: LivingEntity = event.entity as LivingEntity
-        if (stats == null) {
-            simpleDamage(livingEntity, 1.0)
-            return
-        }
-        var damage = 0.0
+    fun complexDamage(event: EntityDamageByEntityEvent, stats: StatMap, defense: StatMap) {
+        val entity = event.entity as LivingEntity
+        val damager: LivingEntity
 
-        val damager: Entity = event.damager
-        val livingDamager: LivingEntity
         var customEvent: CustomDamageEvent? = null
 
-        when (damager) {
+        when (val entityDamager = event.damager) {
             is LivingEntity -> {
-                livingDamager = damager
-                customEvent = CustomDamageEvent(livingEntity, livingDamager)
+                damager = entityDamager
+                customEvent = CustomDamageEvent(entity, damager)
             }
             is Projectile -> {
-                if (damager.shooter is LivingEntity) {
-                    livingDamager = damager.shooter as LivingEntity
-                    customEvent = CustomDamageEvent(livingEntity, livingDamager)
+                if (entityDamager.shooter is LivingEntity) {
+                    damager = entityDamager.shooter as LivingEntity
+                    customEvent = CustomDamageEvent(entity, damager)
                 }
             }
         }
-        var usedModifier = 0.0
-        for ((type, modifier) in getModifier(stats)) {
-            when (type) {
-                StatType.MODIFIER_HELL -> if (MobType.isHellish(livingEntity.type)) usedModifier += modifier / 100
-                StatType.MODIFIER_MOBS -> if (MobType.isMob(livingEntity.type)) usedModifier += modifier / 100
-                StatType.MODIFIER_PLAYER -> if (livingEntity.type == EntityType.PLAYER) usedModifier += modifier / 100
-                StatType.MODIFIER_ARTHROPOD -> if (MobType.isArthropod(livingEntity.type)) usedModifier += modifier / 100
-                StatType.MODIFIER_UNDERWATER -> if (MobType.isWatery(livingEntity.type)) usedModifier += modifier / 100
-                StatType.MODIFIER_UNDEAD -> if (MobType.isUndead(livingEntity.type)) usedModifier += modifier / 100
-                else -> Unit
-            }
-        }
-        val damages: Map<StatType, Double> = getDamage(stats)
-        val critDamage = getStat(EnumSet.of(StatType.POWER_CRITICAL), stats)[StatType.POWER_CRITICAL] ?: 0.0
-        var critChance = getStat(EnumSet.of(StatType.CHANCE_CRITICAL), stats)[StatType.CHANCE_CRITICAL] ?: 0.0
-        for (damageType in damages.keys) {
-            var currentDamage: Double
-            if (damageType === StatType.DAMAGE_TRUE) {
-                currentDamage = damages[StatType.DAMAGE_TRUE]?.let {
-                    StatCalculator.calculateTrueDamage(
-                        it,
-                        defense.getOrDefault(StatType.DEFENSE_TRUE, 0.0),
-                        1 + usedModifier
-                    )
-                }!!
-            } else {
-                var critical = 0
-                critChance /= 100.0
-                while (true) {
-                    val criticalSuccess = rand.nextFloat() < critChance
-                    if (!criticalSuccess) break
-                    critChance -= 1.0
-                    critical++
-                }
-                currentDamage = damages[damageType]?.let {
-                    StatCalculator.calculateDamage(
-                        it,
-                        defense.getOrDefault(DamageDefenseRelation.relationship.get(damageType), 0.0),
-                        1 + (critical * (1 + critDamage / 100) - 1) + usedModifier
-                    )
-                }!!
-            }
-            damage += currentDamage
-            customEvent?.addDamage(damageType, currentDamage)
 
-            var chance = 0.25
-            var x = 0
-            when (damageType) {
-                StatType.DAMAGE_TEMPUS, StatType.DAMAGE_AQUA,
-                StatType.DAMAGE_IGNIS, StatType.DAMAGE_LUMEN,
-                StatType.DAMAGE_TERRA, StatType.DAMAGE_UMBRA -> {
-                    chance = 0.25 + (getStat(EnumSet.of(StatType.AFFINITY_ELEMENT), stats)[StatType.AFFINITY_ELEMENT]
-                        ?: 0.0) / 100
-                }
+        var usedModifier = 0.0
+        StatUtil.getModifier(stats).forEach { (type, modifier) ->
+            when (type) {
+                StatType.MODIFIER_HELL -> if (MobType.isHellish(entity.type)) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_MOBS -> if (MobType.isMob(entity.type)) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_PLAYER -> if (entity.type == EntityType.PLAYER) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_ARTHROPOD -> if (MobType.isArthropod(entity.type)) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_UNDERWATER -> if (MobType.isWatery(entity.type)) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_UNDEAD -> if (MobType.isUndead(entity.type)) usedModifier += modifier.stat / 100
                 else -> Unit
             }
-            while (true) {
-                val success = rand.nextFloat() < chance
-                if (!success) break
-                chance -= 1.0
-                x++
-            }
-            if (x != 0) {
-                when (damageType) {
-                    StatType.DAMAGE_IGNIS -> {
-                        val power = x * currentDamage / 8
-                        if (power < 20) break
-                        EffectHandler.apply(StatusEffectType.BURNING, livingEntity, power, (currentDamage / 6).toInt())
-                    }
-                    StatType.DAMAGE_PHYSICAL -> {
-                        val power = x * currentDamage / 12
-                        if (power < 20) break
-                        EffectHandler.apply(
-                            StatusEffectType.BLEEDING,
-                            livingEntity,
-                            power,
-                            (currentDamage / 14).toInt()
-                        )
-                    }
-                    StatType.DAMAGE_TEMPUS -> {
-                        val power = x * currentDamage / 8
-                        if (power < 20) break
-                        EffectHandler.apply(
-                            StatusEffectType.PARALYSIS,
-                            livingEntity,
-                            power,
-                            (600 * (currentDamage / (currentDamage + 1000))).toInt()
-                        )
-                    }
-                    else -> Unit
-                }
-            }
         }
-        val effectPower: Map<StatType, Double> = getEffectPower(stats)
+
+        val damageSum = damage(stats, defense, usedModifier)
+        elementEffect(stats, entity, usedModifier)
+        val effectPower: StatMap = getEffectPower(stats)
         for (entry in getEffectChance(stats).entries) {
             val type: StatType = entry.key
             var chance = entry.value
@@ -210,81 +127,48 @@ object DamageHandler {
             when (type) {
                 StatType.CHANCE_DRAIN -> {
                     val power = effectPower[StatType.POWER_DRAIN] ?: break
-                    if (livingDamager == null) break
-                    val result: Double = livingDamager.getHealth() + damage * Math.min(1.0, power / 100)
+                    if (damager == null) break
+                    val result: Double = damager.getHealth() + damageSum * Math.min(1.0, power / 100)
                     val maxHealth: Double =
-                        Objects.requireNonNull(livingDamager.getAttribute(Attribute.GENERIC_MAX_HEALTH))
+                        Objects.requireNonNull(damager.getAttribute(Attribute.GENERIC_MAX_HEALTH))
                             .getBaseValue()
-                    livingDamager.setHealth(Math.min(result, maxHealth))
+                    damager.setHealth(Math.min(result, maxHealth))
                 }
                 StatType.CHANCE_SLOWNESS -> {
                     val power = effectPower[StatType.POWER_SLOWNESS] ?: break
                     EffectHandler.apply(
                         StatusEffectType.SLOWNESS,
-                        livingEntity,
+                        entity,
                         x * power / 100,
                         (x * power * 90).toInt()
                     )
                 }
                 StatType.CHANCE_LEVITATION -> {
                     val power = effectPower[StatType.POWER_LEVITATION] ?: break
-                    EffectHandler.apply(StatusEffectType.LEVITATION, livingEntity, 0.0, (x * power * 20).toInt())
+                    EffectHandler.apply(StatusEffectType.LEVITATION, entity, 0.0, (x * power * 20).toInt())
                 }
                 StatType.CHANCE_NAUSEOUS -> {
                     val power = effectPower[StatType.POWER_NAUSEOUS] ?: break
-                    EffectHandler.apply(StatusEffectType.NAUSEOUS, livingEntity, 0.0, (x * power * 20).toInt())
+                    EffectHandler.apply(StatusEffectType.NAUSEOUS, entity, 0.0, (x * power * 20).toInt())
                 }
             }
         }
-        event.damage = damage
-        livingEntity.maximumNoDamageTicks = 0
-        livingEntity.noDamageTicks = 0
+        event.damage = damageSum
+        entity.maximumNoDamageTicks = 0
+        entity.noDamageTicks = 0
         if (customEvent != null) {
             Bukkit.getPluginManager().callEvent(customEvent)
         }
     }
 
-    private fun getStat(template: Set<StatType>, itemStats: Array<ItemStats>): Map<StatType, Double> {
-        val result: MutableMap<StatType, Double> = EnumMap(StatType::class.java)
-        for (itemStat in itemStats) {
-            val stats = itemStat.statMap
-
-            template.forEach { type ->
-                if (stats.containsKey(type)) {
-                    result[type] = itemStat[type] + result.getOrDefault(type, 0.0)
-                }
-            }
-        }
-        return result
-    }
-
-    fun getDefense(stats: Array<ItemStats>): Map<StatType, Double> {
-        return getStat(DefenseType.types, stats)
-    }
-
-    fun getModifier(stats: Array<ItemStats>): Map<StatType, Double> {
-        return getStat(ModifierType.types, stats)
-    }
-
-    fun getDamage(stats: Array<ItemStats>): Map<StatType, Double> {
-        return getStat(DamageType.types, stats)
-    }
-
-    fun getEffectPower(stats: Array<ItemStats>): Map<StatType, Double> {
-        return getStat(EffectPowerType.types, stats)
-    }
-
-    fun getEffectChance(stats: Array<ItemStats>): Map<StatType, Double> {
-        return getStat(EffectChanceType.types, stats)
-    }
-
     fun simpleDamage(
         entity: LivingEntity,
         damage: Double,
-        damageType: StatType? = null,
+        damageType: StatType = StatType.DAMAGE_NONE,
         display: Boolean = false
     ): Boolean {
         if (entity.isDead) return false
+        if (damage == 0.0) return true
         entity.damage(damage)
         entity.maximumNoDamageTicks = 0
         entity.noDamageTicks = 0
@@ -292,5 +176,94 @@ object DamageHandler {
             DamageIndicator.displayDamage(damage, damageType, entity.location)
         }
         return true
+    }
+
+    private fun damage(stats: StatMap, defense: StatMap, modifier: Double): Double {
+        val damages = StatUtil.getDamage(stats)
+        if (damages.isEmpty()) return 0.0
+
+        var certainCritStrikes = 0
+        val critDamage = StatUtil.checkBelowZero(
+            stat = stats.getStatOut(StatType.POWER_CRITICAL),
+            above = { it / 100 }
+        )
+        val critChance = StatUtil.checkBelowZero(
+            stat = stats.getStatOut(StatType.CHANCE_CRITICAL),
+            above = {
+                val temp = it / 100
+                certainCritStrikes = temp.toInt()
+                temp % 1
+            }
+        )
+
+        println(critChance)
+        println(critDamage)
+
+        var damageSum = 0.0
+        damages.forEach { (damageType, rawDamage) ->
+            val critStrikes = certainCritStrikes + (if (rand.nextDouble() < critChance) 1 else 0)
+            val damage = when (damageType) {
+                StatType.DAMAGE_TRUE -> {
+                    StatUtil.calculateTrueDamage(
+                        damage = rawDamage.stat,
+                        defense = defense.getStatOut(StatType.DEFENSE_TRUE),
+                        modifier = 1 + modifier
+                    )
+                }
+                else -> {
+                    StatUtil.calculateDamage(
+                        damage = rawDamage.stat,
+                        defense = defense.getStatOut(DamageDefenseRelation.relation[damageType]!!),
+                        modifier = 1 + modifier + (critDamage * critStrikes)
+                    )
+                }
+            }
+            damageSum += damage
+        }
+        return damageSum
+    }
+
+    private fun elementEffect(stats: StatMap, entity: LivingEntity, modifier: Double) {
+        val elementDamages = StatUtil.getElementDamage(stats)
+        if (elementDamages.isEmpty()) return
+
+        var certainStrike = 0
+        val chance = StatUtil.checkBelowZero(
+            stat = (0.25 + stats.getStatOut(StatType.AFFINITY_ELEMENT)),
+            above = {
+                val temp = it / 100
+                certainStrike = temp.toInt()
+                temp % 1
+            }
+        )
+
+        elementDamages.forEach { (damageType, rawDamage) ->
+            val damage = StatUtil.calculateModifier(rawDamage.stat, modifier)
+            val strikes = (certainStrike + if (rand.nextDouble() < chance) 1 else 0)
+            when (damageType) {
+                StatType.DAMAGE_IGNIS -> {
+                    val power = (damage / 8) * strikes
+                    val tick = (damage / 6).toLong()
+                    if (power > 20 && tick > 10) {
+                        EffectHandler.apply(StatusEffectType.BURNING, entity, power, tick)
+                    }
+                }
+                StatType.DAMAGE_PHYSICAL -> {
+                    val power = (damage / 12) * strikes
+                    val tick = (damage / 14).toLong()
+                    if (power > 20 && tick > 10) {
+                        EffectHandler.apply(StatusEffectType.BLEEDING, entity, power, tick)
+                    }
+                }
+                StatType.DAMAGE_TEMPUS -> {
+                    val power = (damage / 8) * strikes
+                    val tick = (600 * (damage / (damage + 1000))).toLong()
+                    if (power > 20 && tick > 60) {
+                        EffectHandler.apply(StatusEffectType.PARALYSIS, entity, power, tick)
+                    }
+                }
+                else -> Unit
+            }
+        }
     }
 }

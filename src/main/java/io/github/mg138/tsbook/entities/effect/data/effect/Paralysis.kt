@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.entities.effect.data.effect
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook
 import io.github.mg138.tsbook.entities.effect.EffectHandler
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
-import io.github.mg138.tsbook.items.data.stat.StatType
+import io.github.mg138.tsbook.stat.StatType
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler
 import java.util.*
 
@@ -17,7 +17,7 @@ object Paralysis : Effect(
     },
     condition = { _, _ -> false },
     action = lambda@{ i, target, statusEffect ->
-        if (i % 4 == 0) {
+        if (i % 4 == 0L) {
             return@lambda DamageHandler.simpleDamage(target, statusEffect.power, StatType.DAMAGE_THUNDER, true)
         }
 

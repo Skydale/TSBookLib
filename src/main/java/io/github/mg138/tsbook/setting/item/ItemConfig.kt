@@ -5,6 +5,7 @@ import io.github.mg138.tsbook.setting.item.element.SimpleItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting
 import org.bukkit.configuration.file.YamlConfiguration
+import java.lang.IllegalArgumentException
 import java.util.*
 
 object ItemConfig : AbstractItemConfig() {
@@ -26,18 +27,15 @@ object ItemConfig : AbstractItemConfig() {
         }
     }
 
-    val unidKey: Set<String>
-        get() = unid.keys
-
     fun getUnidentifiedByID(id: String): UnidentifiedSetting? {
         return unid[id]
     }
 
-    fun getAnyItemByID(id: String): ItemSetting? {
+    fun getAnyItemByID(id: String): ItemSetting {
         return when {
             items.containsKey(id) -> getItemByID(id)!!
             unid.containsKey(id) -> getUnidentifiedByID(id)!!
-            else -> null
+            else -> throw IllegalArgumentException("No such item exists!")
         }
     }
 }

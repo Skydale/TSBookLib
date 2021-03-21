@@ -5,10 +5,10 @@ import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.listener.event.inventory.error.ItemError
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.players.util.ArmorUtil
-import io.github.mg138.tsbook.setting.BookSetting
-import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
+import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
+import io.github.mg138.tsbook.utils.ArmorUtil
+import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
 import io.github.mg138.tsbook.setting.gui.armor.element.ArmorElementSetting
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -23,10 +23,9 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 
-class EquipmentGUIHandler(
-    private val bookSetting: BookSetting,
-    private val armorConfig: ArmorGUIConfig = bookSetting.armorGUIConfig
-) : Listener {
+// TODO: CLEAN UP
+
+class EquipmentGUIHandler : Listener {
     companion object {
         private val players: MutableSet<Player> = HashSet()
     }
@@ -53,12 +52,11 @@ class EquipmentGUIHandler(
     }
 
     private fun constructInventory(inventory: Inventory, player: Player) {
-        armorConfig.elementSettings.forEach { (i, setting) ->
-            val item: ItemStack
-            val data = ArcticGlobalDataService.inst.getData<PlayerData>(player)
+        val data = ArcticGlobalDataService.inst.getData<PlayerData>(player) ?: return
 
-            item = if (data != null && setting is ArmorElementSetting && data.equipment.contains(i)) {
-                data.equipment[i]!!.createItem(Book.inst)
+        ArmorGUIConfig.elementSettings.forEach { (i, setting) ->
+            val item = if (setting is ArmorElementSetting && data.equipment.contains(i)) {
+                data.equipment[i]!!.createItem()
             } else {
                 defaultItem(setting)
             }
@@ -67,7 +65,7 @@ class EquipmentGUIHandler(
     }
 
     fun openEquipmentGUI(player: Player) {
-        val inventory = Bukkit.createInventory(player, 54, bookSetting.translate.translate("gui.equipment.name"))
+        val inventory = Bukkit.createInventory(player, 54, BookConfig.translate.translate("gui.equipment.name"))
         constructInventory(inventory, player)
         players.add(player)
         player.openInventory(inventory)
@@ -107,8 +105,8 @@ class EquipmentGUIHandler(
             val slot = event.rawSlot
             val inventory = event.inventory
             val playerInventory = player.inventory
-            val currentItem = event.currentItem
-            val cursor = event.cursor
+            val currentItem = event.currentItem ?: return
+            val cursor = event.cursor ?: return
 
             when (event.action) {
                 InventoryAction.MOVE_TO_OTHER_INVENTORY -> {
@@ -116,7 +114,7 @@ class EquipmentGUIHandler(
 
                     if (slot in 0..53) {
                         if (ItemUtils.hasItemID(currentItem)) {
-                            val setting = armorConfig.elementSettings[slot] ?: return
+                            val setting = ArmorGUIConfig.elementSettings[slot] ?: return
                             if (setting !is ArmorElementSetting) return
 
                             val failed = playerInventory.addItem(currentItem)
@@ -128,9 +126,9 @@ class EquipmentGUIHandler(
                         }
                     } else {
                         if (ItemUtils.hasItemID(currentItem)) {
-                            val instance = ItemUtils.getInstByItem(Book.inst, currentItem)
+                            val instance = ItemUtils.getInstByItem(Book.inst, currentItem) ?: return
 
-                            val i = ArmorUtil.getByType(instance.itemType, player, armorConfig)
+                            val i = ArmorUtil.getByType(instance.itemType, player)
                             if (i == -1) return
 
                             inventory.setItem(i, currentItem)
@@ -150,7 +148,7 @@ class EquipmentGUIHandler(
                             ArcticGlobalDataService.inst.edit<PlayerData>(player) { data ->
                                 data.equipment.remove(slot)
                             }
-                            event.currentItem = defaultItem(armorConfig.elementSettings[slot]!!)
+                            event.currentItem = defaultItem(ArmorGUIConfig.elementSettings[slot]!!)
                         }
                     }
                 }
@@ -159,10 +157,10 @@ class EquipmentGUIHandler(
                     if (slot in 0..53) {
                         event.isCancelled = true
                         if (ItemUtils.hasItemID(cursor)) {
-                            val setting = armorConfig.elementSettings[slot] ?: return
+                            val setting = ArmorGUIConfig.elementSettings[slot] ?: return
                             if (setting !is ArmorElementSetting) return
 
-                            val instance = ItemUtils.getInstByItem(Book.inst, cursor)
+                            val instance = ItemUtils.getInstByItem(Book.inst, cursor) ?: return
 
                             if (setting.setting.type == instance.itemType) {
                                 event.currentItem = cursor
@@ -181,13 +179,13 @@ class EquipmentGUIHandler(
                     if (slot in 0..53) {
                         event.isCancelled = true
 
-                        if (currentItem == null || currentItem.type == Material.AIR) return
+                        if (!ItemUtils.checkItem(currentItem)) return
 
                         if (ItemUtils.hasItemID(cursor)) {
-                            val setting = armorConfig.elementSettings[slot] ?: return
+                            val setting = ArmorGUIConfig.elementSettings[slot] ?: return
                             if (setting !is ArmorElementSetting) return
 
-                            val instance = ItemUtils.getInstByItem(Book.inst, cursor)
+                            val instance = ItemUtils.getInstByItem(Book.inst, cursor) ?: return
 
                             if (setting.setting.type == instance.itemType) {
                                 event.currentItem = cursor
@@ -207,13 +205,13 @@ class EquipmentGUIHandler(
 
                     val hotbarButton = event.hotbarButton
                     if (hotbarButton < 0) return
-                    val hotbar = playerInventory.getItem(hotbarButton)
+                    val hotbar = playerInventory.getItem(hotbarButton) ?: return
 
                     if (ItemUtils.hasItemID(hotbar)) {
-                        val setting = armorConfig.elementSettings[slot] ?: return
+                        val setting = ArmorGUIConfig.elementSettings[slot] ?: return
                         if (setting !is ArmorElementSetting) return
 
-                        val instance = ItemUtils.getInstByItem(Book.inst, hotbar)
+                        val instance = ItemUtils.getInstByItem(Book.inst, hotbar) ?: return
 
                         if (setting.setting.type == instance.itemType) {
                             playerInventory.setItem(hotbarButton,
@@ -232,10 +230,10 @@ class EquipmentGUIHandler(
                 InventoryAction.HOTBAR_SWAP -> {
                     event.isCancelled = true
 
-                    val setting = armorConfig.elementSettings[slot] ?: return
+                    val setting = ArmorGUIConfig.elementSettings[slot] ?: return
                     val hotbarButton = event.hotbarButton
                     if (hotbarButton < 0) return
-                    val hotbar = playerInventory.getItem(hotbarButton)
+                    val hotbar = playerInventory.getItem(hotbarButton) ?: return
 
                     if (ItemUtils.hasItemID(currentItem)) {
                         playerInventory.setItem(hotbarButton, currentItem)
@@ -245,7 +243,7 @@ class EquipmentGUIHandler(
                         inventory.setItem(slot, defaultItem(setting))
                     } else if (ItemUtils.hasItemID(hotbar)) {
                         if (setting !is ArmorElementSetting) return
-                        val instance = ItemUtils.getInstByItem(Book.inst, hotbar)
+                        val instance = ItemUtils.getInstByItem(Book.inst, hotbar) ?: return
 
                         if (setting.setting.type == instance.itemType) {
                             playerInventory.setItem(hotbarButton, null)
@@ -260,12 +258,10 @@ class EquipmentGUIHandler(
                 }
 
                 InventoryAction.NOTHING, InventoryAction.UNKNOWN, InventoryAction.CLONE_STACK,
-                InventoryAction.COLLECT_TO_CURSOR
-                -> Unit
+                InventoryAction.COLLECT_TO_CURSOR -> Unit
 
                 InventoryAction.DROP_ALL_CURSOR, InventoryAction.DROP_ONE_CURSOR,
-                InventoryAction.DROP_ONE_SLOT, InventoryAction.DROP_ALL_SLOT
-                -> {
+                InventoryAction.DROP_ONE_SLOT, InventoryAction.DROP_ALL_SLOT -> {
                     event.isCancelled = true
                 }
             }

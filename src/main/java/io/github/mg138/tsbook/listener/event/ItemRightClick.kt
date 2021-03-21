@@ -1,15 +1,12 @@
 package io.github.mg138.tsbook.listener.event
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.items.ItemUtils.getStringTag
 import io.github.mg138.tsbook.items.ItemUtils.getUUID
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
-import io.github.mg138.tsbook.players.ArcticGlobalDataService.Companion.playerDataRef
 import io.github.mg138.tsbook.players.data.PlayerData
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.entity.AbstractArrow
 import org.bukkit.entity.Arrow
 import org.bukkit.entity.Entity
@@ -25,6 +22,16 @@ import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
 class ItemRightClick : Listener {
+    companion object {
+        private val removing: MutableMap<Entity, BukkitRunnable> = HashMap()
+        private val damageCD: MutableMap<Player, Long> = HashMap()
+        fun unload() {
+            removing.forEach { (_, runnable) -> runnable.run() }
+            removing.clear()
+            damageCD.clear()
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     fun onEntityClick(event: PlayerInteractEntityEvent): Boolean {
         val player = event.player
@@ -41,7 +48,7 @@ class ItemRightClick : Listener {
     fun onItemClick(event: PlayerInteractEvent): Boolean {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val item = event.item ?: return false
-            if (item.type == Material.AIR) return false
+            if (!ItemUtils.checkItem(item)) return false
             val type = getStringTag(item, "type") ?: return false
             itemTypeOperator(type, item, event.player)
             return true
@@ -49,50 +56,45 @@ class ItemRightClick : Listener {
         return false
     }
 
-    private fun itemTypeOperator(type: String?, item: ItemStack, player: Player) {
+    private fun itemTypeOperator(type: String, item: ItemStack, player: Player) {
         when (type) {
-            "BOOK" -> BOOK(item, player)
+            "BOOK" -> book(item, player)
         }
     }
 
-    private fun itemIDOperator(itemID: String?, event: PlayerInteractEntityEvent) {
+    private fun itemIDOperator(itemID: String, event: PlayerInteractEntityEvent) {
         when (itemID) {
-            "LASSO" -> LASSO(event)
+            "LASSO" -> lasso(event)
         }
     }
 
-    private fun LASSO(event: PlayerInteractEntityEvent) {
+    private fun lasso(event: PlayerInteractEntityEvent) {
         val entity = event.rightClicked
         entity.addPassenger(event.player)
     }
 
-    private fun BOOK(item: ItemStack, player: Player) {
-        if (damageCD.putIfAbsent(player, System.currentTimeMillis()) != null) {
-            if (System.currentTimeMillis() - damageCD[player]!! < 500) {
-                return
-            }
-            damageCD.replace(player, System.currentTimeMillis())
+    private fun book(item: ItemStack, player: Player) {
+        if (System.currentTimeMillis() - damageCD.getOrDefault(player, 0L) <= 500) {
+            return
         }
+        damageCD[player] = System.currentTimeMillis()
+
         player.setCooldown(item.type, 10)
         val uuids: MutableList<UUID> = ArrayList()
-        val uuid = getUUID(item) ?: return
-        uuids.add(uuid)
-        val data = ArcticGlobalDataService.inst.getData<PlayerData>(player, playerDataRef)
-        data?.equipment?.forEach { i: Int?, instance: ItemInstance -> uuids.add(instance.uuid) }
-        val loc = player.location
+
+        getUUID(item)?.let { uuids.add(it) }
+
+        ArcticGlobalDataService.inst.getData<PlayerData>(player, PlayerData::class)?.equipment?.forEach { _, instance ->
+            uuids.add(instance.uuid)
+        }
         val arrow = player.world.spawn(player.eyeLocation, Arrow::class.java) { aw: Arrow ->
-            val container = aw.persistentDataContainer
-            container.set(
-                NamespacedKey(Book.inst, "item_uuids"),
-                ItemUtils.uuidArrayTag,
-                uuids.toTypedArray()
-            )
+            aw.persistentDataContainer[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag] = uuids.toTypedArray()
             aw.setGravity(false)
             aw.isInvulnerable = true
             aw.isSilent = true
             aw.shooter = player
             aw.damage = 0.0
-            aw.velocity = loc.direction
+            aw.velocity = player.location.direction
             aw.pickupStatus = AbstractArrow.PickupStatus.DISALLOWED
         }
         val runnable: BukkitRunnable = object : BukkitRunnable() {
@@ -102,15 +104,5 @@ class ItemRightClick : Listener {
         }
         removing[arrow] = runnable
         runnable.runTaskLater(Book.inst, 120)
-    }
-
-    companion object {
-        private val removing: MutableMap<Entity, BukkitRunnable> = HashMap()
-        private val damageCD: MutableMap<Player, Long> = HashMap()
-        fun unload() {
-            removing.forEach { (_, runnable) -> runnable.run() }
-            removing.clear()
-            damageCD.clear()
-        }
     }
 }

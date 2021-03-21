@@ -1,16 +1,15 @@
 package io.github.mg138.tsbook.items
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.Book.Companion.setting
-import io.github.mg138.tsbook.items.data.tag.UUIDArrayTag
-import io.github.mg138.tsbook.items.data.tag.UUIDTag
-import io.github.mg138.tsbook.items.data.tag.IdentificationTag
-import org.bukkit.plugin.java.JavaPlugin
-import org.bukkit.inventory.ItemStack
-import java.lang.NullPointerException
-import org.bukkit.NamespacedKey
-import org.bukkit.persistence.PersistentDataType
+import io.github.mg138.tsbook.items.data.IdentificationTag
+import io.github.mg138.tsbook.items.data.UUIDArrayTag
+import io.github.mg138.tsbook.items.data.UUIDTag
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
+import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.java.JavaPlugin
 import java.util.*
 
 object ItemUtils {
@@ -26,8 +25,8 @@ object ItemUtils {
     val itemTypeKey = NamespacedKey(Book.inst, "type")
     val identificationKey = NamespacedKey(Book.inst, "iden")
     val uuidArrayKey = NamespacedKey(Book.inst, "item_uuids")
-
-    inline fun checkItem(item: ItemStack?, actionOnFail: () -> Unit): Boolean {
+    
+    inline fun checkItem(item: ItemStack?, actionOnFail: () -> Unit = {}): Boolean {
         if (item == null || item.type == Material.AIR) {
             actionOnFail()
             return false
@@ -51,10 +50,8 @@ object ItemUtils {
         container[NamespacedKey(Book.inst, internalType), PersistentDataType.STRING] = inst.id
         //item type & internal type
 
-        //Optional
-        inst.itemType?.let { container[itemTypeKey, PersistentDataType.STRING] = it }
-        inst.model?.let { meta.setCustomModelData(it) }
-        //Optional
+        container[itemTypeKey, PersistentDataType.STRING] = inst.itemType
+        meta.setCustomModelData(inst.model)
 
         item.itemMeta = meta
         setIdentification(inst, item)
@@ -62,7 +59,7 @@ object ItemUtils {
     }
 
     fun getInstByItem(plugin: JavaPlugin, item: ItemStack): ItemInstance? {
-        if (!checkItem(item) {}) return null
+        if (!checkItem(item)) return null
         val meta = item.itemMeta!!
 
         val container = meta.persistentDataContainer
@@ -79,7 +76,7 @@ object ItemUtils {
             id,
             ItemStats.create(
                 getIdentification(item),
-                setting,
+                BookConfig,
                 id
             ),
             internalType,
@@ -116,7 +113,7 @@ object ItemUtils {
     }
 
     fun hasItemID(item: ItemStack): Boolean {
-        if (!checkItem(item) {}) return false
+        if (!checkItem(item)) return false
         return item.itemMeta!!.persistentDataContainer.has(itemKey, PersistentDataType.STRING)
     }
 

@@ -4,6 +4,8 @@ import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.items.ItemStats
+import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -15,8 +17,8 @@ object CommandUtil {
         val inst = ItemInstance(
             setting,
             ItemStats.create(
-                Book.setting,
                 setting,
+                BookConfig,
                 false
             ),
             internalType,
@@ -26,7 +28,7 @@ object CommandUtil {
     }
 
     fun getItemByName(itemName: String, sender: CommandSender) : ItemSetting? {
-        return Book.setting.itemConfig.getItemByID(itemName) ?: run {
+        return ItemConfig.getItemByID(itemName) ?: run {
             CommandError.itemNotFound(sender)
             return null
         }

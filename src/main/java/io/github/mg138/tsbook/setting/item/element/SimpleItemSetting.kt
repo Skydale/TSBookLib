@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.setting.item.element
 
-import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.Material
 import org.bukkit.configuration.file.YamlConfiguration
 
@@ -20,7 +20,7 @@ class SimpleItemSetting(
         setting.getString("ITEM_TYPE")!!,
         Material.valueOf(setting.getString("MATERIAL")!!),
         setting.getInt("MODEL"),
-        Book.setting.translate.translate("FORMAT.NAME", null, setting),
-        Book.setting.translate.translateList("FORMAT.LORE", null, setting)
+        BookConfig.translate.translate("FORMAT.NAME", null, setting),
+        BookConfig.translate.translateList("FORMAT.LORE", null, setting)
     )
 }

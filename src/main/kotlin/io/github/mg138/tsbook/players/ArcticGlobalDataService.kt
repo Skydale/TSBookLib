@@ -40,11 +40,7 @@ class ArcticGlobalDataService(
 
                         val itemInstance = data.items[i]
 
-                        item = if (itemInstance == null) {
-                            data.normalItems[i] ?: continue
-                        } else {
-                            itemInstance.createItem(Book.inst)
-                        }
+                        item = itemInstance?.createItem() ?: (data.normalItems[i] ?: continue)
                         inventory.setItem(i, item)
                     }
 
@@ -70,7 +66,7 @@ class ArcticGlobalDataService(
 
                                 ItemUtils.hasItemID(item) -> {
                                     data.normalItems.remove(i)
-                                    data.items[i] = ItemUtils.getInstByItem(Book.inst, item)
+                                    ItemUtils.getInstByItem(Book.inst, item)?.let { data.items[i] = it }
                                 }
 
                                 else -> {
