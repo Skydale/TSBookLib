@@ -10,7 +10,7 @@ import java.util.*
 import java.util.jar.JarFile
 import java.util.function.Consumer
 
-class ConfigBuilder(private val plugin: JavaPlugin, private val jar: File) {
+class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
     private val dataFolder = plugin.dataFolder
     private val jarFile = JarFile(jar)
     

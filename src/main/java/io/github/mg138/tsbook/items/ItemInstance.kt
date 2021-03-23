@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class ItemInstance( //represents a single ItemStack
-    private val setting: ItemSetting, val stats: ItemStats?, val internalType: String, val uuid: UUID
+    private val setting: ItemSetting, val itemStats: ItemStats?, val internalType: String, val uuid: UUID
 ) {
     fun createItem(): ItemStack {
         return createItem(this)
@@ -23,12 +23,13 @@ class ItemInstance( //represents a single ItemStack
     )
 
     private fun putStatsInLore() {
-        stats ?: return
+        itemStats ?: return
 
         setting.lore.forEach { s ->
-            stats.statMap.forEach { (type, stat) ->
-                val placeholder = RegisteredPlaceholder.placeholders[type]!!
-                if (s.contains(placeholder)) s.replace(placeholder, stats.translate(type, stat))
+            itemStats.stats.forEach { (type, stat) ->
+                RegisteredPlaceholder.placeholders[type]?.let {
+                    if (s.contains(it)) s.replace(it, itemStats.translate(type, stat))
+                }
             }
         }
     }
@@ -47,6 +48,6 @@ class ItemInstance( //represents a single ItemStack
         get() = setting.model
 
     init {
-        if (stats != null) putStatsInLore()
+        if (itemStats != null) putStatsInLore()
     }
 }

@@ -12,7 +12,6 @@ import org.bukkit.entity.Player
 import java.util.*
 
 object ArmorGUIConfig {
-    private const val npeMessage = "Something wrong happened when iterating through the config!"
     private val elementSettings: MutableMap<Int, GUIElementSetting> = HashMap()
 
     operator fun get(key: Int) = elementSettings[key]
@@ -35,7 +34,7 @@ object ArmorGUIConfig {
         elementSettings.clear()
         for (key in yaml.getKeys(false)) {
             val i = key.toInt()
-            val section = yaml.getConfigurationSection(key) ?: throw NullPointerException(npeMessage)
+            val section = yaml.getConfigurationSection(key)!!
 
             val material = Material.valueOf(section.getString("MATERIAL")!!)
             val count = section.getInt("COUNT")
@@ -45,8 +44,10 @@ object ArmorGUIConfig {
 
             elementSettings[i] = when {
                 section.contains("EQUIPMENT") -> {
-                    val equipment = section.getConfigurationSection("EQUIPMENT") ?: throw NullPointerException(npeMessage)
-                    ArmorElementSetting(i, material, count, name, lore, model, ArmorSetting(equipment))
+                    ArmorElementSetting(
+                        i, material, count, name, lore, model,
+                        ArmorSetting(section.getConfigurationSection("EQUIPMENT")!!)
+                    )
                 }
                 else -> GUIElementSetting(i, material, count, name, lore, model)
             }

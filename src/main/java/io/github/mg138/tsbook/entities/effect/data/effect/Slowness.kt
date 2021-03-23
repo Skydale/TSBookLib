@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.entities.effect.data.effect
 
-import io.github.mg138.tsbook.listener.event.damage.utils.StatCalculator
+import io.github.mg138.tsbook.stat.util.StatUtil
 import org.bukkit.attribute.Attribute
 import java.util.*
 
@@ -10,7 +10,7 @@ object Slowness : Effect(
     runBefore = lambda@{ target, statusEffect ->
         val attributeInstance = target.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)!!
         val old = attributeInstance.baseValue
-        attributeInstance.baseValue = StatCalculator.calculateModifier(old, -1 * statusEffect.power)
+        attributeInstance.baseValue = StatUtil.calculateModifier(old, -1 * statusEffect.power)
         return@lambda old
     },
     whenExpire = { target, _, old ->

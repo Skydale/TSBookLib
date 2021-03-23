@@ -9,7 +9,7 @@ import io.github.mg138.tsbook.entities.effect.EffectHandler
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.listener.event.ItemRightClick
 import io.github.mg138.tsbook.listener.event.ItemUpdate
-import io.github.mg138.tsbook.listener.event.click.RightClickEvent
+import io.github.mg138.tsbook.listener.event.click.ArmorAutoEquip
 import io.github.mg138.tsbook.listener.event.damage.DamageEventHandler
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
 import io.github.mg138.tsbook.listener.event.DisableArmorAndOffhand
@@ -79,7 +79,7 @@ class Book : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(ItemRightClick(), inst)
         Bukkit.getPluginManager().registerEvents(HealthIndicator(), inst)
         Bukkit.getPluginManager().registerEvents(equipmentGUIHandler, inst)
-        Bukkit.getPluginManager().registerEvents(RightClickEvent(), inst)
+        Bukkit.getPluginManager().registerEvents(ArmorAutoEquip(), inst)
         Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand(), inst)
 
         getCommand("tsbook")!!.setExecutor(AdminCommands())

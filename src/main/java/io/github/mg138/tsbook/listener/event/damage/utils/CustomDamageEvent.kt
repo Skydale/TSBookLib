@@ -4,8 +4,10 @@ import io.github.mg138.tsbook.stat.StatType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
+import java.util.*
+import kotlin.collections.HashMap
 
-class CustomDamageEvent(val entity: LivingEntity, val damager: LivingEntity, private val damages: MutableMap<StatType, Double>) : Event() {
+class CustomDamageEvent(val entity: LivingEntity, val damager: LivingEntity, private val damages: MutableMap<StatType, Double> = EnumMap(StatType::class.java)) : Event() {
     override fun getHandlers(): HandlerList {
         return handlerList
     }

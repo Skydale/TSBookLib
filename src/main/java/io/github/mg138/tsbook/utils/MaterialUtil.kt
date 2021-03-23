@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.utils
 
 import org.bukkit.Material
 
-object ArmorUtil {
+object MaterialUtil {
     fun isArmor(material: Material): Boolean {
         when (material) {
             Material.TURTLE_HELMET,

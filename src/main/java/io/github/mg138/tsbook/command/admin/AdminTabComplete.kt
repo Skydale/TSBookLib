@@ -1,11 +1,12 @@
 package io.github.mg138.tsbook.command.admin
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.TabCompleter
 import org.bukkit.util.StringUtil
 import io.github.mg138.tsbook.command.util.CommandUtil
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import java.util.ArrayList
@@ -29,7 +30,7 @@ class AdminTabComplete : TabCompleter {
                 )
                 2 -> when (category) {
                     "get" -> StringUtil.copyPartialMatches(
-                        args[1], setting.itemConfig.items, result
+                        args[1], ItemConfig.getItems(), result
                     )
                     "give", "unid", "effect" -> StringUtil.copyPartialMatches(
                         args[1],
@@ -39,11 +40,11 @@ class AdminTabComplete : TabCompleter {
                 }
                 3 -> when (category) {
                     "give" -> StringUtil.copyPartialMatches(
-                        args[2], setting.itemConfig.items, result
+                        args[2], ItemConfig.getItems(), result
                     )
                     "unid" -> StringUtil.copyPartialMatches(
                         args[2],
-                        setting.itemConfig.unidKey,
+                        ItemConfig.getUnids(),
                         result
                     )
                     "effect" -> {

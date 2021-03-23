@@ -1,20 +1,16 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.Book.Companion.setting
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.items.ItemInstance
 import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.items.ItemUtils
 import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.setting.item.ItemConfig
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
 
 object Identify {
-    private val rand = Random()
-
     fun call(sender: CommandSender): Boolean {
         if (sender !is Player) {
             CommandError.playerOnly(sender)
@@ -22,6 +18,10 @@ object Identify {
         }
 
         val item = sender.inventory.itemInMainHand
+        ItemUtils.checkItem(item) {
+            CommandError.handEmpty(sender)
+            return false
+        }
         val type = ItemUtils.getInternalItemType(item) ?: run {
             CommandError.itemNotFound(sender)
             return false
@@ -31,25 +31,24 @@ object Identify {
             return false
         }
 
-        val inst = identify(setting, id, type)
+        val inst = identify(id, type)
         item.amount--
         sender.inventory.addItem(inst.createItem())
         return true
     }
 
-    private fun identify(bookSetting: BookConfig, ID: String, type: String): ItemInstance {
-        val setting: ItemSetting = if (type == "unid") {
-            val items = setting.itemConfig.getUnidentifiedByID(ID).iden
-            bookSetting.itemConfig.getItemByID(items[rand.nextInt(items.size)])
+    private fun identify(ID: String, type: String): ItemInstance {
+        val setting = if (type == "unid") {
+            ItemConfig.getItem(ItemConfig.getUnid(ID)!!.iden.random())!!
         } else {
-            bookSetting.itemConfig.getItemByID(ID)
+            ItemConfig.getItem(ID)!!
         }
 
         return ItemInstance(
             setting,
             ItemStats.create(
-                Book.setting,
                 setting,
+                BookConfig,
                 true
             ),
             "item",

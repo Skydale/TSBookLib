@@ -106,7 +106,7 @@ stat:
       player:   "&7玩家增傷:"
 
 health_indicator:
-   title: "[name] &f(&c[health]&7/&c[max_health]&f) [change]"
+   title: "[name] &f(&c[health]&7/&c[max_health]&f) [damages]"
 
 indicator:
    DAMAGE_PHYSICAL: "&f⚔ &6"

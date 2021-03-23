@@ -48,8 +48,8 @@ class ArcticGlobalDataService(
                 }
 
             PlayerQuitEvent::class.observable()
-                .subscribe {
-                    val player = it.player
+                .subscribe { event ->
+                    val player = event.player
                     val inventory = player.inventory
 
                     dataService.edit(player) { data: PlayerData ->

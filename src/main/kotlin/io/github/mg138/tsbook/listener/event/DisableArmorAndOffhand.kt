@@ -1,5 +1,6 @@
 package io.github.mg138.tsbook.listener.event
 
+import io.github.mg138.tsbook.utils.MaterialUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event
@@ -18,7 +19,7 @@ class DisableArmorAndOffhand : Listener {
     fun onPlayerRightClick(event: PlayerInteractEvent) {
         val item = event.item ?: return
         if (item.type == Material.AIR) return
-        if (ArmorType.isArmor(item.type)) {
+        if (MaterialUtil.isArmor(item.type)) {
             event.isCancelled = true
             event.setUseItemInHand(Event.Result.DENY)
         }
@@ -39,7 +40,7 @@ class DisableArmorAndOffhand : Listener {
             InventoryAction.MOVE_TO_OTHER_INVENTORY -> {
                 val item = event.currentItem ?: return
 
-                if (ArmorType.isArmor(item.type)) event.isCancelled = true
+                if (MaterialUtil.isArmor(item.type)) event.isCancelled = true
             }
             InventoryAction.HOTBAR_SWAP -> {
                 if (event.hotbarButton < 0) event.isCancelled = true
