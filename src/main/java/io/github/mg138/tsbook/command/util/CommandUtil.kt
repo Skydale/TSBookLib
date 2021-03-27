@@ -28,7 +28,7 @@ object CommandUtil {
     }
 
     fun getItemByName(itemName: String, sender: CommandSender) : ItemSetting? {
-        return ItemConfig.getItemByID(itemName) ?: run {
+        return ItemConfig.getItem(itemName) ?: run {
             CommandError.itemNotFound(sender)
             return null
         }

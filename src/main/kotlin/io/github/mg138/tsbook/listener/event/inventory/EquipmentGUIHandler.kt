@@ -7,7 +7,7 @@ import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
-import io.github.mg138.tsbook.utils.ArmorUtil
+import io.github.mg138.tsbook.utils.MaterialUtil
 import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
 import io.github.mg138.tsbook.setting.gui.armor.element.ArmorElementSetting
 import org.bukkit.Bukkit
@@ -128,7 +128,7 @@ class EquipmentGUIHandler : Listener {
                         if (ItemUtils.hasItemID(currentItem)) {
                             val instance = ItemUtils.getInstByItem(Book.inst, currentItem) ?: return
 
-                            val i = ArmorUtil.getByType(instance.itemType, player)
+                            val i = MaterialUtil.getByType(instance.itemType, player)
                             if (i == -1) return
 
                             inventory.setItem(i, currentItem)

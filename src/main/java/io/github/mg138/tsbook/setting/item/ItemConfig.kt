@@ -27,14 +27,18 @@ object ItemConfig : AbstractItemConfig() {
         }
     }
 
-    fun getUnidentifiedByID(id: String): UnidentifiedSetting? {
+    fun getUnids(): Set<String> {
+        return unid.keys
+    }
+
+    fun getUnid(id: String): UnidentifiedSetting? {
         return unid[id]
     }
 
     fun getAnyItemByID(id: String): ItemSetting {
         return when {
-            items.containsKey(id) -> getItemByID(id)!!
-            unid.containsKey(id) -> getUnidentifiedByID(id)!!
+            items.containsKey(id) -> getItem(id)!!
+            unid.containsKey(id) -> getUnid(id)!!
             else -> throw IllegalArgumentException("No such item exists!")
         }
     }

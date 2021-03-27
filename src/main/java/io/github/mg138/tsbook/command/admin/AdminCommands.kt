@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -15,7 +15,7 @@ class AdminCommands : CommandExecutor {
         val category = args[0].toLowerCase()
         when (args.size) {
             0 -> {
-                sender.sendMessage(setting.translate.translate("messages.help"))
+                sender.sendMessage(BookConfig.translate.translate("messages.help"))
                 return true
             }
             1 -> when (category) {
@@ -48,7 +48,7 @@ class AdminCommands : CommandExecutor {
                 "effect" -> return Effect.call(sender, args[1], args[2], args[3], args[4])
             }
         }
-        sender.sendMessage(setting.translate.translate("errors.unknown_command"))
+        sender.sendMessage(BookConfig.translate.translate("errors.unknown_command"))
         return false
     }
 }

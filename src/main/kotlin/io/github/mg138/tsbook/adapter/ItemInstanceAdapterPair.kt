@@ -8,7 +8,6 @@ import com.google.gson.stream.JsonWriter
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
-import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.items.ItemIdentification
@@ -35,9 +34,9 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 writer.name("ID")
                 writer.value(instance.id)
 
-                if (instance.stats != null) {
+                if (instance.itemStats != null) {
                     writer.name("iden")
-                    writer.value(gson.toJson(instance.stats.identification))
+                    writer.value(gson.toJson(instance.itemStats.identification))
                 }
             }
             writer.endObject()
@@ -65,8 +64,8 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
 
             var setting: ItemSetting? = null
             when (internalType) {
-                "item" -> setting = ItemConfig.getItemByID(id)
-                "unid" -> setting = ItemConfig.getUnidentifiedByID(id)
+                "item" -> setting = ItemConfig.getItem(id)
+                "unid" -> setting = ItemConfig.getUnid(id)
             }
             if (setting == null) return null
 

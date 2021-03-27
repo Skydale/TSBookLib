@@ -43,7 +43,7 @@ object StatUtil {
     fun combine(itemStats: List<ItemStats>): StatMap {
         val result = StatMap()
         itemStats.forEach { itemStat ->
-            itemStat.statOut.forEach { (type, stat) ->
+            itemStat.stats.forEach { (type, stat) ->
                 result[type] = stat + result[type]
             }
             /*
@@ -103,7 +103,14 @@ object StatUtil {
         }
     }
 
-    inline fun checkBelowZero(stat: Double, below: (Double) -> Double = { 0.0 }, above: (Double) -> Double = { it }): Double {
+    inline fun doubleCheckBelowZero(stat: Double, below: (Double) -> Double = { 0.0 }, above: (Double) -> Double = { it }): Double {
+        return when {
+            stat <= 0 -> below(stat)
+            else -> above(stat)
+        }
+    }
+
+    inline fun intCheckBelowZero(stat: Double, below: (Double) -> Int = { 0 }, above: (Double) -> Int = { it.toInt() }): Int {
         return when {
             stat <= 0 -> below(stat)
             else -> above(stat)

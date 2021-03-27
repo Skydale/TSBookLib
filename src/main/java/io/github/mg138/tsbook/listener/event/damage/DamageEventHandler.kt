@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.listener.event.damage
 
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.simpleDamage
-import io.github.mg138.tsbook.entities.effect.EffectHandler.hasEffect
 import io.github.mg138.tsbook.entities.effect.EffectHandler.getEffect
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.damagedByEntity
 import org.bukkit.event.entity.EntityDeathEvent
@@ -11,14 +10,12 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import io.github.mg138.tsbook.entities.effect.data.StatusEffectType
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import io.github.mg138.tsbook.items.ItemStats
 import io.github.mg138.tsbook.stat.StatMap
 import io.github.mg138.tsbook.stat.util.StatUtil
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.mob.MobConfig
 import io.github.mg138.tsbook.stat.util.set.DefenseType
-import io.lumine.xikage.mythicmobs.MythicMobs
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -77,7 +74,7 @@ class DamageEventHandler : Listener {
             when {
                 DamageHandler.mythicMobHelper.isMythicMob(entity) -> {
                     MobConfig[DamageHandler.mythicMobHelper.getMythicMobInstance(entity).type.internalName]?.let {
-                        damagedByEntity(event, StatUtil.getDefense(it.itemStats.statOut))
+                        damagedByEntity(event, StatUtil.getDefense(it.itemStats.stats))
                         return
                     }
                 }
@@ -85,8 +82,8 @@ class DamageEventHandler : Listener {
                     val stats = StatMap()
                     ArcticGlobalDataService.inst.getData<PlayerData>(entity, PlayerData::class)
                         ?.equipment?.forEach { _, armor ->
-                            armor.stats?.let { itemStat ->
-                                itemStat.statOut.forEach { (type, stat) ->
+                            armor.itemStats?.let { itemStat ->
+                                itemStat.stats.forEach { (type, stat) ->
                                     if (DefenseType.types.contains(type)) {
                                         stats[type] = stat + stats[type]
                                     }

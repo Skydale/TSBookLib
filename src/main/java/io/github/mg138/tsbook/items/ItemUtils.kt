@@ -88,7 +88,7 @@ object ItemUtils {
 
     private fun setIdentification(inst: ItemInstance, item: ItemStack) {
         val meta = item.itemMeta ?: return
-        val identification = inst.stats?.identification ?: return
+        val identification = inst.itemStats?.identification ?: return
         meta.persistentDataContainer[identificationKey, identificationTag] = identification
         item.itemMeta = meta
     }

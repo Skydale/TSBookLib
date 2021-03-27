@@ -14,7 +14,7 @@ abstract class AbstractItemConfig {
         return items.keys
     }
 
-    fun getItemByID(id: String): ItemSetting? {
+    fun getItem(id: String): ItemSetting? {
         return items[id]
     }
 }

@@ -8,13 +8,13 @@ import io.github.mg138.tsbook.stat.*
 import java.lang.IllegalArgumentException
 
 //TODO don't just make a new StatMap
-class ItemStats(statMap: StatMap, val identification: ItemIdentification, private val config: AbstractConfig) {
-    val statOut = StatMap()
+class ItemStats(initStats: StatMap, val identification: ItemIdentification, private val config: AbstractConfig) {
+    val stats = StatMap()
 
     init {
-        statMap.forEach { (type, stat) ->
+        initStats.forEach { (type, stat) ->
             val multiplier = identification[type]
-            statOut[type] = when {
+            stats[type] = when {
                 multiplier == 0.0F -> stat
                 multiplier > 0.0F -> stat * multiplier
                 else -> throw IllegalArgumentException("Identification must be >= 0! (is $multiplier, keyed to $type)")
@@ -23,7 +23,7 @@ class ItemStats(statMap: StatMap, val identification: ItemIdentification, privat
     }
 
     operator fun get(type: StatType): Stat {
-        return statOut[type] ?: throw NullPointerException("No value keyed to $type.")
+        return stats[type] ?: throw NullPointerException("No value keyed to $type.")
     }
 
     fun translate(type: StatType, stat: Stat): String {

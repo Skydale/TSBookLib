@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.Book.Companion.setting
+import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.command.util.CommandUtil
 import io.github.mg138.tsbook.command.util.error.CommandEffectError
@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender
 
 object Effect {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(setting.translate.translate("commands.feedback.effect"))
+        sender.sendMessage(BookConfig.translate.translate("commands.feedback.effect"))
         return true
     }
 
@@ -28,9 +28,9 @@ object Effect {
         return try {
             val type = StatusEffectType.valueOf(effectName.toUpperCase())
             val power = literalPower.toDouble()
-            val ticks = literalTicks.toInt()
+            val ticks = literalTicks.toLong()
             EffectHandler.apply(type, player, power, ticks)
-            sender.sendMessage(setting.translate.translate("messages.effect.applied"))
+            sender.sendMessage(BookConfig.translate.translate("messages.effect.applied"))
             true
         } catch (e: NumberFormatException) {
             CommandError.shouldPutNumber(sender)
@@ -43,7 +43,7 @@ object Effect {
 
         return try {
             EffectHandler.remove(player)
-            sender.sendMessage(setting.translate.translate("messages.effect.cleared"))
+            sender.sendMessage(BookConfig.translate.translate("messages.effect.cleared"))
             true
         } catch (e: NullPointerException) {
             CommandEffectError.noActiveEffect(sender)
