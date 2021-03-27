@@ -7,6 +7,7 @@ import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.stat.*
 import java.lang.IllegalArgumentException
 
+//TODO don't just make a new StatMap
 class ItemStats(statMap: StatMap, val identification: ItemIdentification, private val config: AbstractConfig) {
     val statOut = StatMap()
 

@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.*
 import kotlin.collections.HashMap
 
+//TODO make it prettier :/
 object DamageHandler {
     val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
     private val rand = Random()
