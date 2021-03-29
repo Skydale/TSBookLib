@@ -1,11 +1,11 @@
 package io.github.mg138.tsbook.listener.event.click
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.items.ItemUtils
+import io.github.mg138.tsbook.item.ItemUtils
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
-import io.github.mg138.tsbook.utils.MaterialUtil
+import io.github.mg138.tsbook.util.MaterialUtil
 import org.bukkit.Sound
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler

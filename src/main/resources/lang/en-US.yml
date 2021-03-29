@@ -32,8 +32,7 @@ messages:
          &8[&7=>&8] &c/tsbook get <item> &7- &aGet specified item.
    reload: '%tsbook_prefix% &9Plugin reloading...'
    reloaded: '%tsbook_prefix% &9Plugin reloaded.'
-   player: '%tsbook_player%'
-   get: '%tsbook_prefix% &9Gave %tsbook_player% "%tsbook_item%&9"'
+   get: '%tsbook_prefix% &9Gave %player_name% "%tsbook_item%&9"'
    effect:
       cleared: '%tsbook_prefix% &aSuccessfully cleared the player''s effects!'
       applied: '%tsbook_prefix% &aSuccessfully applied the effect to the player!'

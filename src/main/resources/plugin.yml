@@ -4,6 +4,7 @@ version: 1.0
 api-version: 1.16
 
 depend: [PlaceholderAPI, MythicMobs, ProtocolLib, Reactant, ArcticGlobal, ModularDataAccessor]
+softdepend: [LocaleLib]
 
 commands:
    tsbook:

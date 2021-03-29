@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.listener.event
 
-import io.github.mg138.tsbook.utils.MaterialUtil
+import io.github.mg138.tsbook.util.MaterialUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.Event

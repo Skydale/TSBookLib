@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.players.data
 
-import io.github.mg138.tsbook.items.ItemInstance
+import io.github.mg138.tsbook.item.ItemInstance
 import java.util.*
 
 class ItemInstanceMapWrapper: HashMap<Int, ItemInstance>() {

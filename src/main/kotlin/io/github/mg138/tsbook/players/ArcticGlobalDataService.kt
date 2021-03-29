@@ -4,7 +4,7 @@ import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.component.lifecycle.LifeCycleHook
 import dev.reactant.reactant.service.spec.server.EventService
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.items.ItemUtils
+import io.github.mg138.tsbook.item.ItemUtils
 import io.github.mg138.tsbook.players.data.PlayerData
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
