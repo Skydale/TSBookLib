@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.listener.event.damage
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.entity.effect.EffectHandler
-import io.github.mg138.tsbook.entity.effect.data.StatusEffectType
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.item.ItemStat
 import io.github.mg138.tsbook.item.ItemUtils
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
@@ -214,8 +214,8 @@ object DamageHandler {
                     }
                     StatType.CHANCE_SLOWNESS -> {
                         val rawPower = effectPower.getStatOut(type)
-                        EffectHandler.apply(
-                            StatusEffectType.SLOWNESS,
+                        EffectHandler.addEffect(
+                            StatusType.SLOWNESS,
                             entity,
                             strikes * rawPower / 100,
                             (strikes * rawPower * 90).toLong()
@@ -223,11 +223,11 @@ object DamageHandler {
                     }
                     StatType.CHANCE_LEVITATION -> {
                         val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.apply(StatusEffectType.LEVITATION, entity, 0.0, ticks.toLong())
+                        if (ticks >= 20) EffectHandler.addEffect(StatusType.LEVITATION, entity, 0.0, ticks.toLong())
                     }
                     StatType.CHANCE_NAUSEOUS -> {
                         val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.apply(StatusEffectType.NAUSEOUS, entity, 0.0, ticks.toLong())
+                        if (ticks >= 20) EffectHandler.addEffect(StatusType.NAUSEOUS, entity, 0.0, ticks.toLong())
                     }
                     else -> Unit
                 }
@@ -255,21 +255,21 @@ object DamageHandler {
                     val power = (damage / 8) * strikes
                     val tick = (damage / 6).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.apply(StatusEffectType.BURNING, entity, power, tick)
+                        EffectHandler.addEffect(StatusType.BURNING, entity, power, tick)
                     }
                 }
                 StatType.DAMAGE_PHYSICAL -> {
                     val power = (damage / 12) * strikes
                     val tick = (damage / 14).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.apply(StatusEffectType.BLEEDING, entity, power, tick)
+                        EffectHandler.addEffect(StatusType.BLEEDING, entity, power, tick)
                     }
                 }
                 StatType.DAMAGE_TEMPUS -> {
                     val power = (damage / 8) * strikes
                     val tick = (600 * (damage / (damage + 1000))).toLong()
                     if (power > 20 && tick > 60) {
-                        EffectHandler.apply(StatusEffectType.PARALYSIS, entity, power, tick)
+                        EffectHandler.addEffect(StatusType.PARALYSIS, entity, power, tick)
                     }
                 }
                 else -> Unit

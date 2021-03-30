@@ -9,7 +9,7 @@ object Paralysis : SimpleEffectPattern(
     delay = { 0 },
     period = { 1 },
     condition = { _, _ -> false },
-    action = lambda@{ i, target, statusEffect ->
+    action = lambda@{ i, target, status ->
         val look = WrapperPlayServerEntityLook()
         val loc = target.location
         val yaw = (loc.yaw + 0.5f + 360f) % 360
@@ -20,7 +20,7 @@ object Paralysis : SimpleEffectPattern(
         look.broadcastPacket()
 
         if (i % 4 == 0L) {
-            return@lambda DamageHandler.simpleDamage(target, statusEffect.power, StatType.DAMAGE_THUNDER, true)
+            return@lambda DamageHandler.simpleDamage(target, status.power, StatType.DAMAGE_THUNDER, true)
         }
         return@lambda true
     }

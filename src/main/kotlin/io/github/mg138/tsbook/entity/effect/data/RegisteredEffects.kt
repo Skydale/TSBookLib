@@ -4,17 +4,17 @@ import io.github.mg138.tsbook.entity.effect.data.effect.*
 import java.util.*
 
 object RegisteredEffects {
-    private fun constructEffects(): EnumMap<StatusEffectType, (EntityStatusEffect) -> Unit> {
-        val effects = EnumMap<StatusEffectType, (EntityStatusEffect) -> Unit>(StatusEffectType::class.java)
-        effects[StatusEffectType.BURNING] = Burning.effect
-        effects[StatusEffectType.BLEEDING] = Bleeding.effect
-        effects[StatusEffectType.FALL_DAMAGE_RESISTANCE] = FallDamageResistance.effect
-        effects[StatusEffectType.SLOWNESS] = Slowness.effect
-        effects[StatusEffectType.LEVITATION] = Levitation.effect
-        effects[StatusEffectType.NAUSEOUS] = Nauseous.effect
-        effects[StatusEffectType.PARALYSIS] = Paralysis.effect
+    private fun constructEffects(): EnumMap<StatusType, (EntityStatus) -> Unit> {
+        val effects = EnumMap<StatusType, (EntityStatus) -> Unit>(StatusType::class.java)
+        effects[StatusType.BURNING] = Burning.effect
+        effects[StatusType.BLEEDING] = Bleeding.effect
+        effects[StatusType.FALL_DAMAGE_RESISTANCE] = FallDamageResistance.effect
+        effects[StatusType.SLOWNESS] = Slowness.effect
+        effects[StatusType.LEVITATION] = Levitation.effect
+        effects[StatusType.NAUSEOUS] = Nauseous.effect
+        effects[StatusType.PARALYSIS] = Paralysis.effect
         return effects
     }
 
-    val Effects = constructEffects()
+    val effects = constructEffects()
 }

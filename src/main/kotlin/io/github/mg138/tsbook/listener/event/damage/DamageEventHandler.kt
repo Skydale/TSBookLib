@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.EventPriority
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
-import io.github.mg138.tsbook.entity.effect.data.StatusEffectType
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import io.github.mg138.tsbook.stat.StatMap
 import io.github.mg138.tsbook.stat.util.StatUtil
@@ -58,7 +58,7 @@ class DamageEventHandler : Listener {
                 return
             }
             DamageCause.FALL -> {
-                getEffect(entity, StatusEffectType.FALL_DAMAGE_RESISTANCE)?.let {
+                getEffect(entity, StatusType.FALL_DAMAGE_RESISTANCE)?.let {
                     event.isCancelled = true
                     simpleDamage(entity, StatUtil.calculateModifier(event.damage, max((1 - it.power), 0.0)))
                     return

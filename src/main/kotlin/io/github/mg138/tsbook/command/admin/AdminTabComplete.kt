@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.command.admin
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.command.util.CommandUtil
-import io.github.mg138.tsbook.entity.effect.data.StatusEffectType
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -49,7 +49,7 @@ class AdminTabComplete : TabCompleter {
                     "effect" -> {
                         StringUtil.copyPartialMatches(
                             args[2],
-                            ArrayList(StatusEffectType.names).also { it.add("clear") },
+                            ArrayList(StatusType.names).also { it.add("clear") },
                             result
                         )
                     }

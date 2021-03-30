@@ -3,10 +3,11 @@ package io.github.mg138.tsbook.command.admin
 import io.github.mg138.tsbook.command.util.CommandUtil
 import io.github.mg138.tsbook.command.util.error.CommandEffectError
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.entity.effect.data.StatusEffectType
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.CommandSender
+import java.lang.IllegalArgumentException
 
 object Effect {
     fun call(sender: CommandSender): Boolean {
@@ -24,7 +25,7 @@ object Effect {
         val player = CommandUtil.getPlayerByName(playerName, sender) ?: return false
 
         return try {
-            val type = StatusEffectType.valueOf(effectName.toUpperCase())
+            val type = StatusType.valueOf(effectName.toUpperCase())
             val power = literalPower.toDouble()
             val ticks = literalTicks.toLong()
             EffectHandler.apply(type, player, power, ticks)
@@ -40,10 +41,10 @@ object Effect {
         val player = CommandUtil.getPlayerByName(playerName, sender) ?: return false
 
         return try {
-            EffectHandler.remove(player)
+            EffectHandler.removeAll(player)
             sender.sendMessage(BookConfig.translate.translate("messages.effect.cleared"))
             true
-        } catch (e: NullPointerException) {
+        } catch (e: IllegalArgumentException) {
             CommandEffectError.noActiveEffect(sender)
             false
         }

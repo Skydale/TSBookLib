@@ -9,10 +9,10 @@ import org.bukkit.Particle
 object Bleeding : SimpleEffectPattern(
     delay = { 0 },
     period = { 7 },
-    condition = { target, statusEffect ->
+    condition = { target, status ->
         !DamageHandler.simpleDamage(
             target,
-            statusEffect.power,
+            status.power,
             StatType.DAMAGE_BLEED,
             true
         )
