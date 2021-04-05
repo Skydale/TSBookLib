@@ -4,7 +4,6 @@ import io.github.mg138.tsbook.command.admin.AdminCommands
 import org.bukkit.plugin.java.JavaPlugin
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import io.github.mg138.tsbook.setting.BookConfig
-import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 
 class PlaceholderExpansionTSBook(private val plugin: JavaPlugin) : PlaceholderExpansion() {
@@ -31,7 +30,7 @@ class PlaceholderExpansionTSBook(private val plugin: JavaPlugin) : PlaceholderEx
     override fun onPlaceholderRequest(player: Player?, identifier: String): String {
         return when (identifier) {
             "item" -> AdminCommands.item!!
-            else -> BookConfig.translate.translate(identifier)
+            else -> BookConfig.translate.get(identifier)
         }
     }
 }

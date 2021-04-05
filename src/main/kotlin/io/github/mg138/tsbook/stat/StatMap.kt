@@ -10,11 +10,11 @@ class StatMap : EnumMap<StatType, Stat>(StatType::class.java) {
         }
     }
 
-    fun getStatOut(type: StatType): Double {
+    fun getStatSafe(type: StatType): Double {
         return this[type].let {
             when (it) {
                 null -> 0.0
-                else -> it.stat
+                else -> it.getStat()
             }
         }
     }

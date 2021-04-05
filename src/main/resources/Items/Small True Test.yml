@@ -6,7 +6,7 @@ MODEL: 1
 FORMAT:
   NAME: "&d弱等貫穿測試"
   LORE: |
-          %tsbook_stat.damage.true% [damage-true]
+          [damage-true]
 
           %tsbook_mythic% %tsbook_book%
 stat:

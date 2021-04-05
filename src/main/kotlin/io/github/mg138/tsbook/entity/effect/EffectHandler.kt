@@ -11,15 +11,19 @@ import kotlin.collections.HashMap
 object EffectHandler {
     private val activeEffects: MutableMap<LivingEntity, MutableMap<StatusType, EntityEffect>> = HashMap()
 
+    fun getEffect(entity: LivingEntity, type: StatusType) = activeEffects[entity]?.get(type)
+
+    operator fun get(entity: LivingEntity) = activeEffects[entity]
+
     fun applyEffect(entityEffect: EntityEffect, delay: Long, period: Long) {
         val entityStatus = entityEffect.entityStatus
         val target = entityStatus.target
         if (target !is LivingEntity) return
 
-        val type = entityStatus.status.type
         activeEffects.putIfAbsent(target, EnumMap<StatusType, EntityEffect>(StatusType::class.java))
 
-        activeEffects[target]!![type]?.runnable?.cancel()
+        val type = entityStatus.status.type
+        this.remove(target, type)
         activeEffects[target]!![type] = entityEffect
         entityEffect.runnable.runTaskTimer(Book.inst, delay, period)
     }
@@ -33,11 +37,7 @@ object EffectHandler {
     }
 
     fun remove(entity: LivingEntity, type: StatusType) {
-        try {
-            activeEffects[entity]!![type]!!.runnable.cancel()
-        } catch (e: NullPointerException) {
-            throw IllegalArgumentException("The entity doesn't have any active effects")
-        }
+        activeEffects[entity]!![type]?.runnable?.cancel()
     }
 
     fun removeAll(entity: LivingEntity) {
@@ -53,7 +53,7 @@ object EffectHandler {
 
     fun unload() {
         val removing = HashMap(activeEffects)
-        removing.forEach { (_, map) -> map.forEach { (_, entityEffect) -> entityEffect.runnable.cancel() }}
+        removing.forEach { (_, map) -> map.forEach { (_, entityEffect) -> entityEffect.runnable.cancel() } }
         removing.clear()
         activeEffects.clear()
     }

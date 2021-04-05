@@ -3,16 +3,13 @@ package io.github.mg138.tsbook.stat
 import java.util.*
 
 data class StatRange(var max: Double, var min: Double) : Stat {
-    override fun applyPlaceholder(string: String): String {
-        return string
-                .replace("[min]", min.toLong().toString())
-                .replace("[max]", max.toLong().toString())
-    }
+    private fun withPercentage(percentage: Double) = if (max == min) max else percentage * (max - min) + min
 
-    @Suppress("UNUSED_PARAMETER")
-    override var stat
-        get() = getStat(Random().nextDouble())
-        set(value) {}
+    override fun getStat() = withPercentage(Random().nextDouble())
+
+    override fun applyPlaceholder(string: String) = string
+        .replace("[min]", min.toLong().toString())
+        .replace("[max]", max.toLong().toString())
 
     operator fun plus(increment: StatRange?): StatRange {
         val that = this.copy()
@@ -63,10 +60,6 @@ data class StatRange(var max: Double, var min: Double) : Stat {
         that.max /= divisor
         that.min /= divisor
         return that
-    }
-
-    private fun getStat(percentage: Double): Double {
-        return if (max == min) max else percentage * (max - min) + min
     }
 
     init {

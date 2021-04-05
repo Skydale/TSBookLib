@@ -14,7 +14,7 @@ object ItemConfig : AbstractItemConfig() {
     fun load(items: Map<String, YamlConfiguration>, unid: Map<String, YamlConfiguration>) {
         items.forEach { (key, setting) ->
             when {
-                setting.contains("stats") -> {
+                setting.contains("stat") -> {
                     this.items[key] = StatedItemSetting(setting)
                 }
                 else -> {

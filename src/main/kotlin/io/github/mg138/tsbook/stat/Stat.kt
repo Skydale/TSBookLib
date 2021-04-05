@@ -1,6 +1,8 @@
 package io.github.mg138.tsbook.stat
 
 interface Stat {
+    fun getStat(): Double
+
     fun applyPlaceholder(string: String): String {
         return when (this) {
             is StatRange -> this.applyPlaceholder(string)
@@ -72,6 +74,4 @@ interface Stat {
             else -> throw IllegalArgumentException("Unsupported implementation of Stat interface. (${this::class.simpleName}) (Did someone forget to add it?)")
         }
     }
-
-    var stat: Double
 }

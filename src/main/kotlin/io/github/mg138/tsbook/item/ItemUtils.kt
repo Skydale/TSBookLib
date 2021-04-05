@@ -102,11 +102,10 @@ object ItemUtils {
         return item.itemMeta!!.persistentDataContainer[NamespacedKey(Book.inst, key), PersistentDataType.STRING]
     }
 
-    fun getInternalItemType(item: ItemStack): String? {
+    fun getInternalType(item: ItemStack): String? {
         val container = item.itemMeta!!.persistentDataContainer
 
-        val internalType = container[internalTypeKey, PersistentDataType.STRING] ?: return null
-        return container[NamespacedKey(Book.inst, internalType), PersistentDataType.STRING]
+        return container[internalTypeKey, PersistentDataType.STRING]
     }
 
     fun hasItemID(item: ItemStack): Boolean {

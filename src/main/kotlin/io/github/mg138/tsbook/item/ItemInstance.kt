@@ -12,11 +12,16 @@ class ItemInstance ( //represents a single ItemStack
     private val setting: ItemSetting, val itemStat: ItemStat?, val internalType: String, val uuid: UUID
 ) {
     override fun toString(): String {
-        return "{display: {name: $name, lore: $lore}, }"
+        return "{" +
+                "\n  display: {" +
+                "\n    name: $name," +
+                "\n    lore: $lore" +
+                "\n  }" +
+                "\n}"
     }
 
     val name = setting.name
-    val lore = setting.lore
+    val lore = setting.lore.toMutableList()
     val id get() = setting.id
     val itemType get() = setting.item_type
     val material get() = setting.material
@@ -41,10 +46,14 @@ class ItemInstance ( //represents a single ItemStack
     private fun putStatsInLore() {
         itemStat ?: return
 
-        lore.forEach { s ->
+        for (i in lore.indices) {
+            val s = lore[i]
             itemStat.forEach { (type, _) ->
                 StatTables.placeholders[type]?.let {
-                    if (s.contains(it)) s.replace(it, itemStat.translate(type))
+                    if (s.contains(it)) {
+                        lore[i] = s.replace(it, itemStat.translate(type))
+                        println(itemStat.translate(type))
+                    }
                 }
             }
         }

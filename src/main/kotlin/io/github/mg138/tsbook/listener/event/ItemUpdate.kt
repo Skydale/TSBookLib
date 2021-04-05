@@ -10,11 +10,12 @@ import org.bukkit.inventory.ItemStack
 
 class ItemUpdate : Listener {
     private fun update(item: ItemStack?) {
-        if (item == null) return
+        item ?: return
+
         if (hasItemID(item)) {
             val inst = getInstByItem(Book.inst, item) ?: throw NullPointerException("Cannot create item instance.")
             item.type = inst.material
-            val meta = item.itemMeta ?: throw NullPointerException("Somehow, I cannot get the metadata of the item.")
+            val meta = item.itemMeta ?: return
             meta.setCustomModelData(inst.model)
             item.itemMeta = meta
         }

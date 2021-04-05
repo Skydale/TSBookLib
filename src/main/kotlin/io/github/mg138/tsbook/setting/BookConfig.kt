@@ -4,6 +4,7 @@ import io.github.mg138.tsbook.setting.config.BookSetting
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.mob.MobConfig
+import io.github.mg138.tsbook.setting.stat.StatDisplay
 import io.github.mg138.tsbook.setting.util.ConfigBuilder
 import io.github.mg138.tsbook.util.Translate
 import org.bukkit.plugin.java.JavaPlugin
@@ -28,6 +29,9 @@ object BookConfig : AbstractConfig() {
 
         plugin.logger.info("Loading language file: " + bookSetting.locale + "...")
         translate = Translate(cb.createFolder("lang", bookSetting.locale + ".yml"))
+
+        plugin.logger.info("Caching stat format/name...")
+        StatDisplay.load(translate)
 
         plugin.logger.info("Loading item settings...")
         ItemConfig.load(cb.createMap("Items", "ID"), cb.createMap("Unidentified", "ID"))

@@ -24,7 +24,7 @@ class AdminTabComplete : TabCompleter {
             when (args.size) {
                 1 -> StringUtil.copyPartialMatches(
                     args[0],
-                    listOf("reload", "get", "help", "give", "unid", "identify", "effect"),
+                    listOf("reload", "get", "help", "give", "unid", "identify", "effect", "debug"),
                     result
                 )
                 2 -> when (category) {
@@ -34,6 +34,11 @@ class AdminTabComplete : TabCompleter {
                     "give", "unid", "effect" -> StringUtil.copyPartialMatches(
                         args[1],
                         CommandUtil.getPlayerNames(Book.inst.server.onlinePlayers),
+                        result
+                    )
+                    "debug" -> StringUtil.copyPartialMatches(
+                        args[1],
+                        ArrayList(DebugMode.DebugOption.names).also { it.add("clear") },
                         result
                     )
                 }

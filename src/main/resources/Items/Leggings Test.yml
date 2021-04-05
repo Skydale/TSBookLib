@@ -6,7 +6,7 @@ MODEL: 1
 FORMAT:
   NAME: '&6鞋子測試'
   LORE: |
-          %tsbook_stat.defense.terra% [defense-terra]
+          [defense-terra]
   
           %tsbook_mythic%
 

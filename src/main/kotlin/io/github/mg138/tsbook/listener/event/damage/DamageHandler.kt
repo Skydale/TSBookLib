@@ -1,6 +1,7 @@
 package io.github.mg138.tsbook.listener.event.damage
 
 import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.command.admin.DebugMode
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.item.ItemStat
@@ -18,6 +19,7 @@ import io.github.mg138.tsbook.stat.util.StatUtil
 import io.github.mg138.tsbook.util.MobType
 import io.lumine.xikage.mythicmobs.MythicMobs
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper
+import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
@@ -31,6 +33,12 @@ object DamageHandler {
     val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
     private val rand = Random()
     private val damageCD: MutableMap<Player, Long> = HashMap()
+
+    fun debug(player: Player, message: String) {
+        if (DebugMode.hasOption(player, DebugMode.DebugOption.ON_DAMAGE)) {
+            player.sendMessage(message)
+        }
+    }
 
     fun remove(player: Player) {
         damageCD.remove(player)
@@ -92,19 +100,40 @@ object DamageHandler {
         var usedModifier = 0.0
         StatUtil.getModifier(stats).forEach { (type, modifier) ->
             when (type) {
-                StatType.MODIFIER_HELL -> if (MobType.isHellish(entity.type)) usedModifier += modifier.stat / 100
-                StatType.MODIFIER_MOBS -> if (MobType.isMob(entity.type)) usedModifier += modifier.stat / 100
-                StatType.MODIFIER_PLAYER -> if (entity.type == EntityType.PLAYER) usedModifier += modifier.stat / 100
-                StatType.MODIFIER_ARTHROPOD -> if (MobType.isArthropod(entity.type)) usedModifier += modifier.stat / 100
-                StatType.MODIFIER_UNDERWATER -> if (MobType.isWatery(entity.type)) usedModifier += modifier.stat / 100
-                StatType.MODIFIER_UNDEAD -> if (MobType.isUndead(entity.type)) usedModifier += modifier.stat / 100
+                StatType.MODIFIER_HELL -> if (MobType.isHellish(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_MOBS -> if (MobType.isMob(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_PLAYER -> if (entity.type == EntityType.PLAYER) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_ARTHROPOD -> if (MobType.isArthropod(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_UNDERWATER -> if (MobType.isWatery(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_UNDEAD -> if (MobType.isUndead(entity.type)) usedModifier += modifier.getStat() / 100
                 else -> Unit
             }
         }
 
-        val damageSum = damage(stats, defense, usedModifier, customEvent)
-        elementalEffect(stats, entity, usedModifier)
-        effect(stats, entity, damager, damageSum)
+        if (damager is Player) {
+            debug(
+                damager,
+                ChatColor.translateAlternateColorCodes(
+                    '&',
+                    "&eModifier: &f$usedModifier\n"
+                )
+            )
+        }
+
+        val damageSum = damage(damager, stats, defense, usedModifier, customEvent)
+        elementalEffect(damager, entity, stats, usedModifier)
+        effect(damager, entity, stats, damageSum)
+
+        if (damager is Player) {
+            debug(
+                damager,
+                ChatColor.translateAlternateColorCodes(
+                    '&',
+                    "&cDamageSum: &f$damageSum" +
+                            "\n  &cDamages: &f${customEvent.getDamages()}"
+                )
+            )
+        }
 
         event.damage = damageSum
         entity.maximumNoDamageTicks = 0
@@ -143,37 +172,42 @@ object DamageHandler {
         }
     }
 
-    private fun damage(stats: StatMap, defense: StatMap, modifier: Double, event: CustomDamageEvent): Double {
+    private fun damage(damager: LivingEntity, stats: StatMap, defense: StatMap, modifier: Double, event: CustomDamageEvent): Double {
         val damages = StatUtil.getDamage(stats)
         if (damages.isEmpty()) return 0.0
 
-        val critDamage = stats.getStatOut(StatType.POWER_CRITICAL).div(100)
+        val critDamage = stats.getStatSafe(StatType.POWER_CRITICAL).div(100)
         val critChance: Double
         val certainStrikes: Int
-        stats.getStatOut(StatType.CHANCE_CRITICAL).div(100).let {
+        stats.getStatSafe(StatType.CHANCE_CRITICAL).div(100).let {
             critChance = roundChance(it)
             certainStrikes = getStrikes(it)
         }
 
-        println("crit:")
-        println("    chance: $critChance")
-        println("    damage: $critDamage")
-        println("    certainStrikes: $certainStrikes")
+        if (damager is Player) {
+            debug(
+                damager,
+                ChatColor.translateAlternateColorCodes(
+                    '&',
+                    "&9CritChance: &f$critChance &7/ &cCritDamage: &f$critDamage &7/ &aCertainCritStrikes: &f$certainStrikes\n"
+                )
+            )
+        }
 
         var damageSum = 0.0
         damages.forEach { (damageType, rawDamage) ->
             val damage = when (damageType) {
                 StatType.DAMAGE_TRUE -> {
                     StatUtil.calculateTrueDamage(
-                        damage = rawDamage.stat,
-                        defense = defense.getStatOut(StatType.DEFENSE_TRUE),
+                        damage = rawDamage.getStat(),
+                        defense = defense.getStatSafe(StatType.DEFENSE_TRUE),
                         modifier = 1 + modifier
                     )
                 }
                 else -> {
                     StatUtil.calculateDamage(
-                        damage = rawDamage.stat,
-                        defense = defense.getStatOut(StatTables.damageToDefense[damageType]!!),
+                        damage = rawDamage.getStat(),
+                        defense = defense.getStatSafe(StatTables.damageToDefense[damageType]!!),
                         modifier = 1 + modifier + (critDamage * (certainStrikes + if (roll(critChance)) 1 else 0))
                     )
                 }
@@ -184,7 +218,7 @@ object DamageHandler {
         return damageSum
     }
 
-    private fun effect(stats: StatMap, entity: LivingEntity, damager: LivingEntity, damageSum: Double) {
+    private fun effect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, damageSum: Double) {
         val effectChance = StatUtil.getEffectChance(stats)
         if (effectChance.isEmpty()) return
 
@@ -193,19 +227,25 @@ object DamageHandler {
         effectChance.forEach { (type, rawChance) ->
             val chance: Double
             val strikes: Int
-            rawChance.stat.div(100).let {
+            rawChance.getStat().div(100).let {
                 chance = roundChance(it)
                 strikes = getStrikes(it) + if (roll(chance)) 1 else 0
             }
 
-            println("effect:")
-            println("    chance: $chance")
-            println("    certainStrikes: $strikes")
+            if (damager is Player) {
+                debug(
+                    damager,
+                    ChatColor.translateAlternateColorCodes(
+                        '&',
+                        "&b$type: &7{ &9EffectChance: &f$chance &7/ &aCertainEffectStrikes: &f$strikes &7}\n"
+                    )
+                )
+            }
 
             if (strikes > 0) {
                 when (type) {
                     StatType.CHANCE_DRAIN -> {
-                        val rawPower = effectPower.getStatOut(type)
+                        val rawPower = effectPower.getStatSafe(type)
                         if (rawPower > 0) {
                             val result = damager.health + damageSum * min(rawPower / 100, 0.0)
                             val maxHealth = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue
@@ -213,8 +253,8 @@ object DamageHandler {
                         }
                     }
                     StatType.CHANCE_SLOWNESS -> {
-                        val rawPower = effectPower.getStatOut(type)
-                        EffectHandler.addEffect(
+                        val rawPower = effectPower.getStatSafe(type)
+                        EffectHandler.apply(
                             StatusType.SLOWNESS,
                             entity,
                             strikes * rawPower / 100,
@@ -222,12 +262,12 @@ object DamageHandler {
                         )
                     }
                     StatType.CHANCE_LEVITATION -> {
-                        val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.addEffect(StatusType.LEVITATION, entity, 0.0, ticks.toLong())
+                        val ticks = 20 * strikes * effectPower.getStatSafe(type)
+                        if (ticks >= 20) EffectHandler.apply(StatusType.LEVITATION, entity, 0.0, ticks.toLong())
                     }
                     StatType.CHANCE_NAUSEOUS -> {
-                        val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.addEffect(StatusType.NAUSEOUS, entity, 0.0, ticks.toLong())
+                        val ticks = 20 * strikes * effectPower.getStatSafe(type)
+                        if (ticks >= 20) EffectHandler.apply(StatusType.NAUSEOUS, entity, 0.0, ticks.toLong())
                     }
                     else -> Unit
                 }
@@ -235,41 +275,51 @@ object DamageHandler {
         }
     }
 
-    private fun elementalEffect(stats: StatMap, entity: LivingEntity, modifier: Double) {
+    private fun elementalEffect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, modifier: Double) {
         val elementalDamages = StatUtil.getElementalDamage(stats)
         if (elementalDamages.isEmpty()) return
 
         var certainStrike: Int
         val chance: Double
-        (25 + stats.getStatOut(StatType.AFFINITY_ELEMENT)).div(100).let {
+        (25 + stats.getStatSafe(StatType.AFFINITY_ELEMENT)).div(100).let {
             chance = roundChance(it)
             certainStrike = getStrikes(it)
         }
 
-        elementalDamages.forEach { (damageType, rawDamage) ->
-            val damage = StatUtil.calculateModifier(rawDamage.stat, modifier)
+        elementalDamages.forEach { (type, rawDamage) ->
+            val damage = StatUtil.calculateModifier(rawDamage.getStat(), modifier)
             val strikes = (certainStrike + if (roll(chance)) 1 else 0)
 
-            when (damageType) {
+            if (damager is Player) {
+                debug(
+                    damager,
+                    ChatColor.translateAlternateColorCodes(
+                        '&',
+                        "&b$type: &7{ &cElementDamage: &f$damage &7/ &9ElementChance: &f$chance &7/ &aCertainElementStrikes: &f$strikes &7}\n"
+                    )
+                )
+            }
+
+            when (type) {
                 StatType.DAMAGE_IGNIS -> {
                     val power = (damage / 8) * strikes
                     val tick = (damage / 6).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.addEffect(StatusType.BURNING, entity, power, tick)
+                        EffectHandler.apply(StatusType.BURNING, entity, power, tick)
                     }
                 }
                 StatType.DAMAGE_PHYSICAL -> {
                     val power = (damage / 12) * strikes
                     val tick = (damage / 14).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.addEffect(StatusType.BLEEDING, entity, power, tick)
+                        EffectHandler.apply(StatusType.BLEEDING, entity, power, tick)
                     }
                 }
                 StatType.DAMAGE_TEMPUS -> {
                     val power = (damage / 8) * strikes
                     val tick = (600 * (damage / (damage + 1000))).toLong()
                     if (power > 20 && tick > 60) {
-                        EffectHandler.addEffect(StatusType.PARALYSIS, entity, power, tick)
+                        EffectHandler.apply(StatusType.PARALYSIS, entity, power, tick)
                     }
                 }
                 else -> Unit

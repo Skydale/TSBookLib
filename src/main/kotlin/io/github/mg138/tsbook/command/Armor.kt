@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 class Armor : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         if (sender !is Player) {
-            sender.sendMessage(BookConfig.translate.translate("errors.player_only"))
+            sender.sendMessage(BookConfig.translate.get("errors.player_only"))
             return false
         }
         Book.equipmentGUIHandler.openEquipmentGUI(sender)

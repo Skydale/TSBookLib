@@ -13,7 +13,7 @@ import java.util.function.Consumer
 class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
     private val dataFolder = plugin.dataFolder
     private val jarFile = JarFile(jar)
-    
+
     fun create(path: String, target: String): YamlConfiguration {
         val to = path + target
         val file = File(dataFolder, to)
@@ -69,7 +69,7 @@ class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
     }
 
     private fun loadJarContent(directory: String): List<File> {
-        val folder = File( dataFolder, directory)
+        val folder = File(dataFolder, directory)
         if (!folder.exists()) {
             folder.mkdirs()
 

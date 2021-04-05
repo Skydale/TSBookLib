@@ -4,9 +4,6 @@ import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.stat.StatType
-import me.pikamug.localelib.LocaleLib
-import net.md_5.bungee.api.chat.TranslatableComponent
-import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.boss.BarColor
@@ -49,13 +46,13 @@ class HealthIndicator : Listener {
                     maxDamage = damage
                     maxType = type
                 }
-                damageSum += (damage * 10).roundToInt() / 10.0
-                types.append(BookConfig.translate.translate("indicator.$type"))
+                damageSum += damage
+                types.append(BookConfig.translate.get("indicator.${type.name}"))
             }
-            damageSum *= -1
+            damageSum = -1 * ((damageSum * 10).roundToInt() / 10.0)
             val result = when {
                 damageSum > 0 -> BookConfig.translate.translateString("&a+") + damageSum
-                damageSum < 0 -> BookConfig.translate.translate("indicator.$maxType") + damageSum + " - " + types.toString()
+                damageSum < 0 -> BookConfig.translate.get("indicator.${maxType.name}") + damageSum + " &r&9- " + types.toString()
                 else -> ""
             }
             types.setLength(0)
@@ -67,7 +64,7 @@ class HealthIndicator : Listener {
             val maxHealth = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue * 10).roundToInt() / 10.0
             val health = (entity.health * 10).roundToInt() / 10.0
 
-            val title = BookConfig.translate.translate("health_indicator.title")
+            val title = BookConfig.translate.get("health_indicator.title")
                 .replace("[name]", name)
                 .replace("[health]", health.toString())
                 .replace("[max_health]", maxHealth.toString())

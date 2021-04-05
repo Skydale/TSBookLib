@@ -55,6 +55,7 @@ public class IdentificationTag implements PersistentDataType<String, ItemIdentif
             result = Book.Companion.getGson().fromJson(string, ItemIdentification.class);
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
+            System.out.println("The error string: " + string);
         }
         assert result != null;
         return result;

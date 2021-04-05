@@ -1,5 +1,10 @@
 package io.github.mg138.tsbook.stat
 
+import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.setting.config.BookSetting
+import io.github.mg138.tsbook.setting.stat.StatDisplay
+import java.lang.IllegalArgumentException
+
 enum class StatType {
     SPEED_ATTACK,
     DAMAGE_TRUE,
@@ -56,5 +61,13 @@ enum class StatType {
     DEFENSE_DRAIN,
     DEFENSE_LEVITATION,
     DEFENSE_FROZE,
-    AFFINITY_ELEMENT
+    AFFINITY_ELEMENT;
+
+    override fun toString(): String {
+        return StatDisplay.name[this] ?: throw IllegalArgumentException("No name set for ${this.name} in the language file!")
+    }
+
+    fun getFormat(): String {
+        return StatDisplay.format[this] ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
+    }
 }

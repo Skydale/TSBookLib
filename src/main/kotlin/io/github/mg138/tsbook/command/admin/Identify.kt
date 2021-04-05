@@ -22,7 +22,7 @@ object Identify {
             CommandError.handEmpty(sender)
             return false
         }
-        val type = ItemUtils.getInternalItemType(item) ?: run {
+        val type = ItemUtils.getInternalType(item) ?: run {
             CommandError.itemNotFound(sender)
             return false
         }

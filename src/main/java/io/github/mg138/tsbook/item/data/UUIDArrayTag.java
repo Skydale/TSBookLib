@@ -23,14 +23,12 @@ public class UUIDArrayTag implements PersistentDataType<byte[], UUID[]> {
     @NotNull
     @Override
     public byte[] toPrimitive(UUID[] complex, @NotNull PersistentDataAdapterContext context) {
-        List<byte[]> result = new ArrayList<>();
         ByteBuffer bb = ByteBuffer.wrap(new byte[16 * complex.length]);
         for (UUID uuid : complex) {
             bb.putLong(uuid.getMostSignificantBits());
             bb.putLong(uuid.getLeastSignificantBits());
-            //result.add(bb.array());
         }
-        return bb.array(); //result.toArray(new byte[0][]);
+        return bb.array();
     }
 
     @NotNull

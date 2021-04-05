@@ -6,7 +6,7 @@ MODEL: 1
 FORMAT:
   NAME: '&6戒指測試'
   LORE: |
-          %tsbook_stat.damage.ignis% [damage-ignis]
+          [damage-ignis]
   
           %tsbook_mythic%
 

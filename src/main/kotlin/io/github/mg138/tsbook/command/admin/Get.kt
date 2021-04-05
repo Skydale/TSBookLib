@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 
 object Get {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.translate("commands.feedback.get"))
+        sender.sendMessage(BookConfig.translate.get("commands.feedback.get"))
         return true
     }
 
@@ -20,7 +20,7 @@ object Get {
 
         val item = CommandUtil.getItemByName(itemName, sender) ?: return false
         AdminCommands.item = itemName
-        sender.sendMessage(BookConfig.translate.translate("messages.get", sender))
+        sender.sendMessage(BookConfig.translate.get("messages.get", sender))
         sender.inventory.addItem(CommandUtil.getItem("item", item))
         return true
     }

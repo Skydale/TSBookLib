@@ -9,6 +9,6 @@ FORMAT:
           %tsbook_mythic% %tsbook_book%
 
 DAMAGE: |
-    %tsbook_stat.damage.ignis% [damage-ignis]
+    [damage-ignis]
 
 stats:

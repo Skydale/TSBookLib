@@ -6,10 +6,10 @@ import org.bukkit.command.CommandSender
 
 object Reload {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.translate("messages.reload"))
+        sender.sendMessage(BookConfig.translate.get("messages.reload"))
         Book.inst.unload()
         Book.inst.load()
-        sender.sendMessage(BookConfig.translate.translate("messages.reloaded"))
+        sender.sendMessage(BookConfig.translate.get("messages.reloaded"))
         return true
     }
 }

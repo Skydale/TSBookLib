@@ -4,7 +4,9 @@ import io.github.mg138.tsbook.setting.AbstractConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
+import io.github.mg138.tsbook.setting.stat.StatDisplay
 import io.github.mg138.tsbook.stat.*
+import java.lang.IllegalArgumentException
 import java.util.AbstractMap
 
 class ItemStat (
@@ -13,7 +15,7 @@ class ItemStat (
     private val config: AbstractConfig
 ) : Iterable<Map.Entry<StatType, Stat>> {
     fun getStatOut(type: StatType): Double {
-        return initStats.getStatOut(type) * identification[type]
+        return initStats.getStatSafe(type) * identification[type]
     }
 
     operator fun get(type: StatType): Stat {
@@ -22,7 +24,8 @@ class ItemStat (
 
     fun translate(type: StatType): String {
         return this[type]
-            .applyPlaceholder(config.translate.translate("format.$type"))
+            .applyPlaceholder(type.getFormat())
+            .replace("[name]", type.toString())
             .replace("[percentage]", (identification[type] * 100).toInt().toString() + '%')
     }
 

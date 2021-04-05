@@ -6,7 +6,7 @@ MODEL: 1
 FORMAT:
   NAME: '&6手套測試'
   LORE: |
-          %tsbook_stat.damage.aqua% [damage-aqua]
+          [damage-aqua]
   
           %tsbook_mythic%
 

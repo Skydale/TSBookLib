@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.listener.event.damage
 
+import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.simpleDamage
-import io.github.mg138.tsbook.entity.effect.EffectHandler.getEffect
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler.damagedByEntity
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -58,9 +58,15 @@ class DamageEventHandler : Listener {
                 return
             }
             DamageCause.FALL -> {
-                getEffect(entity, StatusType.FALL_DAMAGE_RESISTANCE)?.let {
+                EffectHandler.getEffect(entity, StatusType.FALL_DAMAGE_RESISTANCE)?.let {
                     event.isCancelled = true
-                    simpleDamage(entity, StatUtil.calculateModifier(event.damage, max((1 - it.power), 0.0)))
+                    simpleDamage(
+                        entity,
+                        StatUtil.calculateModifier(
+                            event.damage,
+                            max((1 - it.entityStatus.status.power), 0.0)
+                        )
+                    )
                     return
                 }
             }

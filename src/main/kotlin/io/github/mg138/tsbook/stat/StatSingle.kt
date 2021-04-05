@@ -1,14 +1,14 @@
 package io.github.mg138.tsbook.stat
 
-data class StatSingle(override var stat: Double) : Stat {
-    override fun applyPlaceholder(string: String): String {
-        return string.replace("[stat]", stat.toInt().toString())
-    }
+data class StatSingle(private var stat: Double) : Stat {
+    override fun getStat() = stat
+
+    override fun applyPlaceholder(string: String) = string.replace("[stat]", stat.toInt().toString())
 
     operator fun plus(increment: StatSingle?): StatSingle {
         val that = this.copy()
         increment?.let {
-            that.stat += increment.stat
+            that.stat += increment.getStat()
         }
         return that
     }

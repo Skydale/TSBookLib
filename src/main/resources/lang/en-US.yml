@@ -9,6 +9,7 @@ errors:
    effect:
       no_active_effect: '&cThe player doesn''t have any active effects!'
    should_put_number: '&cYou should put numbers!'
+   no_such_option: '&cNo such option exists! (Perhaps you did a typo?)'
    gui:
       bad_item: "This item isn't for this slot!"
 
@@ -24,6 +25,9 @@ commands:
     effect: |
             &8[&7=>&8] &c/tsbook effect <player> <effect> <power> <ticks> &7- &aApply the specified effect to the player.
             &8[&7=>&8] &c/tsbook effect <player> clear &7- &aClear the player's effects.
+    debug: |
+            &8[&7=>&8] &c/tsbook debug <option> &7- &aToggles the debug mode option.
+            &8[&7=>&8] &c/tsbook debug clear &7- &aClears your debug mode options.
 
 messages:
    help: |
@@ -40,69 +44,65 @@ messages:
 mythic: "&d&l神話"
 book: "書"
 
-format:
-   DAMAGE_PHYSICAL:   "&6[min] &7- &6[max] &7([percentage])"
-   DAMAGE_TERRA:      "&2[min] &7- &2[max] &7([percentage])"
-   DAMAGE_TEMPUS:     "&e[min] &7- &e[max] &7([percentage])"
-   DAMAGE_IGNIS:      "&c[min] &7- &c[max] &7([percentage])"
-   DAMAGE_AQUA:       "&b[min] &7- &b[max] &7([percentage])"
-   DAMAGE_LUMEN:      "&f[min] &7- &f[max] &7([percentage])"
-   DAMAGE_UMBRA:      "&8[min] &7- &8[max] &7([percentage])"
-   DAMAGE_TRUE:       "&f[min] &7- &f[max] &7([percentage])"
-   DEFENSE_PHYSICAL:  "&6[min] &7- &6[max] &7([percentage])"
-   DEFENSE_TERRA:     "&2[min] &7- &2[max] &7([percentage])"
-   DEFENSE_TEMPUS:    "&e[min] &7- &e[max] &7([percentage])"
-   DEFENSE_IGNIS:     "&c[min] &7- &c[max] &7([percentage])"
-   DEFENSE_AQUA:      "&b[min] &7- &b[max] &7([percentage])"
-   DEFENSE_LUMEN:     "&f[min] &7- &f[max] &7([percentage])"
-   DEFENSE_UMBRA:     "&8[min] &7- &8[max] &7([percentage])"
-   DEFENSE_TRUE:      "&f[min] &7- &f[max] &7([percentage])"
-   CHANCE_CRITICAL:   "&a[stat]% &7([percentage])"
-   POWER_CRITICAL:    "&a[stat]% &7([percentage])"
-   MODIFIER_PLAYER:   "&a[stat]% &7([percentage])"
-   CHANCE_DRAIN:      "&a[stat]% &7([percentage])"
-   POWER_DRAIN:       "&a[stat]% &7([percentage])"
-   CHANCE_SLOWNESS:   "&a[stat]% &7([percentage])"
-   POWER_SLOWNESS:    "&a[stat]% &7([percentage])"
-   CHANCE_NAUSEOUS:   "&a[stat]% &7([percentage])"
-   POWER_NAUSEOUS:    "&a[stat] 秒 &7([percentage])"
-   CHANCE_LEVITATION: "&a[stat]% &7([percentage])"
-   POWER_LEVITATION:  "&a[stat] 秒 &7([percentage])"
-   AFFINITY_ELEMENT:  "&a[stat]% &7([percentage])"
-   
 stat:
-   defense:
-      physical: "&f⚔ &6物理防禦"
-      terra:    "&f⛰ &2大地防禦"
-      tempus:   "&f💨 &e風暴防禦"
-      ignis:    "&f🔥 &c烈焰防禦"
-      aqua:     "&f🌊 &b洪水防禦"
-      lumen:    "&f✳ &f光明防禦"
-      umbra:    "&7❇ &8黑暗防禦"
-      true:     "&f✨ &f真實防禦"
-   damage:
-      physical: "&f⚔ &6物理傷害"
-      terra:    "&f⛰ &2大地傷害"
-      tempus:   "&f💨 &e風暴傷害"
-      ignis:    "&f🔥 &c烈焰傷害"
-      aqua:     "&f🌊 &b洪水傷害"
-      lumen:    "&f✳ &f光明傷害"
-      umbra:    "&7❇ &8黑暗傷害"
-      true:     "&f✨ &f真實傷害"
-   chance:
-      critical: "&7爆擊機率:"
-      drain: "&7吸血機率:"
-      slowness: "&7緩速機率:"
-      levitation: "&7漂浮機率:"
-      nauseous: "&7暈眩機率:"
-   power:
-      critical: "&7爆擊傷害:"
-      drain: "&7吸血傷害:"
-      slowness: "&7緩速等級:"
-      levitation: "&7漂浮秒數:"
-      nauseous: "&7暈眩秒數:"
-   modifier:
-      player:   "&7玩家增傷:"
+  name:
+     DEFENSE_PHYSICAL:  "&f⚔ &6物理防禦"
+     DEFENSE_TERRA:     "&f⛰ &2大地防禦"
+     DEFENSE_TEMPUS:    "&f💨 &e風暴防禦"
+     DEFENSE_IGNIS:     "&f🔥 &c烈焰防禦"
+     DEFENSE_AQUA:      "&f🌊 &b洪水防禦"
+     DEFENSE_LUMEN:     "&f✳ &f光明防禦"
+     DEFENSE_UMBRA:     "&7❇ &8黑暗防禦"
+     DEFENSE_TRUE:      "&f✨ &f真實防禦"
+     DAMAGE_PHYSICAL:   "&f⚔ &6物理傷害"
+     DAMAGE_TERRA:      "&f⛰ &2大地傷害"
+     DAMAGE_TEMPUS:     "&f💨 &e風暴傷害"
+     DAMAGE_IGNIS:      "&f🔥 &c烈焰傷害"
+     DAMAGE_AQUA:       "&f🌊 &b洪水傷害"
+     DAMAGE_LUMEN:      "&f✳ &f光明傷害"
+     DAMAGE_UMBRA:      "&7❇ &8黑暗傷害"
+     DAMAGE_TRUE:       "&f✨ &f真實傷害"
+     CHANCE_CRITICAL:   "&7爆擊機率:"
+     CHANCE_DRAIN:      "&7吸血機率:"
+     CHANCE_SLOWNESS:   "&7緩速機率:"
+     CHANCE_LEVITATION: "&7漂浮機率:"
+     CHANCE_NAUSEOUS:   "&7暈眩機率:"
+     POWER_CRITICAL:    "&7爆擊傷害:"
+     POWER_DRAIN:       "&7吸血傷害:"
+     POWER_SLOWNESS:    "&7緩速等級:"
+     POWER_LEVITATION:  "&7漂浮秒數:"
+     POWER_NAUSEOUS:    "&7暈眩秒數:"
+     MODIFIER_PLAYER:   "&7玩家增傷:"
+     AFFINITY_ELEMENT:  "&7元素適性:"
+  format:
+     DAMAGE_PHYSICAL:   "[name] &6[min] &7- &6[max] &7([percentage])"
+     DAMAGE_TERRA:      "[name] &2[min] &7- &2[max] &7([percentage])"
+     DAMAGE_TEMPUS:     "[name] &e[min] &7- &e[max] &7([percentage])"
+     DAMAGE_IGNIS:      "[name] &c[min] &7- &c[max] &7([percentage])"
+     DAMAGE_AQUA:       "[name] &b[min] &7- &b[max] &7([percentage])"
+     DAMAGE_LUMEN:      "[name] &f[min] &7- &f[max] &7([percentage])"
+     DAMAGE_UMBRA:      "[name] &8[min] &7- &8[max] &7([percentage])"
+     DAMAGE_TRUE:       "[name] &f[min] &7- &f[max] &7([percentage])"
+     DEFENSE_PHYSICAL:  "[name] &6[min] &7- &6[max] &7([percentage])"
+     DEFENSE_TERRA:     "[name] &2[min] &7- &2[max] &7([percentage])"
+     DEFENSE_TEMPUS:    "[name] &e[min] &7- &e[max] &7([percentage])"
+     DEFENSE_IGNIS:     "[name] &c[min] &7- &c[max] &7([percentage])"
+     DEFENSE_AQUA:      "[name] &b[min] &7- &b[max] &7([percentage])"
+     DEFENSE_LUMEN:     "[name] &f[min] &7- &f[max] &7([percentage])"
+     DEFENSE_UMBRA:     "[name] &8[min] &7- &8[max] &7([percentage])"
+     DEFENSE_TRUE:      "[name] &f[min] &7- &f[max] &7([percentage])"
+     CHANCE_CRITICAL:   "[name] &a[stat]% &7([percentage])"
+     POWER_CRITICAL:    "[name] &a[stat]% &7([percentage])"
+     MODIFIER_PLAYER:   "[name] &a[stat]% &7([percentage])"
+     CHANCE_DRAIN:      "[name] &a[stat]% &7([percentage])"
+     POWER_DRAIN:       "[name] &a[stat]% &7([percentage])"
+     CHANCE_SLOWNESS:   "[name] &a[stat]% &7([percentage])"
+     POWER_SLOWNESS:    "[name] &a[stat]% &7([percentage])"
+     CHANCE_NAUSEOUS:   "[name] &a[stat]% &7([percentage])"
+     POWER_NAUSEOUS:    "[name] &a[stat] 秒 &7([percentage])"
+     CHANCE_LEVITATION: "[name] &a[stat]% &7([percentage])"
+     POWER_LEVITATION:  "[name] &a[stat] 秒 &7([percentage])"
+     AFFINITY_ELEMENT:  "[name] &a[stat]% &7([percentage])"
 
 health_indicator:
    title: "[name] &f(&c[health]&7/&c[max_health]&f) [damages]"
@@ -119,4 +119,4 @@ indicator:
    DAMAGE_BLEED:    "&f🩸 &4"
    DAMAGE_TRUE:     "&f✨ &f"
    DAMAGE_THUNDER:  "&f⚡ &6"
-   CRITICAL: "&r&f💥 "
+   CRITICAL:        "&r&f💥 "

@@ -4,9 +4,10 @@ import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.stat.StatType
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
-class ItemIdentification : EnumMap<StatType, Float>(StatType::class.java) {
+class ItemIdentification : HashMap<StatType, Float>() {
     operator fun set(key: StatType, value: Float): Float? {
         return super.put(key, value)
     }
@@ -39,10 +40,9 @@ class ItemIdentification : EnumMap<StatType, Float>(StatType::class.java) {
         }
 
         fun create(setting: ItemSetting, isRandom: Boolean): ItemIdentification? {
-            return when (setting) {
-                is StatedItemSetting -> create(setting, isRandom)
-                else -> null
-            }
+            return if (setting is StatedItemSetting) {
+                create(setting, isRandom)
+            } else null
         }
     }
 }

@@ -27,13 +27,12 @@ open class SimpleEffectPattern(
             var i = 0L
 
             override fun run() {
-                if (i >= ticks || condition(target, status)) {
+                if (i >= ticks || condition(target, status) || !action(i, target, status)) {
                     cancel(); return
                 }
-
-                if (!action(i, target, status)) {
-                    cancel(); return
-                } //if the action fails (returns false), it exits
+                //if time exceeded, it exits
+                //if the condition isn't met, it exits
+                //if the action fails (returns false), it exits
                 i += periodResult
             }
 

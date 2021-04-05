@@ -6,10 +6,10 @@ MODEL: 1
 FORMAT:
   NAME: "&d弱等貫穿+Modifier測試"
   LORE: |
-          %tsbook_stat.damage.true% [damage-true]
-          %tsbook_stat.modifier.player% [modifier-player]
-          %tsbook_stat.chance.drain% [chance-drain]
-          %tsbook_stat.power.drain% [power-drain]
+          [damage-true]
+          [modifier-player]
+          [chance-drain]
+          [power-drain]
 
           %tsbook_mythic% %tsbook_book%
 stat:

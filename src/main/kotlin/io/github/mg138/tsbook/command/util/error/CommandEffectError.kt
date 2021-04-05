@@ -5,6 +5,6 @@ import org.bukkit.command.CommandSender
 
 object CommandEffectError {
     fun noActiveEffect(sender: CommandSender) {
-        sender.sendMessage(BookConfig.translate.translate("errors.effect.no_active_effect"))
+        sender.sendMessage(BookConfig.translate.get("errors.effect.no_active_effect"))
     }
 }

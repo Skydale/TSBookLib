@@ -18,8 +18,8 @@ class ArmorElementSetting(
         slot,
         Material.valueOf(section.getString("MATERIAL")!!),
         section.getInt("COUNT"),
-        translate.translate("NAME", null, section),
-        translate.translateList("LORE", null, section),
+        translate.get("NAME", null, section),
+        translate.getList("LORE", null, section),
         section.getInt("MODEL"),
         armorSetting
     )

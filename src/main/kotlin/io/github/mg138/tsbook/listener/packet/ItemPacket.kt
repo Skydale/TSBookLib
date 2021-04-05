@@ -10,7 +10,7 @@ import com.comphenix.protocol.events.PacketEvent
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.item.ItemUtils.checkItem
 import io.github.mg138.tsbook.item.ItemUtils.getInstByItem
-import io.github.mg138.tsbook.item.ItemUtils.getInternalItemType
+import io.github.mg138.tsbook.item.ItemUtils.getInternalType
 import org.bukkit.inventory.ItemStack
 
 object ItemPacket {
@@ -44,7 +44,8 @@ object ItemPacket {
                 override fun onPacketReceiving(event: PacketEvent) {
                     val item = WrapperPlayClientSetCreativeSlot(event.packet).clickedItem
                     if (!checkItem(item)) return
-                    val type = getInternalItemType(item) ?: return
+                    val type = getInternalType(item) ?: return
+
                     when (type) {
                         "item", "unid" -> {
                             val meta = item.itemMeta ?: return
