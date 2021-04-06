@@ -32,7 +32,7 @@ object DebugMode {
     fun remove(player: Player) = debugOptions.remove(player)
 
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.get("commands.feedback.debug"))
+        sender.sendMessage(BookConfig.language.get("commands.feedback.debug"))
         return true
     }
 

@@ -39,9 +39,9 @@ object ArmorGUIConfig : Iterable<MutableMap.MutableEntry<Int, GUIElementSetting>
 
             elementSettings[i] = when {
                 section.contains("EQUIPMENT") -> ArmorElementSetting(
-                    i, section, ArmorSetting(section.getConfigurationSection("EQUIPMENT")!!), BookConfig.translate
+                    i, section, ArmorSetting(section.getConfigurationSection("EQUIPMENT")!!)
                 )
-                else -> GUIElementSetting(i, section, BookConfig.translate)
+                else -> GUIElementSetting(i, section, BookConfig.languageFile)
             }
         }
     }

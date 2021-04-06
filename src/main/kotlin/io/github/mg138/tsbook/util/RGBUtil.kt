@@ -4,22 +4,17 @@ import net.md_5.bungee.api.ChatColor
 import java.util.regex.Pattern
 
 object RGBUtil {
-    class TextColor(var r: Int, var g: Int, var b: Int)
+    class RGB(var r: Int, var g: Int, var b: Int)
 
     private val hex = Pattern.compile("#[0-9a-fA-F]{6}")
     private val gradient = Pattern.compile("<#[0-9a-fA-F]{6}>[^<]*</#[0-9a-fA-F]{6}>")
 
-    fun translate(input: String): String {
-        var text = input
-        text = ChatColor.translateAlternateColorCodes('&', text)
-        text = setGradient(text)
-        text = setColor(text)
-        return text
-    }
+    fun String.toChatColor(char: Char = '&') = ChatColor.translateAlternateColorCodes(char, this)
+    fun String.translateColor() = this.toChatColor().setGradient().setColor()
 
     //#RRGGBB
-    private fun setColor(input: String): String {
-        var text = input
+    private fun String.setColor(): String {
+        var text = this
         val m = hex.matcher(text)
         while (m.find()) {
             val color = m.group()
@@ -29,27 +24,30 @@ object RGBUtil {
     }
 
     //<#RRGGBB>Text</#RRGGBB>
-    private fun setGradient(input: String): String {
-        var text = input
+    private fun String.setGradient(): String {
+        var text = this
         val m = gradient.matcher(text)
         while (m.find()) {
             val original = m.group()
-            val message = original.substring(9, original.length - 10)
-            val start = original.substring(2, 8).toInt(16)
+            val message = original.substring(9, original.length - 10) //TEXT
+            val start = original.substring(2, 8).toInt(16) //RRGGBB
             val startR = start shr 16 and 0xFF
             val startG = start shr 8 and 0xFF
             val startB = start and 0xFF
-            val end = original.substring(original.length - 7, original.length - 1).toInt(16)
+            val end = original.substring(original.length - 7, original.length - 1).toInt(16) //RRGGBB
             val endR = end shr 16 and 0xFF
             val endG = end shr 8 and 0xFF
             val endB = end and 0xFF
 
-            text = text.replace(original, asGradient(message, TextColor(startR, startG, startB), TextColor(endR, endG, endB)))
+            text = text.replace(
+                original,
+                asGradient(message, RGB(startR, startG, startB), RGB(endR, endG, endB))
+            )
         }
         return text
     }
 
-    private fun asGradient(text: String, start: TextColor, end: TextColor): String {
+    private fun asGradient(text: String, start: RGB, end: RGB): String {
         val sb = StringBuilder()
 
         var i = 0

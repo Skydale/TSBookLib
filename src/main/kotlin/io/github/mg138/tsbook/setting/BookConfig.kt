@@ -6,20 +6,25 @@ import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.mob.MobConfig
 import io.github.mg138.tsbook.setting.stat.StatDisplay
 import io.github.mg138.tsbook.setting.util.ConfigBuilder
-import io.github.mg138.tsbook.util.Translate
+import io.github.mg138.tsbook.util.LanguageFile
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 object BookConfig : AbstractConfig() {
-    override lateinit var plugin: JavaPlugin
-    override lateinit var jar: File
-    override lateinit var translate: Translate
+    object language {
+        object healthIndicator {
+            lateinit var title: String
+        }
+
+        fun load(languageFile: LanguageFile) {
+            healthIndicator.title = languageFile.get("health_indicator.title")
+        }
+    }
+
+    override lateinit var languageFile: LanguageFile
     private lateinit var bookSetting: BookSetting
 
     override fun load(plugin: JavaPlugin, jar: File) {
-        this.plugin = plugin
-        this.jar = jar
-
         val start = System.currentTimeMillis()
 
         val cb = ConfigBuilder(plugin, jar)
@@ -27,11 +32,12 @@ object BookConfig : AbstractConfig() {
         plugin.logger.info("Loading configuration...")
         bookSetting = BookSetting(cb.create("", "config.yml"))
 
-        plugin.logger.info("Loading language file: " + bookSetting.locale + "...")
-        translate = Translate(cb.createFolder("lang", bookSetting.locale + ".yml"))
+        plugin.logger.info("Loading language file: ${bookSetting.locale}...")
+        languageFile = LanguageFile(cb.createFolder("lang", "${bookSetting.locale}.yml"))
+        language.load(languageFile)
 
         plugin.logger.info("Caching stat format/name...")
-        StatDisplay.load(translate)
+        StatDisplay.load(languageFile)
 
         plugin.logger.info("Loading item settings...")
         ItemConfig.load(cb.createMap("Items", "ID"), cb.createMap("Unidentified", "ID"))
@@ -40,7 +46,7 @@ object BookConfig : AbstractConfig() {
         MobConfig.load(cb.createSectionMap("MythicMobs"))
 
         plugin.logger.info("Loading GUI settings...")
-        ArmorGUIConfig.load(cb.create("GUI/", "Equipment.yml"))
+        ArmorGUIConfig.load(cb.create("GUI", "Equipment.yml"))
 
         plugin.logger.info("Took me... [" + (System.currentTimeMillis() - start) + "ms] to load!")
     }

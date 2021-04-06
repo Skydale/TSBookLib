@@ -14,12 +14,12 @@ class ArmorElementSetting(
     model: Int,
     val setting: ArmorSetting
 ) : GUIElementSetting(slot, material, count, name, lore, model) {
-    constructor(slot: Int, section: ConfigurationSection, armorSetting: ArmorSetting, translate: Translate) : this(
+    constructor(slot: Int, section: ConfigurationSection, armorSetting: ArmorSetting) : this(
         slot,
         Material.valueOf(section.getString("MATERIAL")!!),
         section.getInt("COUNT"),
-        translate.get("NAME", null, section),
-        translate.getList("LORE", null, section),
+        Translate.get("NAME", null, section),
+        Translate.getList("LORE", null, section),
         section.getInt("MODEL"),
         armorSetting
     )

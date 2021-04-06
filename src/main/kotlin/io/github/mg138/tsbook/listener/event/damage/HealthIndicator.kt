@@ -4,6 +4,7 @@ import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.stat.StatType
+import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.boss.BarColor
@@ -47,12 +48,13 @@ class HealthIndicator : Listener {
                     maxType = type
                 }
                 damageSum += damage
-                types.append(BookConfig.translate.get("indicator.${type.name}"))
+                types.append(type.getIndicator())
             }
+
             damageSum = -1 * ((damageSum * 10).roundToInt() / 10.0)
             val result = when {
-                damageSum > 0 -> BookConfig.translate.translateString("&a+") + damageSum
-                damageSum < 0 -> BookConfig.translate.get("indicator.${maxType.name}") + damageSum + " &r&9- " + types.toString()
+                damageSum > 0 -> "&a+".toChatColor() + damageSum
+                damageSum < 0 -> maxType.getIndicator() + damageSum + " &r&9- ".toChatColor() + types
                 else -> ""
             }
             types.setLength(0)
@@ -64,7 +66,7 @@ class HealthIndicator : Listener {
             val maxHealth = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue * 10).roundToInt() / 10.0
             val health = (entity.health * 10).roundToInt() / 10.0
 
-            val title = BookConfig.translate.get("health_indicator.title")
+            val title = BookConfig.language.healthIndicator.title
                 .replace("[name]", name)
                 .replace("[health]", health.toString())
                 .replace("[max_health]", maxHealth.toString())

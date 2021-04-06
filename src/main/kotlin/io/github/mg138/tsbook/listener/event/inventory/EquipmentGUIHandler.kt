@@ -64,7 +64,7 @@ class EquipmentGUIHandler : Listener {
     }
 
     fun openEquipmentGUI(player: Player) {
-        val inventory = Bukkit.createInventory(player, 54, BookConfig.translate.get("gui.equipment.name"))
+        val inventory = Bukkit.createInventory(player, 54, BookConfig.language.get("gui.equipment.name"))
         constructInventory(inventory, player)
         players.add(player)
         player.openInventory(inventory)
