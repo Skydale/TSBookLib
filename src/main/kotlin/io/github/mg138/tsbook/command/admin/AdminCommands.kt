@@ -4,7 +4,6 @@ import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
-import org.jetbrains.annotations.Debug
 
 class AdminCommands : CommandExecutor {
     companion object {
@@ -16,7 +15,7 @@ class AdminCommands : CommandExecutor {
         val category = args[0].toLowerCase()
         when (args.size) {
             0 -> {
-                sender.sendMessage(BookConfig.translate.get("messages.help"))
+                sender.sendMessage(BookConfig.language.get("messages.help"))
                 return true
             }
             1 -> when (category) {
@@ -51,7 +50,7 @@ class AdminCommands : CommandExecutor {
                 "effect" -> return Effect.call(sender, args[1], args[2], args[3], args[4])
             }
         }
-        sender.sendMessage(BookConfig.translate.get("errors.unknown_command"))
+        sender.sendMessage(BookConfig.language.get("errors.unknown_command"))
         return false
     }
 }

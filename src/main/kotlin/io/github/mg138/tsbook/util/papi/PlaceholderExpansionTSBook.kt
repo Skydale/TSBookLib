@@ -30,7 +30,7 @@ class PlaceholderExpansionTSBook(private val plugin: JavaPlugin) : PlaceholderEx
     override fun onPlaceholderRequest(player: Player?, identifier: String): String {
         return when (identifier) {
             "item" -> AdminCommands.item!!
-            else -> BookConfig.translate.get(identifier)
+            else -> BookConfig.language.get(identifier)
         }
     }
 }

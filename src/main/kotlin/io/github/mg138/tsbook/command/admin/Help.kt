@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender
 
 object Help {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.get("messages.help"))
+        sender.sendMessage(BookConfig.language.get("messages.help"))
         return true
     }
 }

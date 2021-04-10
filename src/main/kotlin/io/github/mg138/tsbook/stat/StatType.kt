@@ -70,4 +70,8 @@ enum class StatType {
     fun getFormat(): String {
         return StatDisplay.format[this] ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
     }
+
+    fun getIndicator(): String {
+        return StatDisplay.indicator[this] ?: throw IllegalArgumentException("No indicator set for ${this.name} in the language file!")
+    }
 }

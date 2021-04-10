@@ -21,7 +21,7 @@ class SimpleItemSetting(
         setting.getString("ITEM_TYPE") ?: "UNKNOWN_TYPE",
         Material.valueOf(setting.getString("MATERIAL") ?: throw IllegalArgumentException("Material cannot be null")),
         setting.getInt("MODEL"),
-        BookConfig.translate.get("FORMAT.NAME", null, setting),
-        BookConfig.translate.getList("FORMAT.LORE", null, setting)
+        BookConfig.language.get("FORMAT.NAME", null, setting),
+        BookConfig.language.getList("FORMAT.LORE", null, setting)
     )
 }

@@ -40,7 +40,7 @@ object DamageIndicator {
             indicator.setGravity(false)
             indicator.isMarker = true
             indicator.isCustomNameVisible = true
-            indicator.customName = BookConfig.translate.get("indicator.$type") + damage.toInt()
+            indicator.customName = BookConfig.language.get("indicator.$type") + damage.toInt()
         }
 
         object : BukkitRunnable() {

@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 
 object Unidentified {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.get("commands.feedback.unid"))
+        sender.sendMessage(BookConfig.language.get("commands.feedback.unid"))
         return true
     }
 
@@ -20,8 +20,8 @@ object Unidentified {
             return false
         }
         AdminCommands.item = itemName
-        sender.sendMessage(BookConfig.translate.get("messages.get", player))
-        player.sendMessage(BookConfig.translate.get("messages.get", player))
+        sender.sendMessage(BookConfig.language.get("messages.get", player))
+        player.sendMessage(BookConfig.language.get("messages.get", player))
         player.inventory.addItem(CommandUtil.getItem("unid", unid))
         return true
     }

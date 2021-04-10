@@ -11,7 +11,7 @@ import java.lang.IllegalArgumentException
 
 object Effect {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.get("commands.feedback.effect"))
+        sender.sendMessage(BookConfig.language.get("commands.feedback.effect"))
         return true
     }
 
@@ -29,7 +29,7 @@ object Effect {
             val power = literalPower.toDouble()
             val ticks = literalTicks.toLong()
             EffectHandler.apply(type, player, power, ticks)
-            sender.sendMessage(BookConfig.translate.get("messages.effect.applied"))
+            sender.sendMessage(BookConfig.language.get("messages.effect.applied"))
             true
         } catch (e: NumberFormatException) {
             CommandError.shouldPutNumber(sender)
@@ -45,7 +45,7 @@ object Effect {
 
         return try {
             EffectHandler.removeAll(player)
-            sender.sendMessage(BookConfig.translate.get("messages.effect.cleared"))
+            sender.sendMessage(BookConfig.language.get("messages.effect.cleared"))
             true
         } catch (e: IllegalArgumentException) {
             CommandEffectError.noActiveEffect(sender)

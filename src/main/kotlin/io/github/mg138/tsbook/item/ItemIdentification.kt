@@ -45,4 +45,21 @@ class ItemIdentification : HashMap<StatType, Float>() {
             } else null
         }
     }
+
+    override fun toString(): String {
+        val i: Iterator<Map.Entry<StatType, Float>> = entries.iterator()
+        if (!i.hasNext()) return "{}"
+        val sb = StringBuilder()
+        sb.append('{')
+        while (true) {
+            val e = i.next()
+            val key = e.key
+            val value = e.value
+            sb.append(key.name)
+            sb.append('=')
+            sb.append(value)
+            if (!i.hasNext()) return sb.append('}').toString()
+            sb.append(',').append(' ')
+        }
+    }
 }

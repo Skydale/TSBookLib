@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender
 
 object Give {
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.translate.get("commands.feedback.give"))
+        sender.sendMessage(BookConfig.language.get("commands.feedback.give"))
         return true
     }
 
@@ -15,8 +15,8 @@ object Give {
         val item = CommandUtil.getItemByName(itemName, sender) ?: return false
 
         AdminCommands.item = itemName
-        sender.sendMessage(BookConfig.translate.get("messages.get", player))
-        player.sendMessage(BookConfig.translate.get("messages.get", player))
+        sender.sendMessage(BookConfig.language.get("messages.get", player))
+        player.sendMessage(BookConfig.language.get("messages.get", player))
         player.inventory.addItem(CommandUtil.getItem("item", item))
         return true
     }
