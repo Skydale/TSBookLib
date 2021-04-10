@@ -21,14 +21,12 @@ import org.bukkit.event.Listener
 import java.util.*
 import kotlin.math.max
 
-class DamageEventHandler : Listener {
-    companion object {
-        private val damageCD: MutableMap<Entity, Long> = HashMap()
+object DamageEventHandler : Listener {
+    private val damageCD: MutableMap<Entity, Long> = HashMap()
 
-        fun unload() {
-            damageCD.clear()
-            DamageHandler.unload()
-        }
+    fun unload() {
+        damageCD.clear()
+        DamageHandler.unload()
     }
 
     @EventHandler

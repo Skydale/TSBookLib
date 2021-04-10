@@ -4,6 +4,7 @@ import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.item.ItemUtils
 import io.github.mg138.tsbook.item.ItemUtils.getStringTag
 import io.github.mg138.tsbook.item.ItemUtils.getUUID
+import io.github.mg138.tsbook.item.data.UUIDArrayTag
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import org.bukkit.Material
@@ -21,15 +22,13 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class ItemRightClick : Listener {
-    companion object {
-        private val removing: MutableMap<Entity, BukkitRunnable> = HashMap()
-        private val damageCD: MutableMap<Player, Long> = HashMap()
-        fun unload() {
-            removing.forEach { (_, runnable) -> runnable.run() }
-            removing.clear()
-            damageCD.clear()
-        }
+object ItemRightClick : Listener {
+    private val removing: MutableMap<Entity, BukkitRunnable> = HashMap()
+    private val damageCD: MutableMap<Player, Long> = HashMap()
+    fun unload() {
+        removing.forEach { (_, runnable) -> runnable.run() }
+        removing.clear()
+        damageCD.clear()
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -88,7 +87,7 @@ class ItemRightClick : Listener {
             uuids.add(instance.uuid)
         }
         val arrow = player.world.spawn(player.eyeLocation, Arrow::class.java) { aw: Arrow ->
-            aw.persistentDataContainer[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag] = uuids.toTypedArray()
+            aw.persistentDataContainer[ItemUtils.uuidArrayKey, UUIDArrayTag] = uuids.toTypedArray()
             aw.setGravity(false)
             aw.isInvulnerable = true
             aw.isSilent = true

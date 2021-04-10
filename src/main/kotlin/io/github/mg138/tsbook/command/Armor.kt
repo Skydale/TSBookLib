@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.command
 
-import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -13,7 +13,7 @@ class Armor : CommandExecutor {
             sender.sendMessage(BookConfig.translate.get("errors.player_only"))
             return false
         }
-        Book.equipmentGUIHandler.openEquipmentGUI(sender)
+        EquipmentGUIHandler.openEquipmentGUI(sender)
         return true
     }
 }

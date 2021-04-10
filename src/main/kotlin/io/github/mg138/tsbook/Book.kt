@@ -34,8 +34,6 @@ class Book : JavaPlugin() {
         lateinit var inst: Book
         lateinit var jar: File
 
-        lateinit var equipmentGUIHandler: EquipmentGUIHandler
-
         var gson = Gson()
         var localeManager: LocaleManager? = null
     }
@@ -60,7 +58,7 @@ class Book : JavaPlugin() {
         ItemRightClick.unload()
         HealthIndicator.unload()
         DamageIndicator.unload()
-        equipmentGUIHandler.unload()
+        EquipmentGUIHandler.unload()
     }
 
     fun load() {
@@ -79,14 +77,13 @@ class Book : JavaPlugin() {
         DisableHeartParticle.register()
         ItemPacket.register()
 
-        equipmentGUIHandler = EquipmentGUIHandler()
-        Bukkit.getPluginManager().registerEvents(DamageEventHandler(), inst)
-        Bukkit.getPluginManager().registerEvents(ItemUpdate(), inst)
-        Bukkit.getPluginManager().registerEvents(ItemRightClick(), inst)
-        Bukkit.getPluginManager().registerEvents(HealthIndicator(), inst)
-        //Bukkit.getPluginManager().registerEvents(equipmentGUIHandler, inst)
-        Bukkit.getPluginManager().registerEvents(ArmorAutoEquip(), inst)
-        //Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand(), inst)
+        Bukkit.getPluginManager().registerEvents(DamageEventHandler, inst)
+        Bukkit.getPluginManager().registerEvents(ItemUpdate, inst)
+        Bukkit.getPluginManager().registerEvents(ItemRightClick, inst)
+        Bukkit.getPluginManager().registerEvents(HealthIndicator, inst)
+        Bukkit.getPluginManager().registerEvents(EquipmentGUIHandler, inst)
+        Bukkit.getPluginManager().registerEvents(ArmorAutoEquip, inst)
+        Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand, inst)
 
         getCommand("tsbook")!!.setExecutor(AdminCommands())
         getCommand("tsbook")!!.tabCompleter = AdminTabComplete()

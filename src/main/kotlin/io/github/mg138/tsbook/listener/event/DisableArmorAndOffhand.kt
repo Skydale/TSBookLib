@@ -13,8 +13,7 @@ import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.PlayerInteractEvent
 
-class DisableArmorAndOffhand : Listener {
-
+object DisableArmorAndOffhand : Listener {
     @EventHandler
     fun onPlayerRightClick(event: PlayerInteractEvent) {
         val item = event.item ?: return

@@ -2,7 +2,6 @@ package io.github.mg138.tsbook.item
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.item.data.IdentificationTag
-import io.github.mg138.tsbook.item.data.UUIDArrayTag
 import io.github.mg138.tsbook.item.data.UUIDTag
 import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.Material
@@ -14,10 +13,6 @@ import java.util.*
 
 object ItemUtils {
     val itemCache: MutableMap<UUID, ItemInstance> = HashMap()
-
-    val uuidArrayTag = UUIDArrayTag()
-    val uuidTag = UUIDTag()
-    val identificationTag = IdentificationTag()
 
     val itemKey = NamespacedKey(Book.inst, "item")
     val uuidKey = NamespacedKey(Book.inst, "uuid")
@@ -41,7 +36,7 @@ object ItemUtils {
 
         val container = meta.persistentDataContainer
 
-        container[uuidKey, uuidTag] = uuid
+        container[uuidKey, UUIDTag] = uuid
         itemCache[uuid] = inst
 
         val internalType = inst.internalType
@@ -61,7 +56,7 @@ object ItemUtils {
         val meta = item.itemMeta!!
         val container = meta.persistentDataContainer
 
-        val uuid = container[uuidKey, uuidTag].let { uuid ->
+        val uuid = container[uuidKey, UUIDTag].let { uuid ->
             itemCache[uuid]?.let { return it }
             UUID.randomUUID()
         }
@@ -86,16 +81,16 @@ object ItemUtils {
     private fun setIdentification(inst: ItemInstance, item: ItemStack) {
         val meta = item.itemMeta ?: return
         val identification = inst.itemStat?.identification ?: return
-        meta.persistentDataContainer[identificationKey, identificationTag] = identification
+        meta.persistentDataContainer[identificationKey, IdentificationTag] = identification
         item.itemMeta = meta
     }
 
     private fun getIdentification(item: ItemStack): ItemIdentification? {
-        return item.itemMeta!!.persistentDataContainer[identificationKey, identificationTag]
+        return item.itemMeta!!.persistentDataContainer[identificationKey, IdentificationTag]
     }
 
     fun getUUID(item: ItemStack): UUID? {
-        return item.itemMeta!!.persistentDataContainer[uuidKey, uuidTag]
+        return item.itemMeta!!.persistentDataContainer[uuidKey, UUIDTag]
     }
 
     fun getStringTag(item: ItemStack, key: String): String? {

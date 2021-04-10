@@ -1,46 +1,36 @@
-package io.github.mg138.tsbook.item.data;
+package io.github.mg138.tsbook.item.data
 
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.persistence.PersistentDataAdapterContext
+import org.bukkit.persistence.PersistentDataType
+import java.nio.ByteBuffer
+import java.util.*
 
-import java.nio.ByteBuffer;
-import java.util.*;
-
-public class UUIDArrayTag implements PersistentDataType<byte[], UUID[]> {
-    @NotNull
-    @Override
-    public Class<byte[]> getPrimitiveType() {
-        return byte[].class;
+object UUIDArrayTag : PersistentDataType<ByteArray, Array<UUID>> {
+    override fun getPrimitiveType(): Class<ByteArray> {
+        return ByteArray::class.java
     }
 
-    @NotNull
-    @Override
-    public Class<UUID[]> getComplexType() {
-        return UUID[].class;
+    override fun getComplexType(): Class<Array<UUID>> {
+        return Array<UUID>::class.java
     }
 
-    @NotNull
-    @Override
-    public byte[] toPrimitive(UUID[] complex, @NotNull PersistentDataAdapterContext context) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16 * complex.length]);
-        for (UUID uuid : complex) {
-            bb.putLong(uuid.getMostSignificantBits());
-            bb.putLong(uuid.getLeastSignificantBits());
+    override fun toPrimitive(complex: Array<UUID>, context: PersistentDataAdapterContext): ByteArray {
+        val bb = ByteBuffer.wrap(ByteArray(16 * complex.size))
+        for (uuid in complex) {
+            bb.putLong(uuid.mostSignificantBits)
+            bb.putLong(uuid.leastSignificantBits)
         }
-        return bb.array();
+        return bb.array()
     }
 
-    @NotNull
-    @Override
-    public UUID[] fromPrimitive(@NotNull byte[] primitive, @NotNull PersistentDataAdapterContext context) {
-        List<UUID> uuids = new ArrayList<>();
-        ByteBuffer bb = ByteBuffer.wrap(primitive);
-        for (int i = 0; i < primitive.length / 16; i++) {
-            long firstLong = bb.getLong();
-            long secondLong = bb.getLong();
-            uuids.add(new UUID(firstLong, secondLong));
+    override fun fromPrimitive(primitive: ByteArray, context: PersistentDataAdapterContext): Array<UUID> {
+        val uuids: MutableList<UUID> = ArrayList()
+        val bb = ByteBuffer.wrap(primitive)
+        for (i in 0 until primitive.size / 16) {
+            val firstLong = bb.long
+            val secondLong = bb.long
+            uuids.add(UUID(firstLong, secondLong))
         }
-        return uuids.toArray(new UUID[0]);
+        return uuids.toTypedArray()
     }
 }

@@ -1,40 +1,30 @@
-package io.github.mg138.tsbook.item.data;
+package io.github.mg138.tsbook.item.data
 
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.persistence.PersistentDataAdapterContext
+import org.bukkit.persistence.PersistentDataType
+import java.nio.ByteBuffer
+import java.util.*
 
-import java.nio.ByteBuffer;
-import java.util.UUID;
-
-public class UUIDTag implements PersistentDataType<byte[], UUID> {
-    @NotNull
-    @Override
-    public Class<byte[]> getPrimitiveType() {
-        return byte[].class;
+object UUIDTag : PersistentDataType<ByteArray, UUID> {
+    override fun getPrimitiveType(): Class<ByteArray> {
+        return ByteArray::class.java
     }
 
-    @NotNull
-    @Override
-    public Class<UUID> getComplexType() {
-        return UUID.class;
+    override fun getComplexType(): Class<UUID> {
+        return UUID::class.java
     }
 
-    @NotNull
-    @Override
-    public byte[] toPrimitive(UUID complex, @NotNull PersistentDataAdapterContext context) {
-        ByteBuffer bb = ByteBuffer.wrap(new byte[16]);
-        bb.putLong(complex.getMostSignificantBits());
-        bb.putLong(complex.getLeastSignificantBits());
-        return bb.array();
+    override fun toPrimitive(complex: UUID, context: PersistentDataAdapterContext): ByteArray {
+        val bb = ByteBuffer.wrap(ByteArray(16))
+        bb.putLong(complex.mostSignificantBits)
+        bb.putLong(complex.leastSignificantBits)
+        return bb.array()
     }
 
-    @NotNull
-    @Override
-    public UUID fromPrimitive(@NotNull byte[] primitive, @NotNull PersistentDataAdapterContext context) {
-        ByteBuffer bb = ByteBuffer.wrap(primitive);
-        long firstLong = bb.getLong();
-        long secondLong = bb.getLong();
-        return new UUID(firstLong, secondLong);
+    override fun fromPrimitive(primitive: ByteArray, context: PersistentDataAdapterContext): UUID {
+        val bb = ByteBuffer.wrap(primitive)
+        val firstLong = bb.long
+        val secondLong = bb.long
+        return UUID(firstLong, secondLong)
     }
 }

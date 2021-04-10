@@ -1,63 +1,59 @@
-package io.github.mg138.tsbook.item.data;
+package io.github.mg138.tsbook.item.data
 
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonSyntaxException
+import io.github.mg138.tsbook.Book.Companion.gson
+import io.github.mg138.tsbook.item.ItemIdentification
+import org.bukkit.persistence.PersistentDataAdapterContext
+import org.bukkit.persistence.PersistentDataType
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.io.ObjectOutputStream
 
-import io.github.mg138.tsbook.Book;
-import io.github.mg138.tsbook.item.ItemIdentification;
-
-import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataType;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.*;
-
-public class IdentificationTag implements PersistentDataType<String, ItemIdentification> {
-    @NotNull
-    @Override
-    public Class<String> getPrimitiveType() {
-        return String.class;
+object IdentificationTag : PersistentDataType<String, ItemIdentification> {
+    override fun getPrimitiveType(): Class<String> {
+        return String::class.java
     }
 
-    @NotNull
-    @Override
-    public Class<ItemIdentification> getComplexType() {
-        return ItemIdentification.class;
+    override fun getComplexType(): Class<ItemIdentification> {
+        return ItemIdentification::class.java
     }
 
-    @NotNull
-    @Override
-    public String toPrimitive(@NotNull ItemIdentification itemIdentification, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        String result = null;
+    override fun toPrimitive(
+        itemIdentification: ItemIdentification,
+        persistentDataAdapterContext: PersistentDataAdapterContext
+    ): String {
+        val bos = ByteArrayOutputStream()
+        var result: String? = null
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(bos);
-            result = Book.Companion.getGson().toJson(itemIdentification);
-            oos.writeObject(result);
-            oos.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+            val oos = ObjectOutputStream(bos)
+            result = gson.toJson(itemIdentification)
+            oos.writeObject(result)
+            oos.flush()
+        } catch (e: IOException) {
+            e.printStackTrace()
         } finally {
             try {
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                bos.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
-        assert result != null;
-        return result;
+        assert(result != null)
+        return result!!
     }
 
-    @NotNull
-    @Override
-    public ItemIdentification fromPrimitive(@NotNull String string, @NotNull PersistentDataAdapterContext persistentDataAdapterContext) {
-        ItemIdentification result = null;
+    override fun fromPrimitive(
+        string: String,
+        persistentDataAdapterContext: PersistentDataAdapterContext
+    ): ItemIdentification {
+        var result: ItemIdentification? = null
         try {
-            result = Book.Companion.getGson().fromJson(string, ItemIdentification.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-            System.out.println("The error string: " + string);
+            result = gson.fromJson(string, ItemIdentification::class.java)
+        } catch (e: JsonSyntaxException) {
+            e.printStackTrace()
+            println("The error string: $string")
         }
-        assert result != null;
-        return result;
+        assert(result != null)
+        return result!!
     }
 }

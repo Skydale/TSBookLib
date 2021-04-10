@@ -24,10 +24,8 @@ import org.bukkit.scheduler.BukkitRunnable
 
 // TODO: CLEAN UP
 
-class EquipmentGUIHandler : Listener {
-    companion object {
-        private val players: MutableSet<Player> = HashSet()
-    }
+object EquipmentGUIHandler : Listener {
+    private val players: MutableSet<Player> = HashSet()
 
     fun unload() {
         players.forEach {
@@ -40,13 +38,11 @@ class EquipmentGUIHandler : Listener {
         val item = ItemStack(setting.material, setting.count)
         val meta = item.itemMeta
 
-        if (item.type != Material.AIR && meta != null) {
-            meta.setCustomModelData(setting.model)
-            meta.setDisplayName(setting.name)
-            meta.lore = setting.lore
+        meta?.setCustomModelData(setting.model)
+        meta?.setDisplayName(setting.name)
+        meta?.lore = setting.lore
 
-            item.itemMeta = meta
-        }
+        item.itemMeta = meta
         return item
     }
 
@@ -54,10 +50,13 @@ class EquipmentGUIHandler : Listener {
         val data = ArcticGlobalDataService.inst.getData<PlayerData>(player) ?: return
 
         ArmorGUIConfig.forEach { (i, setting) ->
-            val item = if (setting is ArmorElementSetting && data.equipment.contains(i)) {
-                data.equipment[i]!!.createItem()
-            } else {
-                defaultItem(setting)
+            val item = when {
+                setting is ArmorElementSetting && data.equipment.contains(i) -> {
+                    data.equipment[i]!!.createItem()
+                }
+                else -> {
+                    defaultItem(setting)
+                }
             }
             inventory.setItem(i, item)
         }
@@ -72,7 +71,8 @@ class EquipmentGUIHandler : Listener {
 
     @EventHandler
     fun onInventoryClose(event: InventoryCloseEvent) {
-        val player = if (event.player is Player) (event.player as Player) else return
+        val player = event.player
+        if (player !is Player) return
 
         players.remove(player)
         val runnable = object : BukkitRunnable() {
@@ -213,8 +213,10 @@ class EquipmentGUIHandler : Listener {
                         val instance = ItemUtils.getInstByItem(Book.inst, hotbar) ?: return
 
                         if (setting.setting.type == instance.itemType) {
-                            playerInventory.setItem(hotbarButton,
-                                if (ItemUtils.hasItemID(currentItem)) currentItem else null)
+                            playerInventory.setItem(
+                                hotbarButton,
+                                if (ItemUtils.hasItemID(currentItem)) currentItem else null
+                            )
 
                             ArcticGlobalDataService.inst.edit<PlayerData>(player) { data ->
                                 data.equipment[slot] = instance

@@ -6,6 +6,7 @@ import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.item.ItemStat
 import io.github.mg138.tsbook.item.ItemUtils
+import io.github.mg138.tsbook.item.data.UUIDArrayTag
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
@@ -75,7 +76,7 @@ object DamageHandler {
             }
             damager is Arrow -> {
                 val itemStats: MutableList<ItemStat> = LinkedList()
-                damager.persistentDataContainer[ItemUtils.uuidArrayKey, ItemUtils.uuidArrayTag]
+                damager.persistentDataContainer[ItemUtils.uuidArrayKey, UUIDArrayTag]
                     ?.forEach { uuid ->
                         ItemUtils.itemCache[uuid]?.let { inst ->
                             inst.itemStat?.let { itemStats.add(it) }

@@ -14,7 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 
-class ArmorAutoEquip : Listener {
+object ArmorAutoEquip : Listener {
     @EventHandler (priority = EventPriority.HIGHEST)
     fun onRightClick(event: PlayerInteractEvent) {
         val action = event.action

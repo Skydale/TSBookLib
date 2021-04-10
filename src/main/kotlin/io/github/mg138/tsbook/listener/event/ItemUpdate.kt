@@ -8,7 +8,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 
-class ItemUpdate : Listener {
+object ItemUpdate : Listener {
     private fun update(item: ItemStack?) {
         item ?: return
 
