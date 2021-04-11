@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.setting.gui.element
 
-import io.github.mg138.tsbook.util.LanguageFile
+import io.github.mg138.tsbook.util.translate.TranslateUtil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 
@@ -12,12 +12,12 @@ open class GUIElementSetting(
     val lore: List<String>,
     val model: Int
 ) {
-    constructor(slot: Int, section: ConfigurationSection, languageFile: LanguageFile) : this(
+    constructor(slot: Int, section: ConfigurationSection) : this(
         slot,
         Material.valueOf(section.getString("MATERIAL")!!),
         section.getInt("COUNT"),
-        languageFile.get("NAME", null, section),
-        languageFile.getList("LORE", null, section),
+        TranslateUtil.get("NAME", null, section),
+        TranslateUtil.getList("LORE", null, section),
         section.getInt("MODEL")
     )
 }

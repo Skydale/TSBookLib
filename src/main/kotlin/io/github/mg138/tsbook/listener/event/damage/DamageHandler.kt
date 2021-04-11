@@ -1,6 +1,11 @@
 package io.github.mg138.tsbook.listener.event.damage
 
 import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.attribute.stat.StatMap
+import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.attribute.stat.util.StatTables
+import io.github.mg138.tsbook.attribute.stat.util.StatTypes
+import io.github.mg138.tsbook.attribute.stat.util.StatUtil
 import io.github.mg138.tsbook.command.admin.DebugMode
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.StatusType
@@ -12,21 +17,15 @@ import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.mob.MobConfig
-import io.github.mg138.tsbook.stat.StatMap
-import io.github.mg138.tsbook.stat.StatType
-import io.github.mg138.tsbook.stat.util.StatTables
-import io.github.mg138.tsbook.stat.util.StatTypes
-import io.github.mg138.tsbook.stat.util.StatUtil
-import io.github.mg138.tsbook.util.MobType
+import io.github.mg138.tsbook.util.MobTypeUtil
+import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import io.lumine.xikage.mythicmobs.MythicMobs
 import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.min
 
 //TODO make it prettier :/
@@ -35,7 +34,7 @@ object DamageHandler {
     private val rand = Random()
     private val damageCD: MutableMap<Player, Long> = HashMap()
 
-    fun debug(player: Player, message: String) {
+    private fun debug(player: Player, message: String) {
         if (DebugMode.hasOption(player, DebugMode.DebugOption.ON_DAMAGE)) {
             player.sendMessage(message)
         }
@@ -101,23 +100,19 @@ object DamageHandler {
         var usedModifier = 0.0
         StatUtil.getModifier(stats).forEach { (type, modifier) ->
             when (type) {
-                StatType.MODIFIER_HELL -> if (MobType.isHellish(entity.type)) usedModifier += modifier.getStat() / 100
-                StatType.MODIFIER_MOBS -> if (MobType.isMob(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_HELL -> if (MobTypeUtil.isHellish(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_MOBS -> if (MobTypeUtil.isMob(entity.type)) usedModifier += modifier.getStat() / 100
                 StatType.MODIFIER_PLAYER -> if (entity.type == EntityType.PLAYER) usedModifier += modifier.getStat() / 100
-                StatType.MODIFIER_ARTHROPOD -> if (MobType.isArthropod(entity.type)) usedModifier += modifier.getStat() / 100
-                StatType.MODIFIER_UNDERWATER -> if (MobType.isWatery(entity.type)) usedModifier += modifier.getStat() / 100
-                StatType.MODIFIER_UNDEAD -> if (MobType.isUndead(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_ARTHROPOD -> if (MobTypeUtil.isArthropod(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_UNDERWATER -> if (MobTypeUtil.isWatery(entity.type)) usedModifier += modifier.getStat() / 100
+                StatType.MODIFIER_UNDEAD -> if (MobTypeUtil.isUndead(entity.type)) usedModifier += modifier.getStat() / 100
                 else -> Unit
             }
         }
 
         if (damager is Player) {
             debug(
-                damager,
-                ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&eModifier: &f$usedModifier\n"
-                )
+                damager, "&eModifier: &f$usedModifier\n".toChatColor()
             )
         }
 
@@ -128,11 +123,8 @@ object DamageHandler {
         if (damager is Player) {
             debug(
                 damager,
-                ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&cDamageSum: &f$damageSum" +
-                            "\n  &cDamages: &f${customEvent.getDamages()}"
-                )
+                ("&cDamageSum: &f$damageSum" +
+                        "\n  &cDamages: &f${customEvent.getDamages()}").toChatColor()
             )
         }
 
@@ -188,10 +180,7 @@ object DamageHandler {
         if (damager is Player) {
             debug(
                 damager,
-                ChatColor.translateAlternateColorCodes(
-                    '&',
-                    "&9CritChance: &f$critChance &7/ &cCritDamage: &f$critDamage &7/ &aCertainCritStrikes: &f$certainStrikes\n"
-                )
+                "&9CritChance: &f$critChance &7/ &cCritDamage: &f$critDamage &7/ &aCertainCritStrikes: &f$certainStrikes\n".toChatColor()
             )
         }
 
@@ -236,10 +225,7 @@ object DamageHandler {
             if (damager is Player) {
                 debug(
                     damager,
-                    ChatColor.translateAlternateColorCodes(
-                        '&',
-                        "&b$type: &7{ &9EffectChance: &f$chance &7/ &aCertainEffectStrikes: &f$strikes &7}\n"
-                    )
+                    "&b$type: &7{ &9EffectChance: &f$chance &7/ &aCertainEffectStrikes: &f$strikes &7}\n".toChatColor()
                 )
             }
 
@@ -294,10 +280,7 @@ object DamageHandler {
             if (damager is Player) {
                 debug(
                     damager,
-                    ChatColor.translateAlternateColorCodes(
-                        '&',
-                        "&b$type: &7{ &cElementDamage: &f$damage &7/ &9ElementChance: &f$chance &7/ &aCertainElementStrikes: &f$strikes &7}\n"
-                    )
+                    "&b$type: &7{ &cElementDamage: &f$damage &7/ &9ElementChance: &f$chance &7/ &aCertainElementStrikes: &f$strikes &7}\n".toChatColor()
                 )
             }
 

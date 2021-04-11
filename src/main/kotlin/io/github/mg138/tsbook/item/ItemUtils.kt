@@ -1,9 +1,9 @@
 package io.github.mg138.tsbook.item
 
 import io.github.mg138.tsbook.Book
+import io.github.mg138.tsbook.attribute.InternalItemType
 import io.github.mg138.tsbook.item.data.IdentificationTag
 import io.github.mg138.tsbook.item.data.UUIDTag
-import io.github.mg138.tsbook.setting.BookConfig
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
@@ -16,7 +16,7 @@ object ItemUtils {
 
     val itemKey = NamespacedKey(Book.inst, "item")
     val uuidKey = NamespacedKey(Book.inst, "uuid")
-    val internalTypeKey = NamespacedKey(Book.inst, "internal")
+    val internalItemTypeKey = NamespacedKey(Book.inst, "internal")
     val itemTypeKey = NamespacedKey(Book.inst, "type")
     val identificationKey = NamespacedKey(Book.inst, "iden")
     val uuidArrayKey = NamespacedKey(Book.inst, "item_uuids")
@@ -39,11 +39,11 @@ object ItemUtils {
         container[uuidKey, UUIDTag] = uuid
         itemCache[uuid] = inst
 
-        val internalType = inst.internalType
-        container[internalTypeKey, PersistentDataType.STRING] = internalType
-        container[NamespacedKey(Book.inst, internalType), PersistentDataType.STRING] = inst.id
+        val internalItemType = inst.internalItemType
+        container[internalItemTypeKey, PersistentDataType.STRING] = internalItemType.string
+        container[NamespacedKey(Book.inst, internalItemType.string), PersistentDataType.STRING] = inst.id
 
-        container[itemTypeKey, PersistentDataType.STRING] = inst.itemType
+        container[itemTypeKey, PersistentDataType.STRING] = inst.itemType.name
         meta.setCustomModelData(inst.model)
 
         item.itemMeta = meta
@@ -61,17 +61,16 @@ object ItemUtils {
             UUID.randomUUID()
         }
 
-        val internalType = container[internalTypeKey, PersistentDataType.STRING] ?: return null
-        val id = container[NamespacedKey(plugin, internalType), PersistentDataType.STRING] ?: return null
+        val internalItemType = getInternalItemType(item) ?: return null
+        val id = container[NamespacedKey(plugin, internalItemType.string), PersistentDataType.STRING] ?: return null
 
         val inst = ItemInstance(
             id,
             ItemStat.create(
                 getIdentification(item),
-                BookConfig,
                 id
             ),
-            internalType,
+            internalItemType,
             uuid
         )
         itemCache[uuid] = inst
@@ -97,10 +96,10 @@ object ItemUtils {
         return item.itemMeta!!.persistentDataContainer[NamespacedKey(Book.inst, key), PersistentDataType.STRING]
     }
 
-    fun getInternalType(item: ItemStack): String? {
+    fun getInternalItemType(item: ItemStack): InternalItemType? {
         val container = item.itemMeta!!.persistentDataContainer
 
-        return container[internalTypeKey, PersistentDataType.STRING]
+        return container[internalItemTypeKey, PersistentDataType.STRING]?.let { InternalItemType.of(it) }
     }
 
     fun hasItemID(item: ItemStack): Boolean {

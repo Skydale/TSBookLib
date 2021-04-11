@@ -10,7 +10,7 @@ import org.bukkit.command.TabCompleter
 import org.bukkit.util.StringUtil
 import java.util.*
 
-class AdminTabComplete : TabCompleter {
+object AdminTabComplete : TabCompleter {
     override fun onTabComplete(
         sender: CommandSender,
         command: Command,
@@ -19,7 +19,10 @@ class AdminTabComplete : TabCompleter {
     ): List<String> {
         if (sender.hasPermission("tsbook.test")) {
             val result: MutableList<String> = ArrayList()
-            val category = args[0].toLowerCase()
+            val category = when {
+                args.isNotEmpty() -> args[0].toLowerCase()
+                else -> null
+            }
 
             when (args.size) {
                 1 -> StringUtil.copyPartialMatches(
@@ -28,6 +31,7 @@ class AdminTabComplete : TabCompleter {
                     result
                 )
                 2 -> when (category) {
+                    "help" -> result.add("<page>")
                     "get" -> StringUtil.copyPartialMatches(
                         args[1], ItemConfig.getItems(), result
                     )
@@ -51,13 +55,11 @@ class AdminTabComplete : TabCompleter {
                         ItemConfig.getUnids(),
                         result
                     )
-                    "effect" -> {
-                        StringUtil.copyPartialMatches(
-                            args[2],
-                            ArrayList(StatusType.names).also { it.add("clear") },
-                            result
-                        )
-                    }
+                    "effect" -> StringUtil.copyPartialMatches(
+                        args[2],
+                        ArrayList(StatusType.names).also { it.add("clear") },
+                        result
+                    )
                 }
                 4 -> when (category) {
                     "effect" -> result.add("<power>")

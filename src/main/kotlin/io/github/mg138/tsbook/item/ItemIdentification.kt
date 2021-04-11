@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.item
 
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
-import io.github.mg138.tsbook.stat.StatType
+import io.github.mg138.tsbook.attribute.stat.StatType
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt

@@ -8,16 +8,15 @@ import com.google.gson.stream.JsonWriter
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
+import io.github.mg138.tsbook.attribute.InternalItemType
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
 import io.github.mg138.tsbook.item.ItemIdentification
 import io.github.mg138.tsbook.item.ItemInstance
 import io.github.mg138.tsbook.item.ItemStat
-import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import java.lang.reflect.Type
 import java.util.*
-
 
 @Component
 class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
@@ -29,7 +28,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
 
             if (instance != null) {
                 writer.name("internal_type")
-                writer.value(instance.internalType)
+                writer.value(instance.internalItemType.string)
 
                 writer.name("ID")
                 writer.value(instance.id)
@@ -44,7 +43,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
 
         override fun read(reader: JsonReader): ItemInstance? {
             reader.beginObject()
-            var internalType: String? = null
+            var internalItemType: InternalItemType? = null
             var id: String? = null
             var identification: ItemIdentification? = null
 
@@ -52,7 +51,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
                 val token = reader.peek()
                 if (token == JsonToken.NAME) {
                     when (reader.nextName()) {
-                        "internal_type" -> internalType = reader.nextString()
+                        "internal_type" -> internalItemType = InternalItemType.of(reader.nextString())
                         "ID" -> id = reader.nextString()
                         "iden" -> identification = gson.fromJson(reader.nextString(), ItemIdentification::class.java)
                     }
@@ -60,24 +59,22 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
             }
             reader.endObject()
 
-            if (internalType == null || id == null || identification == null) return null
+            if (internalItemType == null || id == null || identification == null) return null
 
-            var setting: ItemSetting? = null
-            when (internalType) {
-                "item" -> setting = ItemConfig.getItem(id)
-                "unid" -> setting = ItemConfig.getUnid(id)
+            val setting: ItemSetting = when (internalItemType) {
+                InternalItemType.ITEM -> ItemConfig.getItem(id)!!
+                InternalItemType.UNID -> ItemConfig.getUnid(id)!!
             }
-            if (setting == null) return null
 
             return if (setting is StatedItemSetting) ItemInstance(
                 setting,
-                ItemStat(setting.stats, identification, BookConfig),
-                internalType,
+                ItemStat(setting.stats, identification),
+                internalItemType,
                 UUID.randomUUID()
             ) else ItemInstance(
                 setting,
                 null,
-                internalType,
+                internalItemType,
                 UUID.randomUUID()
             )
         }

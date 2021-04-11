@@ -8,9 +8,8 @@ import com.comphenix.protocol.events.ListenerPriority
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.ItemUtils.checkItem
 import io.github.mg138.tsbook.item.ItemUtils.getInstByItem
-import io.github.mg138.tsbook.item.ItemUtils.getInternalType
+import io.github.mg138.tsbook.item.ItemUtils.hasItemID
 import org.bukkit.inventory.ItemStack
 
 object ItemPacket {
@@ -43,16 +42,12 @@ object ItemPacket {
             object : PacketAdapter(Book.inst, ListenerPriority.HIGH, WrapperPlayClientSetCreativeSlot.TYPE) {
                 override fun onPacketReceiving(event: PacketEvent) {
                     val item = WrapperPlayClientSetCreativeSlot(event.packet).clickedItem
-                    if (!checkItem(item)) return
-                    val type = getInternalType(item) ?: return
 
-                    when (type) {
-                        "item", "unid" -> {
-                            val meta = item.itemMeta ?: return
-                            meta.setDisplayName(null)
-                            meta.lore = null
-                            item.itemMeta = meta
-                        }
+                    if (hasItemID(item)) {
+                        val meta = item.itemMeta ?: return
+                        meta.setDisplayName(null)
+                        meta.lore = null
+                        item.itemMeta = meta
                     }
                 }
             }

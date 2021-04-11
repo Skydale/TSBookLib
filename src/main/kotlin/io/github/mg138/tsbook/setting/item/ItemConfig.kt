@@ -39,7 +39,7 @@ object ItemConfig : AbstractItemConfig() {
         return when {
             items.containsKey(id) -> getItem(id)!!
             unid.containsKey(id) -> getUnid(id)!!
-            else -> throw IllegalArgumentException("No such item exists!")
+            else -> throw IllegalArgumentException("No such item called $id exists!")
         }
     }
 }

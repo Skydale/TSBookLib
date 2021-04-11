@@ -9,7 +9,7 @@ object RGBUtil {
     private val hex = Pattern.compile("#[0-9a-fA-F]{6}")
     private val gradient = Pattern.compile("<#[0-9a-fA-F]{6}>[^<]*</#[0-9a-fA-F]{6}>")
 
-    fun String.toChatColor(char: Char = '&') = ChatColor.translateAlternateColorCodes(char, this)
+    fun String.toChatColor(char: Char = '&'): String = ChatColor.translateAlternateColorCodes(char, this)
     fun String.translateColor() = this.toChatColor().setGradient().setColor()
 
     //#RRGGBB

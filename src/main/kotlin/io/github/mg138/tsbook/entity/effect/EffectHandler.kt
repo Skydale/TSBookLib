@@ -1,12 +1,12 @@
 package io.github.mg138.tsbook.entity.effect
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.entity.effect.data.*
+import io.github.mg138.tsbook.entity.effect.data.EntityEffect
+import io.github.mg138.tsbook.entity.effect.data.EntityStatus
+import io.github.mg138.tsbook.entity.effect.data.RegisteredEffects
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Entity
-import java.lang.NullPointerException
 import java.util.*
-import kotlin.collections.HashMap
 
 object EffectHandler {
     private val activeEffects: MutableMap<LivingEntity, MutableMap<StatusType, EntityEffect>> = HashMap()

@@ -1,8 +1,7 @@
 package io.github.mg138.tsbook.listener.event.damage.utils
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.stat.StatType
-import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.attribute.stat.StatType
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.scheduler.BukkitRunnable
@@ -40,7 +39,7 @@ object DamageIndicator {
             indicator.setGravity(false)
             indicator.isMarker = true
             indicator.isCustomNameVisible = true
-            indicator.customName = BookConfig.language.get("indicator.$type") + damage.toInt()
+            indicator.customName = type.getIndicator() + damage.toInt()
         }
 
         object : BukkitRunnable() {

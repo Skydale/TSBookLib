@@ -10,7 +10,6 @@ import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
 import io.github.mg138.tsbook.setting.gui.armor.element.ArmorElementSetting
 import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
 import org.bukkit.Bukkit
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -63,7 +62,7 @@ object EquipmentGUIHandler : Listener {
     }
 
     fun openEquipmentGUI(player: Player) {
-        val inventory = Bukkit.createInventory(player, 54, BookConfig.language.get("gui.equipment.name"))
+        val inventory = Bukkit.createInventory(player, 54, BookConfig.language.gui.equipment.name)
         constructInventory(inventory, player)
         players.add(player)
         player.openInventory(inventory)
@@ -161,7 +160,7 @@ object EquipmentGUIHandler : Listener {
 
                             val instance = ItemUtils.getInstByItem(Book.inst, cursor) ?: return
 
-                            if (setting.setting.type == instance.itemType) {
+                            if (setting.setting.itemType == instance.itemType) {
                                 event.currentItem = cursor
                                 ArcticGlobalDataService.inst.edit<PlayerData>(player) { data ->
                                     data.equipment[slot] = instance
@@ -186,7 +185,7 @@ object EquipmentGUIHandler : Listener {
 
                             val instance = ItemUtils.getInstByItem(Book.inst, cursor) ?: return
 
-                            if (setting.setting.type == instance.itemType) {
+                            if (setting.setting.itemType == instance.itemType) {
                                 event.currentItem = cursor
                                 ArcticGlobalDataService.inst.edit<PlayerData>(player) { data ->
                                     data.equipment[slot] = instance
@@ -212,7 +211,7 @@ object EquipmentGUIHandler : Listener {
 
                         val instance = ItemUtils.getInstByItem(Book.inst, hotbar) ?: return
 
-                        if (setting.setting.type == instance.itemType) {
+                        if (setting.setting.itemType == instance.itemType) {
                             playerInventory.setItem(
                                 hotbarButton,
                                 if (ItemUtils.hasItemID(currentItem)) currentItem else null
@@ -246,7 +245,7 @@ object EquipmentGUIHandler : Listener {
                         if (setting !is ArmorElementSetting) return
                         val instance = ItemUtils.getInstByItem(Book.inst, hotbar) ?: return
 
-                        if (setting.setting.type == instance.itemType) {
+                        if (setting.setting.itemType == instance.itemType) {
                             playerInventory.setItem(hotbarButton, null)
                             ArcticGlobalDataService.inst.edit<PlayerData>(player) { data ->
                                 data.equipment[slot] = instance

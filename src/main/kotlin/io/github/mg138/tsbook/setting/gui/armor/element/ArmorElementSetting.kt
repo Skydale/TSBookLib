@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.setting.gui.armor.element
 
 import io.github.mg138.tsbook.setting.gui.element.GUIElementSetting
-import io.github.mg138.tsbook.util.Translate
+import io.github.mg138.tsbook.util.translate.TranslateUtil
 import org.bukkit.Material
 import org.bukkit.configuration.ConfigurationSection
 
@@ -18,8 +18,8 @@ class ArmorElementSetting(
         slot,
         Material.valueOf(section.getString("MATERIAL")!!),
         section.getInt("COUNT"),
-        Translate.get("NAME", null, section),
-        Translate.getList("LORE", null, section),
+        TranslateUtil.get("NAME", null, section),
+        TranslateUtil.getList("LORE", null, section),
         section.getInt("MODEL"),
         armorSetting
     )

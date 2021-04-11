@@ -2,11 +2,11 @@ package io.github.mg138.tsbook.command.admin
 
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.setting.BookConfig
-import org.bukkit.ChatColor
+import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
-import kotlin.collections.HashMap
+
 object DebugMode {
     enum class DebugOption {
         ON_DAMAGE;
@@ -32,7 +32,7 @@ object DebugMode {
     fun remove(player: Player) = debugOptions.remove(player)
 
     fun call(sender: CommandSender): Boolean {
-        sender.sendMessage(BookConfig.language.get("commands.feedback.debug"))
+        sender.sendMessage(BookConfig.language.commands.feedback.debug)
         return true
     }
 
@@ -43,8 +43,19 @@ object DebugMode {
         }
 
         if (string == "clear") {
-            this.remove(sender)
-            return true
+            debugOptions[sender].let {
+                return when {
+                    it == null || it.isEmpty() -> {
+                        sender.sendMessage("&9[Debug] &eDeactivated &fNothing.".toChatColor())
+                        false
+                    }
+                    else -> {
+                        sender.sendMessage("&9[Debug] &eDeactivated Debug Modes of &f${it}".toChatColor())
+                        this.remove(sender)
+                        true
+                    }
+                }
+            }
         }
 
         return try {
@@ -52,16 +63,12 @@ object DebugMode {
             if (hasOption(sender, debugOption)) {
                 this.remove(sender, debugOption)
                 sender.sendMessage(
-                    ChatColor.translateAlternateColorCodes(
-                        '&', "&9[Debug] &eDeactivated Debug Mode: &f$string"
-                    )
+                      "&9[Debug] &eDeactivated Debug Mode: &f$string".toChatColor()
                 )
             } else {
                 this[sender] = debugOption
                 sender.sendMessage(
-                    ChatColor.translateAlternateColorCodes(
-                        '&', "&9[Debug] &eActivated Debug Mode: &f$string"
-                    )
+                    "&9[Debug] &eActivated Debug Mode: &f$string".toChatColor()
                 )
             }
             true

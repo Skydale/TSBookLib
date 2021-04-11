@@ -1,9 +1,6 @@
-package io.github.mg138.tsbook.stat
+package io.github.mg138.tsbook.attribute.stat
 
-import io.github.mg138.tsbook.setting.BookConfig
-import io.github.mg138.tsbook.setting.config.BookSetting
-import io.github.mg138.tsbook.setting.stat.StatDisplay
-import java.lang.IllegalArgumentException
+import io.github.mg138.tsbook.setting.attribute.AttributeDisplay
 
 enum class StatType {
     SPEED_ATTACK,
@@ -64,14 +61,14 @@ enum class StatType {
     AFFINITY_ELEMENT;
 
     override fun toString(): String {
-        return StatDisplay.name[this] ?: throw IllegalArgumentException("No name set for ${this.name} in the language file!")
+        return AttributeDisplay.statName[this] ?: throw IllegalArgumentException("No name set for ${this.name} in the language file!")
     }
 
     fun getFormat(): String {
-        return StatDisplay.format[this] ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
+        return AttributeDisplay.statFormat[this] ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
     }
 
     fun getIndicator(): String {
-        return StatDisplay.indicator[this] ?: throw IllegalArgumentException("No indicator set for ${this.name} in the language file!")
+        return AttributeDisplay.statIndicator[this] ?: throw IllegalArgumentException("No indicator set for ${this.name} in the language file!")
     }
 }

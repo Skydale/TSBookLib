@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.listener.event.damage
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.setting.BookConfig
-import io.github.mg138.tsbook.stat.StatType
+import io.github.mg138.tsbook.attribute.stat.StatType
 import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
@@ -88,7 +88,7 @@ object HealthIndicator : Listener {
         return bar
     }
 
-    fun showToPlayer(entity: Entity, player: Player, damages: Map<StatType, Double>) {
+    private fun showToPlayer(entity: Entity, player: Player, damages: Map<StatType, Double>) {
         if (entity !is LivingEntity) return
 
         removingQueue[player]?.cancel()

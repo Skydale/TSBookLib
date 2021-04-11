@@ -5,26 +5,26 @@ import org.bukkit.command.CommandSender
 
 object CommandError {
     fun handEmpty(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.hand_empty"))
+        sender.sendMessage(BookConfig.language.errors.handEmpty)
     }
 
     fun noSuchOption(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.no_such_option"))
+        sender.sendMessage(BookConfig.language.errors.noSuchOption)
     }
 
-    fun shouldPutNumber(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.should_put_number"))
+    fun shouldPutInteger(sender: CommandSender) {
+        sender.sendMessage(BookConfig.language.errors.shouldPutInteger())
     }
 
     fun itemNotFound(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.item_not_found"))
+        sender.sendMessage(BookConfig.language.errors.itemNotFound)
     }
 
     fun playerNotFound(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.player_not_found"))
+        sender.sendMessage(BookConfig.language.errors.playerNotFound)
     }
 
     fun playerOnly(sender: CommandSender) {
-        sender.sendMessage(BookConfig.language.get("errors.player_only"))
+        sender.sendMessage(BookConfig.language.errors.playerOnly)
     }
 }

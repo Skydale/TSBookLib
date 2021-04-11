@@ -1,18 +1,16 @@
 package io.github.mg138.tsbook.item
 
-import io.github.mg138.tsbook.setting.AbstractConfig
+import io.github.mg138.tsbook.attribute.stat.Stat
+import io.github.mg138.tsbook.attribute.stat.StatMap
+import io.github.mg138.tsbook.attribute.stat.StatType
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.StatedItemSetting
-import io.github.mg138.tsbook.setting.stat.StatDisplay
-import io.github.mg138.tsbook.stat.*
-import java.lang.IllegalArgumentException
-import java.util.AbstractMap
+import java.util.*
 
-class ItemStat (
+class ItemStat(
     private val initStats: StatMap,
-    val identification: ItemIdentification,
-    private val config: AbstractConfig
+    val identification: ItemIdentification
 ) : Iterable<Map.Entry<StatType, Stat>> {
     fun getStatOut(type: StatType): Double {
         return initStats.getStatSafe(type) * identification[type]
@@ -46,25 +44,23 @@ class ItemStat (
     }
 
     companion object {
-        fun create(setting: ItemSetting, identification: ItemIdentification?, config: AbstractConfig): ItemStat? {
+        fun create(setting: ItemSetting, identification: ItemIdentification?): ItemStat? {
             return if (setting is StatedItemSetting && identification != null) {
-                ItemStat(setting.stats, identification, config)
+                ItemStat(setting.stats, identification)
             } else null
         }
 
-        fun create(setting: ItemSetting, config: AbstractConfig, isRandom: Boolean): ItemStat? {
+        fun create(setting: ItemSetting, isRandom: Boolean): ItemStat? {
             return create(
                 setting,
-                ItemIdentification.create(setting, isRandom),
-                config
+                ItemIdentification.create(setting, isRandom)
             )
         }
 
-        fun create(identification: ItemIdentification?, config: AbstractConfig, ID: String): ItemStat? {
+        fun create(identification: ItemIdentification?, ID: String): ItemStat? {
             return create(
                 ItemConfig.getAnyItemByID(ID),
-                identification,
-                config
+                identification
             )
         }
     }

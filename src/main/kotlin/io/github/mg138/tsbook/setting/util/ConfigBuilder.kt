@@ -1,14 +1,10 @@
 package io.github.mg138.tsbook.setting.util
 
 import org.bukkit.configuration.ConfigurationSection
-import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.io.IOException
-import java.util.*
 import java.util.jar.JarFile
-import java.util.function.Consumer
 
 class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
     private val dataFolder = plugin.dataFolder
@@ -26,9 +22,9 @@ class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
         }
     }
 
-    fun createFolder(path: String, target: String): YamlConfiguration {
+    fun loadDirectory(path: String, target: String): YamlConfiguration {
         val yaml = YamlConfiguration()
-        loadJarContent(path).forEach { file ->
+        loadDirectoryContent(path).forEach { file ->
             if (file.name == target) {
                 yaml.load(file)
             }
@@ -36,39 +32,33 @@ class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
         return yaml
     }
 
-    fun createFolder(path: String): List<YamlConfiguration> {
+    fun loadDirectory(path: String): List<YamlConfiguration> {
         val list: MutableList<YamlConfiguration> = ArrayList()
-        loadJarContent(path).forEach { file ->
+        loadDirectoryContent(path).forEach { file ->
             list.add(YamlConfiguration.loadConfiguration(file))
         }
         return list
     }
 
-    fun createMap(path: String, key: String): Map<String, YamlConfiguration> {
+    fun loadToMap(path: String, key: String): Map<String, YamlConfiguration> {
         val map: MutableMap<String, YamlConfiguration> = HashMap()
-        loadJarContent(path).forEach { file ->
-            YamlConfiguration().apply {
-                load(file)
-                map[getString(key)!!] = this
-            }
+        loadDirectory(path).forEach { yaml ->
+            map[yaml.getString(key)!!] = yaml
         }
         return map
     }
 
-    fun createSectionMap(path: String): Map<String, ConfigurationSection> {
+    fun loadToSectionMap(path: String): Map<String, ConfigurationSection> {
         val map: MutableMap<String, ConfigurationSection> = HashMap()
-        loadJarContent(path).forEach { file ->
-            YamlConfiguration().apply {
-                load(file)
-                getKeys(false).forEach { section ->
-                    map[section] = getConfigurationSection(section)!!
-                }
+        loadDirectory(path).forEach { yaml ->
+            yaml.getKeys(false).forEach { key ->
+                map[key] = yaml.getConfigurationSection(key)!!
             }
         }
         return map
     }
 
-    private fun loadJarContent(directory: String): List<File> {
+    private fun loadDirectoryContent(directory: String): List<File> {
         val folder = File(dataFolder, directory)
         if (!folder.exists()) {
             folder.mkdirs()
@@ -85,14 +75,14 @@ class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
             }
         }
         val result: MutableList<File> = ArrayList()
-        recursiveListFolder(result, folder)
+        recursiveListDiretory(result, folder)
         return result
     }
 
-    private fun recursiveListFolder(list: MutableList<File>, folder: File) {
+    private fun recursiveListDiretory(list: MutableList<File>, folder: File) {
         folder.listFiles()?.forEach { file ->
             if (file.isDirectory) {
-                recursiveListFolder(list, file)
+                recursiveListDiretory(list, file)
             } else {
                 list.add(file)
             }

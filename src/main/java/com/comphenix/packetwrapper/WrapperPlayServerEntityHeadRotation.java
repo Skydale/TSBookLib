@@ -18,6 +18,7 @@
  */
 package com.comphenix.packetwrapper;
 
+
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 

@@ -7,6 +7,7 @@ import io.github.mg138.tsbook.command.admin.AdminCommands
 import io.github.mg138.tsbook.command.admin.AdminTabComplete
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.item.ItemUtils
+import io.github.mg138.tsbook.listener.event.DisableArmorAndOffhand
 import io.github.mg138.tsbook.listener.event.ItemUpdate
 import io.github.mg138.tsbook.listener.event.click.ArmorAutoEquip
 import io.github.mg138.tsbook.listener.event.click.ItemRightClick
@@ -17,9 +18,6 @@ import io.github.mg138.tsbook.listener.event.inventory.EquipmentGUIHandler
 import io.github.mg138.tsbook.listener.packet.DisableHeartParticle
 import io.github.mg138.tsbook.listener.packet.ItemPacket
 import io.github.mg138.tsbook.setting.BookConfig
-import io.github.mg138.tsbook.util.papi.PlaceholderExpansionTSBook
-import me.pikamug.localelib.LocaleLib
-import me.pikamug.localelib.LocaleManager
 import org.bukkit.Bukkit
 import org.bukkit.GameRule
 import org.bukkit.plugin.java.JavaPlugin
@@ -34,7 +32,6 @@ class Book : JavaPlugin() {
         lateinit var jar: File
 
         var gson = Gson()
-        var localeManager: LocaleManager? = null
     }
 
     override fun onEnable() {
@@ -65,10 +62,6 @@ class Book : JavaPlugin() {
     }
 
     private fun preReg() {
-        if (server.pluginManager.isPluginEnabled("LocaleLib")) {
-            localeManager = (server.pluginManager.getPlugin("LocaleLib") as LocaleLib).localeManager
-        }
-        PlaceholderExpansionTSBook(inst).register()
     }
 
     private fun reg() {
@@ -84,8 +77,9 @@ class Book : JavaPlugin() {
         Bukkit.getPluginManager().registerEvents(ArmorAutoEquip, inst)
         Bukkit.getPluginManager().registerEvents(DisableArmorAndOffhand, inst)
 
-        getCommand("tsbook")!!.setExecutor(AdminCommands())
-        getCommand("tsbook")!!.tabCompleter = AdminTabComplete()
-        getCommand("armor")!!.setExecutor(Armor())
+        val tsbook = getCommand("tsbook")!!
+        tsbook.setExecutor(AdminCommands)
+        tsbook.tabCompleter = AdminTabComplete
+        getCommand("armor")!!.setExecutor(Armor)
     }
 }

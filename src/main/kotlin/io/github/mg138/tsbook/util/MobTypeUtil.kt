@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.util
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.EntityType.*
 
-object MobType {
+object MobTypeUtil {
     fun isHellish(type: EntityType): Boolean {
         return when (type) {
             PIGLIN, PIGLIN_BRUTE,

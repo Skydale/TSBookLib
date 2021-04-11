@@ -5,18 +5,16 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 
-class AdminCommands : CommandExecutor {
-    companion object {
-        var item: String? = null
-    }
-
+object AdminCommands : CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
-        item = null
-        val category = args[0].toLowerCase()
+        val category = when {
+            args.isNotEmpty() -> args[0].toLowerCase()
+            else -> null
+        }
+
         when (args.size) {
             0 -> {
-                sender.sendMessage(BookConfig.language.get("messages.help"))
-                return true
+                return Help.call(sender)
             }
             1 -> when (category) {
                 "reload" -> return Reload.call(sender)
@@ -29,6 +27,7 @@ class AdminCommands : CommandExecutor {
                 "debug" -> return DebugMode.call(sender)
             }
             2 -> when (category) {
+                "help" -> return Help.call(sender, args[1])
                 "get" -> return Get.call(sender, args[1])
                 "give" -> return Give.call(sender)
                 "unid" -> return Unidentified.call(sender)
@@ -50,7 +49,7 @@ class AdminCommands : CommandExecutor {
                 "effect" -> return Effect.call(sender, args[1], args[2], args[3], args[4])
             }
         }
-        sender.sendMessage(BookConfig.language.get("errors.unknown_command"))
+        sender.sendMessage(BookConfig.language.errors.unknownCommand)
         return false
     }
 }

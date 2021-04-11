@@ -1,15 +1,15 @@
 package io.github.mg138.tsbook.item
 
+import io.github.mg138.tsbook.attribute.InternalItemType
 import io.github.mg138.tsbook.item.ItemUtils.createItem
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
-import io.github.mg138.tsbook.stat.util.StatTables
-import org.bukkit.Material
+import io.github.mg138.tsbook.attribute.stat.util.StatTables
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
 class ItemInstance ( //represents a single ItemStack
-    private val setting: ItemSetting, val itemStat: ItemStat?, val internalType: String, val uuid: UUID
+    private val setting: ItemSetting, val itemStat: ItemStat?, val internalItemType: InternalItemType, val uuid: UUID
 ) {
     override fun toString(): String {
         return "{" +
@@ -23,7 +23,7 @@ class ItemInstance ( //represents a single ItemStack
     val name = setting.name
     val lore = setting.lore.toMutableList()
     val id get() = setting.id
-    val itemType get() = setting.item_type
+    val itemType get() = setting.itemType
     val material get() = setting.material
     val model get() = setting.model
 
@@ -31,10 +31,10 @@ class ItemInstance ( //represents a single ItemStack
         return createItem(this)
     }
 
-    constructor(ID: String, itemStat: ItemStat?, internalType: String, uuid: UUID) : this(
+    constructor(ID: String, itemStat: ItemStat?, internalItemType: InternalItemType, uuid: UUID) : this(
         ItemConfig.getAnyItemByID(ID),
         itemStat,
-        internalType,
+        internalItemType,
         uuid
     )
 
