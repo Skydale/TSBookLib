@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.attribute.stat
 
-import io.github.mg138.tsbook.setting.attribute.AttributeDisplay
+import io.github.mg138.tsbook.setting.BookConfig.language
 
 enum class StatType {
     SPEED_ATTACK,
@@ -60,15 +60,12 @@ enum class StatType {
     DEFENSE_FROZE,
     AFFINITY_ELEMENT;
 
-    override fun toString(): String {
-        return AttributeDisplay.statName[this] ?: throw IllegalArgumentException("No name set for ${this.name} in the language file!")
-    }
+    override fun toString() = language.attribute.stat.name[this]
+        ?: throw IllegalArgumentException("No name set for ${this.name} in the language file!")
 
-    fun getFormat(): String {
-        return AttributeDisplay.statFormat[this] ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
-    }
+    fun getFormat() = language.attribute.stat.format[this]
+        ?: throw IllegalArgumentException("No format set for ${this.name} in the language file!")
 
-    fun getIndicator(): String {
-        return AttributeDisplay.statIndicator[this] ?: throw IllegalArgumentException("No indicator set for ${this.name} in the language file!")
-    }
+    fun getIndicator() = language.attribute.stat.indicator[this]
+        ?: throw IllegalArgumentException("No indicator set for ${this.name} in the language file!")
 }
