@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.command.util
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.attribute.InternalItemType
+import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.item.ItemInstance
-import io.github.mg138.tsbook.item.ItemStat
+import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
@@ -12,6 +12,7 @@ import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.lang.IllegalArgumentException
 import java.util.*
 
 object CommandUtil {
@@ -25,28 +26,31 @@ object CommandUtil {
         .replace("[!player]", playerName)
         .replace("[!item]", itemName)
 
-    fun getItem(internalItemType: InternalItemType, setting: ItemSetting): ItemStack {
+    fun getItem(identifier: DefaultIdentifier, setting: ItemSetting): ItemStack {
         val inst = ItemInstance(
             setting,
-            ItemStat.create(
+            IdentifiedStat.create(
                 setting,
                 false
             ),
-            internalItemType,
             UUID.randomUUID()
         )
         return inst.createItem()
     }
 
     fun getUnidByName(itemName: String, sender: CommandSender): UnidentifiedSetting? {
-        return ItemConfig.getUnid(itemName) ?: run {
+        return try {
+            ItemConfig.getUnid(itemName)
+        } catch (e: IllegalArgumentException) {
             CommandError.itemNotFound(sender)
-            return null
+            null
         }
     }
 
     fun getItemByName(itemName: String, sender: CommandSender): ItemSetting? {
-        return ItemConfig.getItem(itemName) ?: run {
+        return try {
+            ItemConfig.getItem(itemName)
+        } catch (e: IllegalArgumentException) {
             CommandError.itemNotFound(sender)
             return null
         }

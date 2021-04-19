@@ -8,14 +8,14 @@ import com.comphenix.protocol.events.ListenerPriority
 import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketEvent
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.ItemUtils.getInstByItem
-import io.github.mg138.tsbook.item.ItemUtils.hasItemID
+import io.github.mg138.tsbook.item.util.ItemUtil.getInstByItem
+import io.github.mg138.tsbook.item.util.ItemUtil.hasItemID
 import org.bukkit.inventory.ItemStack
 
 object ItemPacket {
     fun updateItem(item: ItemStack) {
         val meta = item.itemMeta ?: return
-        val inst = getInstByItem(Book.inst, item) ?: return
+        val inst = getInstByItem(item) ?: return
         meta.lore = inst.lore
         meta.setDisplayName(inst.name)
         item.itemMeta = meta

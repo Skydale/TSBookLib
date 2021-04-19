@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.listener.event.click
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.ItemUtils
-import io.github.mg138.tsbook.item.ItemUtils.getStringTag
-import io.github.mg138.tsbook.item.ItemUtils.getUUID
-import io.github.mg138.tsbook.item.data.UUIDArrayTag
+import io.github.mg138.tsbook.item.util.ItemUtil
+import io.github.mg138.tsbook.item.util.ItemUtil.getStringTag
+import io.github.mg138.tsbook.item.util.ItemUtil.getUUID
+import io.github.mg138.tsbook.item.storage.UUIDArrayTag
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import org.bukkit.Material
@@ -47,7 +47,7 @@ object ItemRightClick : Listener {
     fun onItemClick(event: PlayerInteractEvent): Boolean {
         if (event.action == Action.RIGHT_CLICK_BLOCK || event.action == Action.RIGHT_CLICK_AIR) {
             val item = event.item ?: return false
-            if (!ItemUtils.checkItem(item)) return false
+            if (!ItemUtil.checkItem(item)) return false
             val type = getStringTag(item, "type") ?: return false
             itemTypeOperator(type, item, event.player)
             return true
@@ -87,7 +87,7 @@ object ItemRightClick : Listener {
             uuids.add(instance.uuid)
         }
         val arrow = player.world.spawn(player.eyeLocation, Arrow::class.java) { aw: Arrow ->
-            aw.persistentDataContainer[ItemUtils.uuidArrayKey, UUIDArrayTag] = uuids.toTypedArray()
+            aw.persistentDataContainer[ItemUtil.uuidArrayKey, UUIDArrayTag] = uuids.toTypedArray()
             aw.setGravity(false)
             aw.isInvulnerable = true
             aw.isSilent = true

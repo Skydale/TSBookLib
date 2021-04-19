@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat
 
 import org.bukkit.configuration.ConfigurationSection
 import java.util.*
@@ -10,7 +10,7 @@ class StatMap : EnumMap<StatType, Stat>(StatType::class.java) {
         }
     }
 
-    fun getStatSafe(type: StatType): Double {
+    fun getStatOut(type: StatType): Double {
         return this[type].let {
             when (it) {
                 null -> 0.0

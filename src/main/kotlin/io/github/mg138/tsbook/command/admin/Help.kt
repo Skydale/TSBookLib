@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender
 object Help {
     private fun selector(sender: CommandSender, page: Int, max: Int) {
         sender.spigot().sendMessage(
-            language.format.page.selector("/tsbooklib:tsbook help ", language.format.page.help, page, 0, max)
+            language.format.page.help.selector("/tsbooklib:tsbook help ", page, 0, max)
         )
     }
 
@@ -23,14 +23,15 @@ object Help {
 
     fun call(sender: CommandSender, page: Int = 0): Boolean {
         val max = language.messages.help.pages.size - 1
-        val pos = language.format.page.selectorPos
+        val pos = language.format.page.help.selectorPos
+
         return if (page in 0..max) {
             if (pos == TOP) selector(sender, page, max)
-            sender.sendMessage(language.format.page.header(language.format.page.help, page, 0, max))
+            sender.sendMessage(language.format.page.help.header(page, 0, max))
             if (pos == BEFORE_HELP) selector(sender, page, max)
             sender.sendMessage(language.messages.help.pages[page])
             if (pos == AFTER_HELP) selector(sender, page, max)
-            sender.sendMessage(language.format.page.footer(language.format.page.help, page, 0, max))
+            sender.sendMessage(language.format.page.help.footer(page, 0, max))
             if (pos == BOTTOM) selector(sender, page, max)
             true
         } else {

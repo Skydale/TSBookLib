@@ -1,8 +1,8 @@
-package io.github.mg138.tsbook.attribute.stat.util
+package io.github.mg138.tsbook.item.attribute.stat.util
 
-import io.github.mg138.tsbook.item.ItemStat
-import io.github.mg138.tsbook.attribute.stat.StatMap
-import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.StatType
 import kotlin.math.abs
 
 object StatUtil {
@@ -38,41 +38,41 @@ object StatUtil {
         return filter(StatTypes.effectChances, stats)
     }
 
-    private fun filter(template: Set<StatType>, itemStat: ItemStat): StatMap {
+    private fun filter(template: Set<StatType>, identifiedStat: IdentifiedStat): StatMap {
         val result = StatMap()
         template.forEach { type ->
-            result[type] = itemStat[type]
+            result[type] = identifiedStat[type]
         }
         return result
     }
 
-    fun getElementalDamage(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.elementalDamages, itemStat)
+    fun getElementalDamage(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.elementalDamages, identifiedStat)
     }
 
-    fun getDefense(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.defenses, itemStat)
+    fun getDefense(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.defenses, identifiedStat)
     }
 
-    fun getModifier(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.modifiers, itemStat)
+    fun getModifier(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.modifiers, identifiedStat)
     }
 
-    fun getDamage(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.damages, itemStat)
+    fun getDamage(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.damages, identifiedStat)
     }
 
-    fun getEffectPower(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.effectPowers, itemStat)
+    fun getEffectPower(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.effectPowers, identifiedStat)
     }
 
-    fun getEffectChance(itemStat: ItemStat): StatMap {
-        return filter(StatTypes.effectChances, itemStat)
+    fun getEffectChance(identifiedStat: IdentifiedStat): StatMap {
+        return filter(StatTypes.effectChances, identifiedStat)
     }
 
-    fun combine(itemStats: List<ItemStat>): StatMap {
+    fun combine(identifiedStats: List<IdentifiedStat>): StatMap {
         val result = StatMap()
-        itemStats.forEach { itemStat ->
+        identifiedStats.forEach { itemStat ->
             itemStat.forEach { (type, stat) -> result[type] = stat + result[type] }
         }
         return result

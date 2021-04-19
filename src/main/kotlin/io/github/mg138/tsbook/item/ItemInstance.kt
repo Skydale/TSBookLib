@@ -1,15 +1,12 @@
 package io.github.mg138.tsbook.item
 
-import io.github.mg138.tsbook.attribute.InternalItemType
-import io.github.mg138.tsbook.item.ItemUtils.createItem
-import io.github.mg138.tsbook.setting.item.ItemConfig
+import io.github.mg138.tsbook.item.util.ItemUtil.createItem
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
-import io.github.mg138.tsbook.attribute.stat.util.StatTables
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-class ItemInstance ( //represents a single ItemStack
-    private val setting: ItemSetting, val itemStat: ItemStat?, val internalItemType: InternalItemType, val uuid: UUID
+open class ItemInstance(
+    private val setting: ItemSetting, val uuid: UUID
 ) {
     override fun toString(): String {
         return "{" +
@@ -29,33 +26,5 @@ class ItemInstance ( //represents a single ItemStack
 
     fun createItem(): ItemStack {
         return createItem(this)
-    }
-
-    constructor(ID: String, itemStat: ItemStat?, internalItemType: InternalItemType, uuid: UUID) : this(
-        ItemConfig.getAnyItemByID(ID),
-        itemStat,
-        internalItemType,
-        uuid
-    )
-
-    init {
-        putStatsInLore()
-        println(this)
-    }
-
-    private fun putStatsInLore() {
-        itemStat ?: return
-
-        for (i in lore.indices) {
-            val s = lore[i]
-            itemStat.forEach { (type, _) ->
-                StatTables.placeholders[type]?.let {
-                    if (s.contains(it)) {
-                        lore[i] = s.replace(it, itemStat.translate(type))
-                        println(itemStat.translate(type))
-                    }
-                }
-            }
-        }
     }
 }

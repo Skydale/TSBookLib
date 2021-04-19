@@ -2,9 +2,9 @@ package io.github.mg138.tsbook.setting.item.element
 
 import org.bukkit.configuration.file.YamlConfiguration
 
-class UnidentifiedSetting(val setting: ItemSetting, val iden: List<String>) : ItemSetting(setting) {
+class UnidentifiedSetting(setting: ItemSetting, val iden: List<String>) : ItemSetting(setting) {
     constructor(setting: YamlConfiguration) : this(
-        SimpleItemSetting(setting),
+        ItemSetting(setting),
         setting.getStringList("ITEMS")
     )
 }

@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.listener.event.click
 
-import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.ItemUtils
+import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
@@ -21,7 +20,7 @@ object ArmorAutoEquip : Listener {
         if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
             val player = event.player
             val item = event.item ?: return
-            val instance = ItemUtils.getInstByItem(Book.inst, item) ?: return
+            val instance = ItemUtil.getInstByItem(item) ?: return
 
             event.isCancelled = true
             event.setUseItemInHand(Event.Result.DENY)

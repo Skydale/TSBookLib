@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.setting
 
-import io.github.mg138.tsbook.attribute.ItemRarity
-import io.github.mg138.tsbook.attribute.ItemType
-import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.ItemRarity
+import io.github.mg138.tsbook.item.attribute.ItemType
+import io.github.mg138.tsbook.item.attribute.stat.StatType
 import io.github.mg138.tsbook.setting.config.BookSetting
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
@@ -31,7 +31,6 @@ object BookConfig : AbstractConfig() {
 
         init {
             lang.placeholders["[!prefix]"] = prefix
-            println(lang)
             format = Format(lang.getSection("format"))
             errors = Errors(lang.getSection("errors"), format)
             gui = GUI(lang.getSection("gui"))
@@ -55,6 +54,8 @@ object BookConfig : AbstractConfig() {
             }
 
             class Page(page: TranslatableSetting) {
+                val help = Help(page.getSection("help"), this)
+
                 private fun number(string: String, command: String, number: Int): TextComponent {
                     return TextComponent(string.replace("[!number]", number.toString())).also {
                         it.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, command)
@@ -65,69 +66,103 @@ object BookConfig : AbstractConfig() {
                     }
                 }
 
-                enum class SelectorPos {
-                    TOP, BEFORE_HELP, AFTER_HELP, BOTTOM;
-                }
-
-                val selectorPos = SelectorPos.valueOf(page.get("selectorPos").toUpperCase())
-
-                private val header = page.get("header")
-                fun header(name: String, now: Int, min: Int, max: Int) = header.applyPlaceholder(name, now, min, max)
-
-                private val footer = page.get("footer")
-                fun footer(name: String, now: Int, min: Int, max: Int) = footer.applyPlaceholder(name, now, min, max)
-
-                private val notAvailableSymbol = page.get("notAvailable_symbol")
-                private val notAvailable = page.get("notAvailable")
-                private fun notAvailable() = TextComponent(notAvailable.replace("[!placeholder]", notAvailableSymbol))
+                private val notAvailable = TextComponent(page.get("notAvailable"))
 
                 private val prev = page.get("prev")
-                private fun prev(command: String, number: Int, min: Int) = when {
-                    number > min -> number(prev, command, number - 1)
-                    else -> notAvailable()
+                private fun prev(command: String, now: Int, min: Int) = when {
+                    now > min -> number(prev, command, now - 1)
+                    else -> notAvailable
                 }
 
                 private val now = page.get("now")
                 private fun now(number: Int) = now.replace("[!number]", number.toString())
 
                 private val next = page.get("next")
-                private fun next(command: String, number: Int, max: Int) = when {
-                    number < max -> number(next, command, number + 1)
-                    else -> notAvailable()
+                private fun next(command: String, now: Int, max: Int) = when {
+                    now < max -> number(next, command, now + 1)
+                    else -> notAvailable
                 }
 
                 private val hover = page.get("hover")
 
-                private val selectorMatchers = arrayOf("[!prev]", "[!now]", "[!next]")
-                private val selector = page.get("selector")
+                enum class SelectorPos {
+                    TOP, BEFORE_HELP, AFTER_HELP, BOTTOM;
+                }
+
+                class PageSelector(val name: String, val now: Int, val min: Int, val max: Int)
+
+                class Help(help: TranslatableSetting, private val page: Page) {
+                    val selectorPos = SelectorPos.valueOf(help.get("selectorPos").toUpperCase())
+
+                    private val header = help.get("header")
+                    fun header(now: Int, min: Int, max: Int) = page.applyPlaceholder(header, PageSelector(name, now, min, max))
+
+                    private val footer = help.get("footer")
+                    fun footer(now: Int, min: Int, max: Int) = page.applyPlaceholder(footer, PageSelector(name, now, min, max))
+
+                    private val selector = help.get("selector")
+                    private val matchers = arrayOf("[!prev]", "[!now]", "[!next]")
+
+                    private val name = help.get("name")
+
+                    fun selector(command: String, now: Int, min: Int, max: Int) =
+                        page.selector(command, selector, matchers, PageSelector(name, now, min, max))
+                }
+
+                private fun selector(command: String, template: String, matchers: Array<String>, selector: PageSelector): BaseComponent {
+                    val component = TextComponent()
+
+                    var i = 0
+                    val length = template.length
+                    val buffer = StringBuffer()
+
+                    while (i < length) {
+                        val j = match(template, matchers, i, command, selector, buffer, component)
+
+                        if (j > 0) {
+                            i += j
+                        } else if (j < 0) {
+                            buffer.append(template.substring(i, length))
+                            break
+                        } else {
+                            buffer.append(template[i])
+                            i++
+                        }
+                    }
+                    if (buffer.isNotEmpty()) component.addExtra(
+                        applyPlaceholder(buffer.toString(), selector)
+                    )
+                    return component
+                }
 
                 private fun match(
+                    matching: String,
+                    matchers: Array<String>,
                     i: Int,
-                    length: Int,
                     command: String,
-                    name: String,
-                    number: Int,
-                    min: Int,
-                    max: Int,
+                    selector: PageSelector,
                     buffer: StringBuffer,
                     component: BaseComponent
                 ): Int {
-                    for (matcher in selectorMatchers) {
+                    val now = selector.now
+                    val length = matching.length
+
+                    for (matcher in matchers) {
                         val matcherLength = matcher.length
 
                         var j = 0
-                        while (matcher[j] == selector[i + j]) {
+                        while (matcher[j] == matching[i + j]) {
                             j++
                             if (j >= matcherLength) {
                                 if (buffer.isNotEmpty()) {
-                                    component.addExtra(buffer.toString().applyPlaceholder(name, number, min, max))
+                                    component.addExtra(applyPlaceholder(buffer.toString(), selector))
                                     buffer.setLength(0)
                                 }
 
                                 when (matcher) {
-                                    "[!prev]" -> component.addExtra(prev("$command ${number - 1}", number, min))
-                                    "[!now]" -> component.addExtra(now(number))
-                                    "[!next]" -> component.addExtra(next("$command ${number + 1}", number, max))
+                                    "[!prev]" -> component.addExtra(prev("$command ${now - 1}", now, selector.min))
+                                    "[!now]" -> component.addExtra(now(now))
+                                    "[!next]" -> component.addExtra(next("$command ${now + 1}", now, selector.max))
                                 }
                                 return matcherLength
                             }
@@ -137,40 +172,13 @@ object BookConfig : AbstractConfig() {
                     return 0
                 }
 
-                private fun String.applyPlaceholder(name: String, now: Int, min: Int, max: Int): String {
-                    return this
-                        .replace("[!name]", name)
-                        .replace("[!now]", now.toString())
-                        .replace("[!min", min.toString())
-                        .replace("[!max]", max.toString())
+                fun applyPlaceholder(string: String, selector: PageSelector): String {
+                    return string
+                        .replace("[!name]", selector.name)
+                        .replace("[!now]", selector.now.toString())
+                        .replace("[!min", selector.min.toString())
+                        .replace("[!max]", selector.max.toString())
                 }
-
-                fun selector(command: String, name: String, number: Int, min: Int, max: Int): BaseComponent {
-                    val component = TextComponent()
-
-                    var i = 0
-                    val selectorLength = selector.length
-                    val buffer = StringBuffer()
-
-                    while (i < selectorLength) {
-                        val j = match(i, selectorLength, command, name, number, min, max, buffer, component)
-                        if (j > 0) {
-                            i += j
-                        } else if (j < 0) {
-                            buffer.append(selector.substring(i, selectorLength))
-                            break
-                        } else {
-                            buffer.append(selector[i])
-                            i++
-                        }
-                    }
-                    if (buffer.isNotEmpty()) component.addExtra(
-                        buffer.toString().applyPlaceholder(name, number, min, max)
-                    )
-                    return component
-                }
-
-                val help = page.get("help")
             }
         }
 
@@ -314,11 +322,11 @@ object BookConfig : AbstractConfig() {
         languageSetting = TranslatableSetting(cb.loadDirectory("lang", "${bookSetting.locale}.yml"))
         language = Language(languageSetting)
 
-        plugin.logger.info("Loading item settings...")
-        ItemConfig.load(cb.loadToMap("Items", "ID"), cb.loadToMap("Unidentified", "ID"))
+        //plugin.logger.info("Loading item settings...")
+        //ItemConfig.load(cb.loadToMap("Items", "ID"), cb.loadToMap("Unidentified", "ID"))
 
-        plugin.logger.info("Loading MythicMobs settings...")
-        MobConfig.load(cb.loadToSectionMap("MythicMobs"))
+        //plugin.logger.info("Loading MythicMobs settings...")
+        //MobConfig.load(cb.loadToSectionMap("MythicMobs"))
 
         plugin.logger.info("Loading GUI settings...")
         ArmorGUIConfig.load(cb.create("GUI/", "Equipment.yml"))

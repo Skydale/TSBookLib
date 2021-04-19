@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.attribute.InternalItemType
+import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.command.util.CommandUtil
@@ -21,7 +21,7 @@ object Get {
 
         val item = CommandUtil.getItemByName(itemName, sender) ?: return false
         sender.sendMessage(CommandUtil.getGetMessage(sender.name, itemName))
-        sender.inventory.addItem(CommandUtil.getItem(InternalItemType.ITEM, item))
+        sender.inventory.addItem(CommandUtil.getItem(DefaultIdentifier.ITEM, item))
         return true
     }
 }

@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.entity.effect.data.effect
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler
-import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.StatType
 
 object Paralysis : SimpleEffectPattern(
     delay = { 0 },

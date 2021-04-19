@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.listener.event.damage.utils
 
-import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.StatType
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList

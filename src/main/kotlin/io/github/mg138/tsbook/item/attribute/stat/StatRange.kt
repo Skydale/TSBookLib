@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat
 
 import java.util.*
 

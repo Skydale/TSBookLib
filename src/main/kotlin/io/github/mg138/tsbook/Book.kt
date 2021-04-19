@@ -6,7 +6,7 @@ import io.github.mg138.tsbook.command.Armor
 import io.github.mg138.tsbook.command.admin.AdminCommands
 import io.github.mg138.tsbook.command.admin.AdminTabComplete
 import io.github.mg138.tsbook.entity.effect.EffectHandler
-import io.github.mg138.tsbook.item.ItemUtils
+import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.listener.event.DisableArmorAndOffhand
 import io.github.mg138.tsbook.listener.event.ItemUpdate
 import io.github.mg138.tsbook.listener.event.click.ArmorAutoEquip
@@ -48,7 +48,7 @@ class Book : JavaPlugin() {
 
     fun unload() {
         BookConfig.unload()
-        ItemUtils.unload()
+        ItemUtil.unload()
         EffectHandler.unload()
         DamageEventHandler.unload()
         ItemRightClick.unload()

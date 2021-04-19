@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.setting.mob.element
 
-import io.github.mg138.tsbook.attribute.stat.StatMap
-import io.github.mg138.tsbook.attribute.stat.StatSingle
-import io.github.mg138.tsbook.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.StatSingle
+import io.github.mg138.tsbook.item.attribute.stat.StatType
 import org.bukkit.configuration.ConfigurationSection
 
 class MobSetting(val stats: StatMap) {

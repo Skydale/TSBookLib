@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.attribute.InternalItemType
+import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.command.util.CommandUtil
 import org.bukkit.command.CommandSender
@@ -16,7 +16,7 @@ object Unidentified {
 
         val unid = CommandUtil.getUnidByName(itemName, sender) ?: return false
         CommandUtil.sendGetMessage(receiver, sender, itemName)
-        receiver.inventory.addItem(CommandUtil.getItem(InternalItemType.UNID, unid))
+        receiver.inventory.addItem(CommandUtil.getItem(DefaultIdentifier.UNID, unid))
         return true
     }
 }

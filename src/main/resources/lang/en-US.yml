@@ -9,22 +9,24 @@ format:
         integer: '&einteger'
     range: '[!min] ~ [!max]'
     page:
-        selectorPos: BEFORE_HELP
-        # Options:
-        # - TOP (on top of the header)
-        # - BEFORE_HELP (before the help messages (or: between help and header))
-        # - AFTER_HELP (after the help messages (or: between help and footer))
-        # - BOTTOM (after the footer)
-        header: "&8-----------------------------------------------------"
-        footer: "&8-----------------------------------------------------"
-        notAvailable_symbol: '-'
-        notAvailable: "&c&l[!placeholder]"
+        notAvailable: "&c&l-"
         prev: "&e&l«"
         now: "&f[!number]"
         next: "&e&l»"
         hover: "&6Click to view page &f[!page]"
-        selector: "                       [!prev] [!name] &6(Page [!now] &6of &f[!max]&6) [!next]"
-        help: "&6Help"
+
+          # selectorPos options:
+          # - TOP (on top of the header)
+          # - BEFORE_HELP (before the help messages (or: between help and header))
+          # - AFTER_HELP (after the help messages (or: between help and footer))
+          # - BOTTOM (after the footer)
+
+        help:
+            selectorPos: BEFORE_HELP
+            header: "&8-----------------------------------------------------"
+            footer: "&8-----------------------------------------------------"
+            selector: "                       [!prev] [!name] &6(Page [!now] &6of &f[!max]&6) [!next]"
+            name: "&6Help"
 
 errors:
     unknown_command: '&cUnknown command!'

@@ -33,7 +33,7 @@ object AdminTabComplete : TabCompleter {
                 2 -> when (category) {
                     "help" -> result.add("<page>")
                     "get" -> StringUtil.copyPartialMatches(
-                        args[1], ItemConfig.getItems(), result
+                        args[1], ItemConfig.getItemNames(), result
                     )
                     "give", "unid", "effect" -> StringUtil.copyPartialMatches(
                         args[1],
@@ -48,11 +48,11 @@ object AdminTabComplete : TabCompleter {
                 }
                 3 -> when (category) {
                     "give" -> StringUtil.copyPartialMatches(
-                        args[2], ItemConfig.getItems(), result
+                        args[2], ItemConfig.getItemNames(), result
                     )
                     "unid" -> StringUtil.copyPartialMatches(
                         args[2],
-                        ItemConfig.getUnids(),
+                        ItemConfig.getUnidNames(),
                         result
                     )
                     "effect" -> StringUtil.copyPartialMatches(

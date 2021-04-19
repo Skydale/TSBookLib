@@ -1,10 +1,10 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.attribute.InternalItemType
+import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.item.ItemInstance
-import io.github.mg138.tsbook.item.ItemStat
-import io.github.mg138.tsbook.item.ItemUtils
+import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -18,15 +18,15 @@ object Identify {
         }
 
         val item = sender.inventory.itemInMainHand
-        ItemUtils.checkItem(item) {
+        ItemUtil.checkItem(item) {
             CommandError.handEmpty(sender)
             return false
         }
-        val type = ItemUtils.getInternalItemType(item) ?: run {
+        val type = ItemUtil.getIdentifier(item) ?: run {
             CommandError.itemNotFound(sender)
             return false
         }
-        val id = ItemUtils.getStringTag(item, type.string) ?: run {
+        val id = ItemUtil.getStringTag(item, type.identifier) ?: run {
             CommandError.itemNotFound(sender)
             return false
         }
@@ -37,19 +37,18 @@ object Identify {
         return true
     }
 
-    private fun identify(ID: String, internalItemType: InternalItemType): ItemInstance {
-        val setting = when (internalItemType) {
-            InternalItemType.UNID -> ItemConfig.getItem(ItemConfig.getUnid(ID)!!.iden.random())!!
-            else -> ItemConfig.getItem(ID)!!
+    private fun identify(id: String, identifier: DefaultIdentifier): ItemInstance {
+        val setting = when (identifier) {
+            DefaultIdentifier.UNID -> ItemConfig.getItem(ItemConfig.getUnid(id).iden.random())
+            else -> ItemConfig.getItem(id)
         }
 
         return ItemInstance(
             setting,
-            ItemStat.create(
+            IdentifiedStat.create(
                 setting,
                 true
             ),
-            InternalItemType.ITEM,
             UUID.randomUUID()
         )
     }

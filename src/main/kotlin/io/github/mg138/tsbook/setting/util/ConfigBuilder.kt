@@ -75,14 +75,14 @@ class ConfigBuilder(private val plugin: JavaPlugin, jar: File) {
             }
         }
         val result: MutableList<File> = ArrayList()
-        recursiveListDiretory(result, folder)
+        recursiveListDirectory(result, folder)
         return result
     }
 
-    private fun recursiveListDiretory(list: MutableList<File>, folder: File) {
+    private fun recursiveListDirectory(list: MutableList<File>, folder: File) {
         folder.listFiles()?.forEach { file ->
             if (file.isDirectory) {
-                recursiveListDiretory(list, file)
+                recursiveListDirectory(list, file)
             } else {
                 list.add(file)
             }

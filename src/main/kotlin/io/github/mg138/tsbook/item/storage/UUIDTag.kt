@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.data
+package io.github.mg138.tsbook.item.storage
 
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType

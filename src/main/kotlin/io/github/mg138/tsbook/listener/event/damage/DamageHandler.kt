@@ -1,17 +1,16 @@
 package io.github.mg138.tsbook.listener.event.damage
 
-import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.attribute.stat.StatMap
-import io.github.mg138.tsbook.attribute.stat.StatType
-import io.github.mg138.tsbook.attribute.stat.util.StatTables
-import io.github.mg138.tsbook.attribute.stat.util.StatTypes
-import io.github.mg138.tsbook.attribute.stat.util.StatUtil
+import io.github.mg138.tsbook.item.attribute.stat.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
+import io.github.mg138.tsbook.item.attribute.stat.util.StatTypes
+import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
 import io.github.mg138.tsbook.command.admin.DebugMode
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.StatusType
-import io.github.mg138.tsbook.item.ItemStat
-import io.github.mg138.tsbook.item.ItemUtils
-import io.github.mg138.tsbook.item.data.UUIDArrayTag
+import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.util.ItemUtil
+import io.github.mg138.tsbook.item.storage.UUIDArrayTag
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
@@ -64,24 +63,24 @@ object DamageHandler {
                 }
                 damageCD[damager] = System.currentTimeMillis()
 
-                val itemStats: MutableList<ItemStat> = LinkedList()
+                val identifiedStats: MutableList<IdentifiedStat> = LinkedList()
                 damager.equipment?.itemInMainHand?.let { item ->
-                    ItemUtils.getInstByItem(Book.inst, item)?.itemStat?.let { itemStats.add(it) }
+                    ItemUtil.getInstByItem(item)?.itemStat?.let { identifiedStats.add(it) }
                 }
                 ArcticGlobalDataService.inst.getData<PlayerData>(damager, PlayerData::class)
-                    ?.equipment?.forEach { _, armor -> armor.itemStat?.let { itemStats.add(it) } }
+                    ?.equipment?.forEach { _, armor -> armor.itemStat?.let { identifiedStats.add(it) } }
 
-                complexDamage(event, StatUtil.combine(itemStats), defense)
+                complexDamage(event, StatUtil.combine(identifiedStats), defense)
             }
             damager is Arrow -> {
-                val itemStats: MutableList<ItemStat> = LinkedList()
-                damager.persistentDataContainer[ItemUtils.uuidArrayKey, UUIDArrayTag]
+                val identifiedStats: MutableList<IdentifiedStat> = LinkedList()
+                damager.persistentDataContainer[ItemUtil.uuidArrayKey, UUIDArrayTag]
                     ?.forEach { uuid ->
-                        ItemUtils.itemCache[uuid]?.let { inst ->
-                            inst.itemStat?.let { itemStats.add(it) }
+                        ItemUtil.ITEM_CACHE[uuid]?.let { inst ->
+                            inst.itemStat?.let { identifiedStats.add(it) }
                         }
                     }
-                complexDamage(event, StatUtil.combine(itemStats), defense)
+                complexDamage(event, StatUtil.combine(identifiedStats), defense)
             }
         }
     }
@@ -169,10 +168,10 @@ object DamageHandler {
         val damages = StatUtil.getDamage(stats)
         if (damages.isEmpty()) return 0.0
 
-        val critDamage = stats.getStatSafe(StatType.POWER_CRITICAL).div(100)
+        val critDamage = stats.getStatOut(StatType.POWER_CRITICAL).div(100)
         val critChance: Double
         val certainStrikes: Int
-        stats.getStatSafe(StatType.CHANCE_CRITICAL).div(100).let {
+        stats.getStatOut(StatType.CHANCE_CRITICAL).div(100).let {
             critChance = roundChance(it)
             certainStrikes = getStrikes(it)
         }
@@ -190,14 +189,14 @@ object DamageHandler {
                 StatType.DAMAGE_TRUE -> {
                     StatUtil.calculateTrueDamage(
                         damage = rawDamage.getStat(),
-                        defense = defense.getStatSafe(StatType.DEFENSE_TRUE),
+                        defense = defense.getStatOut(StatType.DEFENSE_TRUE),
                         modifier = 1 + modifier
                     )
                 }
                 else -> {
                     StatUtil.calculateDamage(
                         damage = rawDamage.getStat(),
-                        defense = defense.getStatSafe(StatTables.damageToDefense[damageType]!!),
+                        defense = defense.getStatOut(StatTables.damageToDefense[damageType]!!),
                         modifier = 1 + modifier + (critDamage * (certainStrikes + if (roll(critChance)) 1 else 0))
                     )
                 }
@@ -232,7 +231,7 @@ object DamageHandler {
             if (strikes > 0) {
                 when (type) {
                     StatType.CHANCE_DRAIN -> {
-                        val rawPower = effectPower.getStatSafe(type)
+                        val rawPower = effectPower.getStatOut(type)
                         if (rawPower > 0) {
                             val result = damager.health + damageSum * min(rawPower / 100, 0.0)
                             val maxHealth = damager.getAttribute(Attribute.GENERIC_MAX_HEALTH)!!.baseValue
@@ -240,7 +239,7 @@ object DamageHandler {
                         }
                     }
                     StatType.CHANCE_SLOWNESS -> {
-                        val rawPower = effectPower.getStatSafe(type)
+                        val rawPower = effectPower.getStatOut(type)
                         EffectHandler.apply(
                             StatusType.SLOWNESS,
                             entity,
@@ -249,11 +248,11 @@ object DamageHandler {
                         )
                     }
                     StatType.CHANCE_LEVITATION -> {
-                        val ticks = 20 * strikes * effectPower.getStatSafe(type)
+                        val ticks = 20 * strikes * effectPower.getStatOut(type)
                         if (ticks >= 20) EffectHandler.apply(StatusType.LEVITATION, entity, 0.0, ticks.toLong())
                     }
                     StatType.CHANCE_NAUSEOUS -> {
-                        val ticks = 20 * strikes * effectPower.getStatSafe(type)
+                        val ticks = 20 * strikes * effectPower.getStatOut(type)
                         if (ticks >= 20) EffectHandler.apply(StatusType.NAUSEOUS, entity, 0.0, ticks.toLong())
                     }
                     else -> Unit
@@ -268,7 +267,7 @@ object DamageHandler {
 
         var certainStrike: Int
         val chance: Double
-        (25 + stats.getStatSafe(StatType.AFFINITY_ELEMENT)).div(100).let {
+        (25 + stats.getStatOut(StatType.AFFINITY_ELEMENT)).div(100).let {
             chance = roundChance(it)
             certainStrike = getStrikes(it)
         }

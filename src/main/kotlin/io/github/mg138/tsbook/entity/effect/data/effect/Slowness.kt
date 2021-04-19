@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.entity.effect.data.effect
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.EntityEffect
 import io.github.mg138.tsbook.entity.effect.data.EntityStatus
-import io.github.mg138.tsbook.attribute.stat.util.StatUtil
+import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable

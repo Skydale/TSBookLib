@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.setting.gui.armor
 
-import io.github.mg138.tsbook.attribute.ItemType
+import io.github.mg138.tsbook.item.attribute.ItemType
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import io.github.mg138.tsbook.setting.gui.armor.element.ArmorElementSetting

@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.players.data
 
-import io.github.mg138.tsbook.attribute.ItemType
+import io.github.mg138.tsbook.item.attribute.ItemType
 import io.github.mg138.tsbook.item.ItemInstance
 import java.util.*
 
