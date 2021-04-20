@@ -87,7 +87,7 @@ object ItemRightClick : Listener {
             uuids.add(instance.uuid)
         }
         val arrow = player.world.spawn(player.eyeLocation, Arrow::class.java) { aw: Arrow ->
-            aw.persistentDataContainer[ItemUtil.uuidArrayKey, UUIDArrayTag] = uuids.toTypedArray()
+            aw.persistentDataContainer[ItemUtil.UUID_ARRAY_KEY, UUIDArrayTag] = uuids.toTypedArray()
             aw.setGravity(false)
             aw.isInvulnerable = true
             aw.isSilent = true

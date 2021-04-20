@@ -74,7 +74,7 @@ object DamageHandler {
             }
             damager is Arrow -> {
                 val identifiedStats: MutableList<IdentifiedStat> = LinkedList()
-                damager.persistentDataContainer[ItemUtil.uuidArrayKey, UUIDArrayTag]
+                damager.persistentDataContainer[ItemUtil.UUID_ARRAY_KEY, UUIDArrayTag]
                     ?.forEach { uuid ->
                         ItemUtil.ITEM_CACHE[uuid]?.let { inst ->
                             inst.itemStat?.let { identifiedStats.add(it) }

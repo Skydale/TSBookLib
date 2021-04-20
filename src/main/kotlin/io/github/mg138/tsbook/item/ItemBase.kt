@@ -5,9 +5,7 @@ import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import org.bukkit.inventory.ItemStack
 import java.util.*
 
-open class ItemInstance(
-    private val setting: ItemSetting, val uuid: UUID
-) {
+open class ItemBase(protected val setting: ItemSetting, val uuid: UUID) {
     override fun toString(): String {
         return "{" +
                 "\n  display: {" +

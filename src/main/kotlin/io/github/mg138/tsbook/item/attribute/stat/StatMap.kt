@@ -1,47 +1,52 @@
 package io.github.mg138.tsbook.item.attribute.stat
 
-import org.bukkit.configuration.ConfigurationSection
+import io.github.mg138.tsbook.item.attribute.MutableStated
 import java.util.*
 
-class StatMap : EnumMap<StatType, Stat>(StatType::class.java) {
-    override fun putAll(from: Map<out StatType, Stat>) {
-        from.forEach { (type, stat) ->
-            this[type] = stat + this[type]
+open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<StatType, Stat>> {
+    protected val map = EnumMap<StatType, Stat>(StatType::class.java)
+
+    constructor(map: Map<out StatType, Stat>) : this() {
+        this.putAll(map)
+    }
+
+    fun putAll(map: Map<out StatType, Stat>) {
+        map.forEach { (type, stat) ->
+            this.map[type] = stat + this.map[type]
         }
     }
 
-    fun getStatOut(type: StatType): Double {
-        return this[type].let {
-            when (it) {
-                null -> 0.0
-                else -> it.getStat()
-            }
-        }
+    open fun remove(type: StatType) = map.remove(type)
+
+    override operator fun set(type: StatType, stat: Stat) = map.put(type, stat)
+
+    override operator fun get(type: StatType) = map[type]
+
+    override fun getStatOut(type: StatType) = this[type]?.getStat() ?: 0.0
+
+    open fun translate(type: StatType): String? {
+        return this[type]
+            ?.applyPlaceholder(type.getFormat())
+            ?.replace("[name]", type.toString())
+            ?.replace("[percentage]", "100%")
     }
 
-    companion object {
-        fun from(setting: ConfigurationSection): StatMap {
-            val stats = StatMap()
-
-            setting.getKeys(false).forEach { literalType ->
-                val type = StatType.valueOf(literalType.toUpperCase())
-
-                stats[type] = when {
-                    setting.contains("$literalType.min") -> {
-                        StatRange(
-                            setting.getDouble("$literalType.max"),
-                            setting.getDouble("$literalType.min")
-                        )
-                    }
-                    else -> {
-                        StatSingle(
-                            setting.getDouble(literalType)
-                        )
-                    }
-                }
-            }
-
-            return stats
-        }
+    override fun toString(): String {
+        return map.toString()
     }
+
+    override fun hashCode(): Int {
+        return map.hashCode()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is StatMap) return false
+
+        if (map != other.map) return false
+
+        return true
+    }
+
+    override fun iterator() = map.iterator()
 }

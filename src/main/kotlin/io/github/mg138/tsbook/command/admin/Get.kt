@@ -1,6 +1,5 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.command.util.CommandUtil

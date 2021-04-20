@@ -1,54 +1,31 @@
 package io.github.mg138.tsbook.setting.item
 
-import io.github.mg138.tsbook.item.attribute.DefaultIdentifier.*
+import io.github.mg138.tsbook.item.attribute.Identifier
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting
 import java.lang.IllegalArgumentException
 import java.util.*
 
 object ItemConfig {
-    val items: MutableMap<String, MutableMap<String, ItemSetting>> = HashMap()
+    val items: MutableMap<Identifier, ItemSetting> = HashMap()
 
     fun unload() {
         items.clear()
     }
 
-    @Throws(IllegalArgumentException::class)
-    fun putAll(identifier: String, items: MutableMap<String, ItemSetting>) {
-        getItems(identifier).putAll(items)
-    }
+    fun getAllItemIds() = items.keys
 
-    fun getAllItemNames() = items.values.flatMap { it.keys }
+    fun getAllItemNames() = this.getAllItemIds().map { it.name }
 
     @Throws(IllegalArgumentException::class)
-    fun getItems(identifier: String) = items[identifier]
-        ?: throw IllegalArgumentException("$identifier doesn't exist. Keys: ${items.keys}")
+    fun getItemNames(key: String) = this.getAllItemIds().filter { it.sameKey(key) }.map { it.name }
 
     @Throws(IllegalArgumentException::class)
-    fun getItemNames(identifier: String) = getItems(identifier).keys
+    fun getItem(id: Identifier) = items[id] ?: throw IllegalArgumentException("$id doesn't exist.")
 
     @Throws(IllegalArgumentException::class)
-    fun getItemNames() = getItemNames(ITEM.identifier)
+    fun getItem(id: String) = this.getItem(Identifier.PresetKey.item(id))
 
     @Throws(IllegalArgumentException::class)
-    fun getUnidNames() = getItemNames(UNID.identifier)
-
-    @Throws(IllegalArgumentException::class)
-    fun getItem(identifier: String, id: String) = getItems(identifier).let {
-        it[id] ?: throw IllegalArgumentException("$id doesn't exist. Keys: ${it.keys}")
-    }
-
-    @Throws(IllegalArgumentException::class)
-    fun getItem(id: String) = getItem(ITEM.identifier, id)
-
-    @Throws(IllegalArgumentException::class)
-    fun getUnid(id: String) = getItem(UNID.identifier, id) as UnidentifiedSetting
-
-    @Throws(IllegalArgumentException::class)
-    fun getAnyItemByID(id: String): ItemSetting {
-        items.forEach { (_, map) ->
-            map[id]?.let { return it }
-        }
-        throw IllegalArgumentException("No such item called $id exists!")
-    }
+    fun getUnid(id: String) = this.getItem(Identifier.PresetKey.unid(id)) as UnidentifiedSetting
 }

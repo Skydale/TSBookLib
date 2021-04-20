@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.item.util
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.item.data.Identification
-import io.github.mg138.tsbook.item.ItemInstance
+import io.github.mg138.tsbook.item.ItemBase
 import io.github.mg138.tsbook.item.storage.IdentificationTag
 import io.github.mg138.tsbook.item.storage.UUIDTag
 import org.bukkit.Material
@@ -14,15 +14,15 @@ import org.bukkit.persistence.PersistentDataType
 import java.util.*
 
 object ItemUtil {
-    val ITEM_CACHE: MutableMap<UUID, ItemInstance> = HashMap()
+    val ITEM_CACHE: MutableMap<UUID, ItemBase> = HashMap()
 
     // Non-persistent
-    val cacheKey = NamespacedKey(Book.inst, "cache")
-    val uuidArrayKey = NamespacedKey(Book.inst, "item_uuids")
+    val CACHE_KEY = NamespacedKey(Book.inst, "cache")
+    val UUID_ARRAY_KEY = NamespacedKey(Book.inst, "item_uuids")
 
     // Persistent
-    val idKey = NamespacedKey(Book.inst, "id")
-    val identificationKey = NamespacedKey(Book.inst, "iden")
+    val ID_KEY = NamespacedKey(Book.inst, "id")
+    val IDEN_KEY = NamespacedKey(Book.inst, "iden")
 
     inline fun checkItem(item: ItemStack?, actionOnFail: () -> Unit = {}): Boolean {
         if (item == null || item.type == Material.AIR) {
@@ -32,7 +32,7 @@ object ItemUtil {
         return true
     }
 
-    fun createItem(inst: ItemInstance): ItemStack {
+    fun createItem(inst: ItemBase): ItemStack {
         val item = ItemStack(inst.material)
         val meta = item.itemMeta!!
         val uuid = inst.uuid
@@ -44,7 +44,7 @@ object ItemUtil {
         return item
     }
 
-    fun getInstByItem(item: ItemStack): ItemInstance? {
+    fun getInstByItem(item: ItemStack): ItemBase? {
         if (!checkItem(item)) return null
         val meta = item.itemMeta!!
 
@@ -54,7 +54,7 @@ object ItemUtil {
 
         val id = getItemId(meta) ?: return null
 
-        val inst = ItemInstance(
+        val inst = ItemBase(
             id,
             IdentifiedStat.create(
                 id,
@@ -89,23 +89,23 @@ object ItemUtil {
 
 
     fun getUUID(meta: ItemMeta) =
-        meta.persistentDataContainer.get(cacheKey, UUIDTag)
+        meta.persistentDataContainer.get(CACHE_KEY, UUIDTag)
 
     fun setUUID(meta: ItemMeta, uuid: UUID) =
-        meta.persistentDataContainer.set(cacheKey, UUIDTag, uuid)
+        meta.persistentDataContainer.set(CACHE_KEY, UUIDTag, uuid)
 
     //fun hasItemID(meta: ItemMeta) =
     //    hasStringTag(meta, itemKey)
 
-    fun getItemId(meta: ItemMeta) = getStringTag(meta, idKey)
+    fun getItemId(meta: ItemMeta) = getStringTag(meta, ID_KEY)
 
     private fun setIdentification(meta: ItemMeta, identification: Identification) =
-        meta.persistentDataContainer.set(identificationKey, IdentificationTag, identification)
+        meta.persistentDataContainer.set(IDEN_KEY, IdentificationTag, identification)
 
     private fun getIdentification(meta: ItemMeta) =
-        meta.persistentDataContainer.get(identificationKey, IdentificationTag)
+        meta.persistentDataContainer.get(IDEN_KEY, IdentificationTag)
 
-    fun cacheItem(inst: ItemInstance, uuid: UUID) {
+    fun cacheItem(inst: ItemBase, uuid: UUID) {
         ITEM_CACHE[uuid] = inst
     }
 

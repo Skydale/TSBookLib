@@ -1,11 +1,7 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.item.ItemInstance
-import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.item.util.ItemUtil
-import io.github.mg138.tsbook.setting.item.ItemConfig
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.*
@@ -35,21 +31,5 @@ object Identify {
         item.amount--
         sender.inventory.addItem(inst.createItem())
         return true
-    }
-
-    private fun identify(id: String, identifier: DefaultIdentifier): ItemInstance {
-        val setting = when (identifier) {
-            DefaultIdentifier.UNID -> ItemConfig.getItem(ItemConfig.getUnid(id).iden.random())
-            else -> ItemConfig.getItem(id)
-        }
-
-        return ItemInstance(
-            setting,
-            IdentifiedStat.create(
-                setting,
-                true
-            ),
-            UUID.randomUUID()
-        )
     }
 }

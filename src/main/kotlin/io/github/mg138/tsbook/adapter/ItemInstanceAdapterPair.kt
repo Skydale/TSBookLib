@@ -9,7 +9,7 @@ import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
 import io.github.mg138.tsbook.item.data.Identification
-import io.github.mg138.tsbook.item.ItemInstance
+import io.github.mg138.tsbook.item.ItemBase
 import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import java.lang.reflect.Type
@@ -17,26 +17,26 @@ import java.util.*
 
 @Component
 class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
-    class ItemInstanceAdapter : TypeAdapter<ItemInstance>() {
+    class ItemInstanceAdapter : TypeAdapter<ItemBase>() {
         private var gson: Gson = Gson()
 
-        override fun write(writer: JsonWriter, instance: ItemInstance?) {
+        override fun write(writer: JsonWriter, inst: ItemBase?) {
             writer.beginObject()
 
-            if (instance != null) {
+            if (inst != null) {
                 writer.name("id")
-                writer.value(instance.id)
+                writer.value(inst.id)
 
-                if (instance.itemStat != null) {
+                if (inst.itemStat != null) {
                     writer.name("iden")
-                    writer.value(gson.toJson(instance.itemStat.identification))
+                    writer.value(gson.toJson(inst.itemStat.identification))
                 }
             }
 
             writer.endObject()
         }
 
-        override fun read(reader: JsonReader): ItemInstance? {
+        override fun read(reader: JsonReader): ItemBase? {
             reader.beginObject()
 
             var id: String? = null
@@ -59,7 +59,7 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
 
             val setting = ItemConfig.getItem(id)
 
-            return ItemInstance(
+            return ItemBase(
                 setting,
                 IdentifiedStat.create(setting, identification),
                 UUID.randomUUID()
@@ -67,6 +67,6 @@ class ItemInstanceAdapterPair: SystemLevel, TypeAdapterPair {
         }
     }
 
-    override val type: Type = ItemInstance::class.java
+    override val type: Type = ItemBase::class.java
     override val typeAdapter = ItemInstanceAdapter()
 }

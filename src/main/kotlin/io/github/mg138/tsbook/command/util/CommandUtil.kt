@@ -1,9 +1,8 @@
 package io.github.mg138.tsbook.command.util
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.attribute.DefaultIdentifier
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.item.ItemInstance
+import io.github.mg138.tsbook.item.ItemBase
 import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
@@ -27,7 +26,7 @@ object CommandUtil {
         .replace("[!item]", itemName)
 
     fun getItem(identifier: DefaultIdentifier, setting: ItemSetting): ItemStack {
-        val inst = ItemInstance(
+        val inst = ItemBase(
             setting,
             IdentifiedStat.create(
                 setting,

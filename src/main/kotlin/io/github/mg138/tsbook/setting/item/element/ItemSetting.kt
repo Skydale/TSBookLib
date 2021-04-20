@@ -1,12 +1,13 @@
 package io.github.mg138.tsbook.setting.item.element
 
+import io.github.mg138.tsbook.item.attribute.Identifier
 import io.github.mg138.tsbook.item.attribute.ItemType
 import io.github.mg138.tsbook.util.translate.TranslateUtil
 import org.bukkit.Material
 import org.bukkit.configuration.file.YamlConfiguration
 
 open class ItemSetting(
-    val id: String,
+    val id: Identifier,
     val itemType: ItemType,
     val material: Material,
     val model: Int = 0,
@@ -15,7 +16,6 @@ open class ItemSetting(
 ) {
     init {
         if (material == Material.AIR) throw IllegalArgumentException("Material cannot be air! (ID: $id)")
-        if (id.contains(":")) throw IllegalArgumentException("IDs cannot consist of `:`! (ID: $id)")
     }
 
     constructor(setting: ItemSetting) : this(
@@ -27,14 +27,16 @@ open class ItemSetting(
         setting.lore
     )
 
-    constructor(setting: YamlConfiguration) : this(
-        setting.getString("ID")
-            ?: throw java.lang.IllegalArgumentException("ID cannot be null."),
+    constructor(setting: YamlConfiguration, key: String) : this(
+        setting.getString("ID")?.let {
+            Identifier(key, it)
+        }
+            ?: throw IllegalArgumentException("ID cannot be null."),
         setting.getString("ITEM_TYPE")?.let {
             ItemType.of(it)
         } ?: ItemType.UNKNOWN,
         Material.valueOf(
-            setting.getString("MATERIAL") ?: throw java.lang.IllegalArgumentException("Material cannot be null")
+            setting.getString("MATERIAL") ?: throw IllegalArgumentException("Material cannot be null")
         ),
         setting.getInt("MODEL"),
         TranslateUtil.get("FORMAT.NAME", null, setting),
