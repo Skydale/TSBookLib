@@ -1,9 +1,19 @@
-package io.github.mg138.tsbook.util.translate
+package io.github.mg138.tsbook.setting.util.translate
 
+import io.github.mg138.tsbook.setting.util.Section
 import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.ConfigurationSection
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
 
-class TranslatableSetting(private val setting: ConfigurationSection, val placeholders: MutableMap<String, String> = HashMap()) {
+open class TranslatableSetting(private val setting: ConfigurationSection, val placeholders: MutableMap<String, String> = HashMap()) {
+    private fun <T : Any> getSectionAnnotation(lang: KClass<T>) = lang.findAnnotation<Section>()
+        ?: throw IllegalArgumentException("LanguageSetting doesn't have ${Section::class.simpleName} annotation.")
+
+    private fun getSection(section: Section) = this.getSection(section.name)
+
+    fun <T : Any> getSection(lang: KClass<T>) = this.getSection(this.getSectionAnnotation(lang))
+
     fun getSection(path: String): TranslatableSetting {
         try {
             return TranslatableSetting(setting.getConfigurationSection(path)!!, placeholders)

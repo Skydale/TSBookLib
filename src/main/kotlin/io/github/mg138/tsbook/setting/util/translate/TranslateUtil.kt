@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.util.translate
+package io.github.mg138.tsbook.setting.util.translate
 
 import io.github.mg138.tsbook.util.RGBUtil.translateColor
 import me.clip.placeholderapi.PlaceholderAPI

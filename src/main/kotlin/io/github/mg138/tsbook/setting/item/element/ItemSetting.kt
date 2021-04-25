@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.setting.item.element
 
 import io.github.mg138.tsbook.item.attribute.Identifier
 import io.github.mg138.tsbook.item.attribute.ItemType
-import io.github.mg138.tsbook.util.translate.TranslateUtil
+import io.github.mg138.tsbook.setting.util.translate.TranslateUtil
 import org.bukkit.Material
 import org.bukkit.configuration.file.YamlConfiguration
 
