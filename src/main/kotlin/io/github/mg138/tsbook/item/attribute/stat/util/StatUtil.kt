@@ -1,16 +1,18 @@
 package io.github.mg138.tsbook.item.attribute.stat.util
 
-import io.github.mg138.tsbook.item.data.IdentifiedStat
 import io.github.mg138.tsbook.item.attribute.stat.StatMap
 import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.data.IdentifiedStat
 import kotlin.math.abs
 
 object StatUtil {
     private fun filter(template: Set<StatType>, stats: StatMap): StatMap {
         val result = StatMap()
+
         template.forEach { type ->
-            stats[type]?.let { result[type] = it }
+            stats.getStat(type)?.let { result[type] = it }
         }
+
         return result
     }
 
@@ -38,43 +40,13 @@ object StatUtil {
         return filter(StatTypes.effectChances, stats)
     }
 
-    private fun filter(template: Set<StatType>, identifiedStat: IdentifiedStat): StatMap {
-        val result = StatMap()
-        template.forEach { type ->
-            result[type] = identifiedStat[type]
-        }
-        return result
-    }
-
-    fun getElementalDamage(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.elementalDamages, identifiedStat)
-    }
-
-    fun getDefense(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.defenses, identifiedStat)
-    }
-
-    fun getModifier(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.modifiers, identifiedStat)
-    }
-
-    fun getDamage(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.damages, identifiedStat)
-    }
-
-    fun getEffectPower(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.effectPowers, identifiedStat)
-    }
-
-    fun getEffectChance(identifiedStat: IdentifiedStat): StatMap {
-        return filter(StatTypes.effectChances, identifiedStat)
-    }
-
     fun combine(identifiedStats: List<IdentifiedStat>): StatMap {
         val result = StatMap()
+
         identifiedStats.forEach { itemStat ->
-            itemStat.forEach { (type, stat) -> result[type] = stat + result[type] }
+            itemStat.forEach { (type, stat) -> result[type] = stat + result.getStat(type) }
         }
+        
         return result
     }
 

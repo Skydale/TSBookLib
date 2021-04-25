@@ -5,47 +5,57 @@ data class StatSingle(private var stat: Double) : Stat {
 
     override fun applyPlaceholder(string: String) = string.replace("[stat]", stat.toInt().toString())
 
-    operator fun plus(increment: StatSingle?): StatSingle {
-        val that = this.copy()
-        increment?.let {
-            that.stat += increment.getStat()
+    override operator fun plus(increment: Stat?): StatSingle {
+        if (increment == null) return this.copy()
+        if (increment !is StatSingle) throw IllegalArgumentException(incompatible(increment))
+
+        return this.copy().also {
+            it.stat += increment.stat
         }
-        return that
+    }
+
+    override operator fun minus(decrement: Stat?): StatSingle {
+        if (decrement == null) return this.copy()
+        if (decrement !is StatSingle) throw IllegalArgumentException(incompatible(decrement))
+
+        return this.copy().also {
+            it.stat -= decrement.stat
+        }
     }
 
     override operator fun times(multiplier: Int): StatSingle {
-        val that = this.copy()
-        that.stat *= multiplier
-        return that
+        return this.copy().also {
+            it.stat *= multiplier
+        }
     }
 
     override operator fun times(multiplier: Float): StatSingle {
-        val that = this.copy()
-        that.stat *= multiplier
-        return that
+        return this.copy().also {
+            it.stat *= multiplier
+        }
     }
 
     override operator fun times(multiplier: Double): StatSingle {
-        val that = this.copy()
-        that.stat *= multiplier
-        return that
+        return this.copy().also {
+            it.stat *= multiplier
+        }
     }
 
     override operator fun div(divisor: Int): StatSingle {
-        val that = this.copy()
-        that.stat /= divisor
-        return that
+        return this.copy().also {
+            it.stat /= divisor
+        }
     }
 
     override operator fun div(divisor: Float): StatSingle {
-        val that = this.copy()
-        that.stat /= divisor
-        return that
+        return this.copy().also {
+            it.stat /= divisor
+        }
     }
 
     override operator fun div(divisor: Double): StatSingle {
-        val that = this.copy()
-        that.stat /= divisor
-        return that
+        return this.copy().also {
+            it.stat /= divisor
+        }
     }
 }

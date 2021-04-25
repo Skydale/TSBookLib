@@ -1,16 +1,16 @@
 package io.github.mg138.tsbook.listener.event.damage
 
+import io.github.mg138.tsbook.command.admin.DebugMode
+import io.github.mg138.tsbook.entity.effect.EffectHandler
+import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.item.attribute.stat.StatMap
 import io.github.mg138.tsbook.item.attribute.stat.StatType
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTypes
 import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
-import io.github.mg138.tsbook.command.admin.DebugMode
-import io.github.mg138.tsbook.entity.effect.EffectHandler
-import io.github.mg138.tsbook.entity.effect.data.StatusType
 import io.github.mg138.tsbook.item.data.IdentifiedStat
-import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.item.storage.UUIDArrayTag
+import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
@@ -47,7 +47,7 @@ object DamageHandler {
         damageCD.clear()
     }
 
-    fun damagedByEntity(event: EntityDamageByEntityEvent, defense: StatMap) {
+    fun  damagedByEntity(event: EntityDamageByEntityEvent, defense: StatMap) {
         val damager = event.damager
 
         when {
@@ -65,10 +65,10 @@ object DamageHandler {
 
                 val identifiedStats: MutableList<IdentifiedStat> = LinkedList()
                 damager.equipment?.itemInMainHand?.let { item ->
-                    ItemUtil.getInstByItem(item)?.itemStat?.let { identifiedStats.add(it) }
+                    //ItemUtil.getInstByItem(item)?.itemStat?.let { identifiedStats.add(it) }
                 }
                 ArcticGlobalDataService.inst.getData<PlayerData>(damager, PlayerData::class)
-                    ?.equipment?.forEach { _, armor -> armor.itemStat?.let { identifiedStats.add(it) } }
+                    //?.equipment?.forEach { _, armor -> armor.itemStat?.let { identifiedStats.add(it) } }
 
                 complexDamage(event, StatUtil.combine(identifiedStats), defense)
             }
@@ -77,7 +77,7 @@ object DamageHandler {
                 damager.persistentDataContainer[ItemUtil.UUID_ARRAY_KEY, UUIDArrayTag]
                     ?.forEach { uuid ->
                         ItemUtil.ITEM_CACHE[uuid]?.let { inst ->
-                            inst.itemStat?.let { identifiedStats.add(it) }
+                            //inst.itemStat?.let { identifiedStats.add(it) }
                         }
                     }
                 complexDamage(event, StatUtil.combine(identifiedStats), defense)
@@ -85,7 +85,7 @@ object DamageHandler {
         }
     }
 
-    fun complexDamage(event: EntityDamageByEntityEvent, stats: StatMap, defense: StatMap) {
+    fun  complexDamage(event: EntityDamageByEntityEvent, stats: StatMap, defense: StatMap) {
         val entity = event.entity as LivingEntity
 
         val damager = when (val entityDamager = event.damager) {
@@ -133,26 +133,6 @@ object DamageHandler {
         Bukkit.getPluginManager().callEvent(customEvent)
     }
 
-    fun simpleDamage(
-        entity: LivingEntity,
-        damage: Double,
-        damageType: StatType = StatType.DAMAGE_NONE,
-        display: Boolean = false
-    ): Boolean {
-        if (entity.isDead) return false
-        if (damage == 0.0) return true
-
-        entity.damage(damage)
-
-        entity.maximumNoDamageTicks = 0
-        entity.noDamageTicks = 0
-
-        if (display && StatTypes.damages.contains(damageType)) {
-            DamageIndicator.displayDamage(damage, damageType, entity.location)
-        }
-        return true
-    }
-
     private fun roll(chance: Double): Boolean = rand.nextDouble() < chance
 
     private fun roundChance(chance: Double): Double = chance % 1
@@ -164,7 +144,7 @@ object DamageHandler {
         }
     }
 
-    private fun damage(damager: LivingEntity, stats: StatMap, defense: StatMap, modifier: Double, event: CustomDamageEvent): Double {
+    private fun  damage(damager: LivingEntity, stats: StatMap, defense: StatMap, modifier: Double, event: CustomDamageEvent): Double {
         val damages = StatUtil.getDamage(stats)
         if (damages.isEmpty()) return 0.0
 
@@ -207,7 +187,7 @@ object DamageHandler {
         return damageSum
     }
 
-    private fun effect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, damageSum: Double) {
+    private fun   effect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, damageSum: Double) {
         val effectChance = StatUtil.getEffectChance(stats)
         if (effectChance.isEmpty()) return
 
@@ -261,7 +241,7 @@ object DamageHandler {
         }
     }
 
-    private fun elementalEffect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, modifier: Double) {
+    private fun   elementalEffect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, modifier: Double) {
         val elementalDamages = StatUtil.getElementalDamage(stats)
         if (elementalDamages.isEmpty()) return
 
@@ -308,5 +288,25 @@ object DamageHandler {
                 else -> Unit
             }
         }
+    }
+
+    fun simpleDamage(
+        entity: LivingEntity,
+        damage: Double,
+        damageType: StatType = StatType.DAMAGE_NONE,
+        display: Boolean = false
+    ): Boolean {
+        if (entity.isDead) return false
+        if (damage == 0.0) return true
+
+        entity.damage(damage)
+
+        entity.maximumNoDamageTicks = 0
+        entity.noDamageTicks = 0
+
+        if (display && StatTypes.damages.contains(damageType)) {
+            DamageIndicator.displayDamage(damage, damageType, entity.location)
+        }
+        return true
     }
 }

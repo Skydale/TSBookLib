@@ -10,6 +10,8 @@ open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<St
         this.putAll(map)
     }
 
+    fun isEmpty() = map.isEmpty()
+
     fun putAll(map: Map<out StatType, Stat>) {
         map.forEach { (type, stat) ->
             this.map[type] = stat + this.map[type]
@@ -18,14 +20,14 @@ open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<St
 
     open fun remove(type: StatType) = map.remove(type)
 
-    override operator fun set(type: StatType, stat: Stat) = map.put(type, stat)
+    override operator fun set(type: StatType, stat: Stat): Stat? = map.put(type, stat)
 
-    override operator fun get(type: StatType) = map[type]
+    override fun getStat(type: StatType): Stat? = map[type]
 
-    override fun getStatOut(type: StatType) = this[type]?.getStat() ?: 0.0
+    override fun getStatOut(type: StatType) = this.getStat(type)?.getStat() ?: 0.0
 
     open fun translate(type: StatType): String? {
-        return this[type]
+        return this.getStat(type)
             ?.applyPlaceholder(type.getFormat())
             ?.replace("[name]", type.toString())
             ?.replace("[percentage]", "100%")

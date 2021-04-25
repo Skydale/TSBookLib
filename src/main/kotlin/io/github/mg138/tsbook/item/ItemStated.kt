@@ -30,6 +30,7 @@ open class ItemStated(
     }
 
     override fun getStatOut(type: StatType) = stats.getStatOut(type)
-
-    override fun getStat(type: StatType) = stats[type]
+    override fun getStat(type: StatType): T? {
+        TODO("Not yet implemented")
+    }
 }

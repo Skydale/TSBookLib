@@ -5,5 +5,5 @@ import io.github.mg138.tsbook.item.attribute.stat.StatType
 
 interface Stated {
     fun getStatOut(type: StatType): Double
-    operator fun get(type: StatType): Stat?
+    fun getStat(type: StatType): Stat?
 }

@@ -1,15 +1,18 @@
 package io.github.mg138.tsbook.item.data
 
+import io.github.mg138.tsbook.item.attribute.Identified
 import io.github.mg138.tsbook.item.attribute.stat.Stat
 import io.github.mg138.tsbook.item.attribute.stat.StatMap
 import io.github.mg138.tsbook.item.attribute.stat.StatType
 
-class IdentifiedStat(
+class IdentifiedStat (
     private val identification: Identification
-) : StatMap() {
+) : StatMap(), Identified {
     constructor(map: Map<out StatType, Stat>, identification: Identification) : this(identification) {
         super.putAll(map)
     }
+
+    private fun applyIden(stat: Stat?, type: StatType) = stat?.times(identification[type])
 
     override fun remove(type: StatType): Stat? {
         this.identification.remove(type)
@@ -23,18 +26,14 @@ class IdentifiedStat(
 
     override operator fun set(type: StatType, stat: Stat) = this.set(type, stat, 0.5F)
 
-    override operator fun get(type: StatType): Stat? {
-        return super.get(type)?.let {
-            it * this.identification[type]
+    override fun getStat(type: StatType): Stat? {
+        return super.getStat(type)?.let {
+            applyIden(it, type)
         }
     }
 
-    override fun getStatOut(type: StatType): Double {
-        return super.getStatOut(type) * this.identification[type]
-    }
-
     override fun translate(type: StatType): String? {
-        return this[type]
+        return this.getStat(type)
             ?.applyPlaceholder(type.getFormat())
             ?.replace("[name]", type.toString())
             ?.replace("[percentage]", "${getPercentage(type)}%")
@@ -44,14 +43,16 @@ class IdentifiedStat(
 
     override fun iterator(): MutableIterator<MutableMap.MutableEntry<StatType, Stat>> {
         return object : MutableIterator<MutableMap.MutableEntry<StatType, Stat>> {
-            val keys = map.keys.iterator()
+            val iter = map.iterator()
 
             override fun hasNext(): Boolean {
-                return keys.hasNext()
+                return iter.hasNext()
             }
 
             override fun next(): MutableMap.MutableEntry<StatType, Stat> {
-
+                return iter.next().also {
+                    it.setValue(it.value * identification[it.key])
+                }
             }
 
             override fun remove() {
