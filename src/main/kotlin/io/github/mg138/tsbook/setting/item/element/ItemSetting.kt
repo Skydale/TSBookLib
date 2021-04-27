@@ -30,14 +30,13 @@ open class ItemSetting(
     constructor(setting: YamlConfiguration, key: String) : this(
         setting.getString("ID")?.let {
             Identifier(key, it)
-        }
-            ?: throw IllegalArgumentException("ID cannot be null."),
+        } ?: throw IllegalArgumentException("Setting doesn't contain an ID."),
         setting.getString("ITEM_TYPE")?.let {
             ItemType.of(it)
         } ?: ItemType.UNKNOWN,
-        Material.valueOf(
-            setting.getString("MATERIAL") ?: throw IllegalArgumentException("Material cannot be null")
-        ),
+        setting.getString("MATERIAL")?.let {
+            Material.valueOf(it)
+        } ?: throw IllegalArgumentException("Setting doesn't contain Material."),
         setting.getInt("MODEL"),
         TranslateUtil.get("FORMAT.NAME", null, setting),
         TranslateUtil.getList("FORMAT.LORE", null, setting)

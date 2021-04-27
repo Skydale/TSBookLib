@@ -1,18 +1,19 @@
 package io.github.mg138.tsbook.item.attribute.stat
 
 import io.github.mg138.tsbook.item.attribute.MutableStated
+import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
 import java.util.*
 
-open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<StatType, Stat>> {
+open class StatMap() : MutableStated, Iterable<Map.Entry<StatType, Stat>> {
     protected val map = EnumMap<StatType, Stat>(StatType::class.java)
 
-    constructor(map: Map<out StatType, Stat>) : this() {
+    constructor(map: StatMap) : this() {
         this.putAll(map)
     }
 
     fun isEmpty() = map.isEmpty()
 
-    fun putAll(map: Map<out StatType, Stat>) {
+    fun putAll(map: StatMap) {
         map.forEach { (type, stat) ->
             this.map[type] = stat + this.map[type]
         }
@@ -25,6 +26,14 @@ open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<St
     override fun getStat(type: StatType): Stat? = map[type]
 
     override fun getStatOut(type: StatType) = this.getStat(type)?.getStat() ?: 0.0
+
+    open fun applyPlaceholder(string: String, type: StatType): String {
+        return StatTables.placeholders[type]?.let {
+            this.translate(type)?.let { translated ->
+                string.replace(it, translated)
+            }
+        } ?: string
+    }
 
     open fun translate(type: StatType): String? {
         return this.getStat(type)
@@ -50,5 +59,5 @@ open class StatMap() : MutableStated, MutableIterable<MutableMap.MutableEntry<St
         return true
     }
 
-    override fun iterator() = map.iterator()
+    override fun iterator(): Iterator<Map.Entry<StatType, Stat>> = map.iterator()
 }

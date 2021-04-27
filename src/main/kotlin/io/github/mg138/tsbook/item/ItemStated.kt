@@ -1,6 +1,7 @@
 package io.github.mg138.tsbook.item
 
 import io.github.mg138.tsbook.item.attribute.Stated
+import io.github.mg138.tsbook.item.attribute.stat.Stat
 import io.github.mg138.tsbook.item.attribute.stat.StatMap
 import io.github.mg138.tsbook.item.attribute.stat.StatType
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
@@ -16,21 +17,12 @@ open class ItemStated(
 
     private fun putStatsInLore() {
         for (i in lore.indices) {
-            val s = lore[i]
             stats.forEach { (type, _) ->
-                StatTables.placeholders[type]?.let {
-                    if (s.contains(it)) {
-                        stats.translate(type)?.let { translated ->
-                            lore[i] = s.replace(it, translated)
-                        }
-                    }
-                }
+                lore[i] = stats.applyPlaceholder(lore[i], type)
             }
         }
     }
 
     override fun getStatOut(type: StatType) = stats.getStatOut(type)
-    override fun getStat(type: StatType): T? {
-        TODO("Not yet implemented")
-    }
+    override fun getStat(type: StatType) = stats.getStat(type)
 }
