@@ -1,16 +1,16 @@
 package io.github.mg138.tsbook.item.attribute.stat.util
 
-import io.github.mg138.tsbook.item.attribute.stat.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.StatType
-import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.Stated
+import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import kotlin.math.abs
 
 object StatUtil {
-    private fun filter(template: Set<StatType>, stats: StatMap): StatMap {
+    private fun filter(filter: Set<StatType>, stats: StatMap): StatMap {
         val result = StatMap()
 
-        template.forEach { type ->
-            stats.getStat(type)?.let { result[type] = it }
+        filter.forEach { type ->
+            stats.getStat(type)?.let { result.putStat(type, it) }
         }
 
         return result
@@ -40,11 +40,13 @@ object StatUtil {
         return filter(StatTypes.effectChances, stats)
     }
 
-    fun combine(identifiedStats: List<IdentifiedStat>): StatMap {
+    fun combine(statList: List<Stated>): StatMap {
         val result = StatMap()
 
-        identifiedStats.forEach { itemStat ->
-            itemStat.forEach { (type, stat) -> result[type] = stat + result.getStat(type) }
+        statList.forEach {
+            it.forEach { (type, stat) ->
+                result.putStat(type, stat + result.getStat(type))
+            }
         }
         
         return result
@@ -77,7 +79,6 @@ object StatUtil {
 
     /**
      * Calculates the damage
-     *
      * @return
      * - defense > 0: damage gets smaller, but limited at 0 (never goes under 0)
      * - defense < 0: buffs the damage up to 2x

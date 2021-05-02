@@ -1,6 +1,6 @@
-package io.github.mg138.tsbook.item.data
+package io.github.mg138.tsbook.item.attribute.stat.identified.data
 
-import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import java.util.HashMap
 
 class Identification : HashMap<StatType, Float>() {

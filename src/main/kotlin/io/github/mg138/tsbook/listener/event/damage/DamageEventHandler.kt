@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause
 import io.github.mg138.tsbook.entity.effect.data.StatusType
 import org.bukkit.event.entity.EntityDamageByEntityEvent
-import io.github.mg138.tsbook.item.attribute.stat.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
 import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData

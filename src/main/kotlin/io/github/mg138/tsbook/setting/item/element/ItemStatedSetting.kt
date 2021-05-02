@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.setting.item.element
 
-import io.github.mg138.tsbook.item.attribute.Identifier
-import io.github.mg138.tsbook.item.attribute.stat.StatMap
+import io.github.mg138.tsbook.item.attribute.data.Identifier
+import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
 import io.github.mg138.tsbook.item.util.StatFactory
 import org.bukkit.configuration.file.YamlConfiguration
 

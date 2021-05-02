@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat.data
 
 import java.util.*
 
@@ -22,7 +22,7 @@ data class StatRange(var max: Double, var min: Double) : Stat {
         .replace("[max]", max.toLong().toString())
 
     override operator fun plus(increment: Stat?): StatRange {
-        if (increment == null) return this.copy()
+        if (increment == null) return this
         if (increment !is StatRange) throw IllegalArgumentException(incompatible(increment))
 
         return this.copy().also {
@@ -32,7 +32,7 @@ data class StatRange(var max: Double, var min: Double) : Stat {
     }
 
     override operator fun minus(decrement: Stat?): StatRange {
-        if (decrement == null) return this.copy()
+        if (decrement == null) return this
         if (decrement !is StatRange) throw IllegalArgumentException(incompatible(decrement))
 
         return this.copy().also {

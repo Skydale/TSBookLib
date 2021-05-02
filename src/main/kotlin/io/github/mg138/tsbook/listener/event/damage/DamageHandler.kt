@@ -3,13 +3,13 @@ package io.github.mg138.tsbook.listener.event.damage
 import io.github.mg138.tsbook.command.admin.DebugMode
 import io.github.mg138.tsbook.entity.effect.EffectHandler
 import io.github.mg138.tsbook.entity.effect.data.StatusType
-import io.github.mg138.tsbook.item.attribute.stat.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTypes
 import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
-import io.github.mg138.tsbook.item.data.IdentifiedStat
-import io.github.mg138.tsbook.item.storage.UUIDArrayTag
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
+import io.github.mg138.tsbook.item.data.UUIDArrayTag
 import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
 import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator

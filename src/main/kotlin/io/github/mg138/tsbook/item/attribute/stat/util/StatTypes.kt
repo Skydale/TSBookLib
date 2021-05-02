@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.item.attribute.stat.util
 
-import io.github.mg138.tsbook.item.attribute.stat.StatType
-import io.github.mg138.tsbook.item.attribute.stat.StatType.*
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType.*
 import java.util.*
 
 object StatTypes {

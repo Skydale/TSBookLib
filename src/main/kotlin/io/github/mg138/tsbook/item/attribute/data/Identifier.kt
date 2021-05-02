@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.attribute
+package io.github.mg138.tsbook.item.attribute.data
 
 class Identifier(val key: String, val name: String) {
     fun sameKey(key: String) = this.key == key

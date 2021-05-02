@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.setting
 
-import io.github.mg138.tsbook.item.attribute.ItemRarity
-import io.github.mg138.tsbook.item.attribute.ItemType
-import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.data.ItemRarity
+import io.github.mg138.tsbook.item.attribute.data.ItemType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import io.github.mg138.tsbook.setting.config.BookSetting
 import io.github.mg138.tsbook.setting.util.Section
 import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
@@ -11,7 +11,6 @@ import io.github.mg138.tsbook.setting.mob.MobConfig
 import io.github.mg138.tsbook.setting.util.ConfigBuilder
 import io.github.mg138.tsbook.setting.util.translate.TranslatableSetting
 import io.github.mg138.tsbook.util.ComponentUtil
-import io.github.mg138.tsbook.util.StringUtil
 import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.HoverEvent

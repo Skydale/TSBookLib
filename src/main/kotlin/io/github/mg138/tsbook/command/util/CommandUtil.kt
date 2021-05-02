@@ -3,7 +3,7 @@ package io.github.mg138.tsbook.command.util
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.command.util.error.CommandError
 import io.github.mg138.tsbook.item.ItemBase
-import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.BookConfig
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import io.github.mg138.tsbook.setting.item.element.ItemSetting

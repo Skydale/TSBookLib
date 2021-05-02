@@ -1,11 +1,11 @@
 package io.github.mg138.tsbook.item.util
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.data.IdentifiedStat
-import io.github.mg138.tsbook.item.data.Identification
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
 import io.github.mg138.tsbook.item.ItemBase
-import io.github.mg138.tsbook.item.storage.IdentificationTag
-import io.github.mg138.tsbook.item.storage.UUIDTag
+import io.github.mg138.tsbook.item.data.IdentificationTag
+import io.github.mg138.tsbook.item.data.UUIDTag
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack

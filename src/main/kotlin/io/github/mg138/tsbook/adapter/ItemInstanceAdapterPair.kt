@@ -8,9 +8,9 @@ import com.google.gson.stream.JsonWriter
 import dev.reactant.reactant.core.component.Component
 import dev.reactant.reactant.core.dependency.layers.SystemLevel
 import dev.reactant.reactant.extra.parser.gsonadapters.TypeAdapterPair
-import io.github.mg138.tsbook.item.data.Identification
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
 import io.github.mg138.tsbook.item.ItemBase
-import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.item.ItemConfig
 import java.lang.reflect.Type
 import java.util.*

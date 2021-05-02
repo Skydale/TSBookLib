@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.setting.item
 
-import io.github.mg138.tsbook.item.attribute.Identifier
+import io.github.mg138.tsbook.item.attribute.data.Identifier
 import io.github.mg138.tsbook.setting.item.element.ItemSetting
 import io.github.mg138.tsbook.setting.item.element.UnidentifiedSetting
 import java.lang.IllegalArgumentException

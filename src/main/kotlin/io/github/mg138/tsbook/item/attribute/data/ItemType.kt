@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.attribute
+package io.github.mg138.tsbook.item.attribute.data
 
 import io.github.mg138.tsbook.setting.BookConfig.language
 import java.lang.IllegalArgumentException

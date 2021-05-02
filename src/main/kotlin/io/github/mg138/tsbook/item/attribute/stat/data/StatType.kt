@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat.data
 
 import io.github.mg138.tsbook.setting.BookConfig.language
 

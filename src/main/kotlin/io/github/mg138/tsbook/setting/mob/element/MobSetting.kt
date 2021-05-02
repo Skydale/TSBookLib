@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.setting.mob.element
 
-import io.github.mg138.tsbook.item.attribute.stat.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.StatSingle
-import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
+import io.github.mg138.tsbook.item.attribute.stat.data.StatSingle
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import org.bukkit.configuration.ConfigurationSection
 
 class MobSetting(val stats: StatMap) {
@@ -12,7 +12,7 @@ class MobSetting(val stats: StatMap) {
 
             for (literalType in setting.getKeys(false)) {
                 val type = StatType.valueOf(literalType.toUpperCase())
-                stats[type] = StatSingle(setting.getDouble(literalType))
+                stats.putStat(type, StatSingle(setting.getDouble(literalType)))
             }
             return MobSetting(stats)
         }

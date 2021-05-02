@@ -1,8 +1,8 @@
-package io.github.mg138.tsbook.item.storage
+package io.github.mg138.tsbook.item.data
 
 import com.google.gson.JsonSyntaxException
 import io.github.mg138.tsbook.Book.Companion.gson
-import io.github.mg138.tsbook.item.data.Identification
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType
 import java.io.ByteArrayOutputStream

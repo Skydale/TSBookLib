@@ -4,7 +4,7 @@ import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.item.util.ItemUtil
 import io.github.mg138.tsbook.item.util.ItemUtil.getStringTag
 import io.github.mg138.tsbook.item.util.ItemUtil.getUUID
-import io.github.mg138.tsbook.item.storage.UUIDArrayTag
+import io.github.mg138.tsbook.item.data.UUIDArrayTag
 import io.github.mg138.tsbook.players.ArcticGlobalDataService
 import io.github.mg138.tsbook.players.data.PlayerData
 import org.bukkit.Material

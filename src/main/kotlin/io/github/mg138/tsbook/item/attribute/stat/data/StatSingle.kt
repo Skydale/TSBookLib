@@ -1,4 +1,4 @@
-package io.github.mg138.tsbook.item.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat.data
 
 data class StatSingle(private var stat: Double) : Stat {
     override fun getStat() = stat
@@ -6,7 +6,7 @@ data class StatSingle(private var stat: Double) : Stat {
     override fun applyPlaceholder(string: String) = string.replace("[stat]", stat.toInt().toString())
 
     override operator fun plus(increment: Stat?): StatSingle {
-        if (increment == null) return this.copy()
+        if (increment == null) return this
         if (increment !is StatSingle) throw IllegalArgumentException(incompatible(increment))
 
         return this.copy().also {
@@ -15,7 +15,7 @@ data class StatSingle(private var stat: Double) : Stat {
     }
 
     override operator fun minus(decrement: Stat?): StatSingle {
-        if (decrement == null) return this.copy()
+        if (decrement == null) return this
         if (decrement !is StatSingle) throw IllegalArgumentException(incompatible(decrement))
 
         return this.copy().also {

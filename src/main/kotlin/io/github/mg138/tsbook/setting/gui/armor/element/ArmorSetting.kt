@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.setting.gui.armor.element
 
-import io.github.mg138.tsbook.item.attribute.ItemType
+import io.github.mg138.tsbook.item.attribute.data.ItemType
 import org.bukkit.configuration.ConfigurationSection
 
 class ArmorSetting(val itemType: ItemType) {

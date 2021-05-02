@@ -1,11 +1,12 @@
 package io.github.mg138.tsbook.item.attribute.stat.util
 
-import io.github.mg138.tsbook.item.attribute.stat.StatType
+import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import java.util.*
 
 object StatTables {
     private fun constructPlaceholders(): EnumMap<StatType, String> {
         val map = EnumMap<StatType, String>(StatType::class.java)
+
         map[StatType.CHANCE_CRITICAL] = "[chance-critical]"
         map[StatType.POWER_CRITICAL] = "[power-critical]"
         map[StatType.DAMAGE_PHYSICAL] = "[damage-physical]"
@@ -34,10 +35,13 @@ object StatTables {
         map[StatType.CHANCE_NAUSEOUS] = "[chance-nauseous]"
         map[StatType.POWER_NAUSEOUS] = "[power-nauseous]"
         map[StatType.AFFINITY_ELEMENT] = "[affinity-element]"
+
         return map
     }
+
     private fun constructDamageToDefense(): EnumMap<StatType, StatType> {
         val map = EnumMap<StatType, StatType>(StatType::class.java)
+
         map[StatType.DAMAGE_PHYSICAL] = StatType.DEFENSE_PHYSICAL
         map[StatType.DAMAGE_TEMPUS] = StatType.DEFENSE_TEMPUS
         map[StatType.DAMAGE_TERRA] = StatType.DEFENSE_TERRA
@@ -46,6 +50,7 @@ object StatTables {
         map[StatType.DAMAGE_UMBRA] = StatType.DEFENSE_UMBRA
         map[StatType.DAMAGE_LUMEN] = StatType.DEFENSE_LUMEN
         map[StatType.DAMAGE_TRUE] = StatType.DEFENSE_TRUE
+
         return map
     }
 

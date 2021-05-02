@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.item.util
 
-import io.github.mg138.tsbook.item.attribute.stat.*
-import io.github.mg138.tsbook.item.data.Identification
-import io.github.mg138.tsbook.item.data.IdentifiedStat
+import io.github.mg138.tsbook.item.attribute.stat.data.*
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
+import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
 import io.github.mg138.tsbook.setting.item.element.ItemStatedSetting
 import org.bukkit.configuration.ConfigurationSection
 import java.util.*
@@ -44,7 +44,7 @@ object StatFactory {
         val stats = StatMap()
 
         setting.getKeys(false).forEach {
-            stats[StatType.valueOf(it)] = stat(it, setting)
+            stats.putStat(StatType.valueOf(it), stat(it, setting))
         }
 
         return stats
