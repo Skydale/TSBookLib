@@ -8,15 +8,15 @@ import kotlin.reflect.full.findAnnotation
 
 open class TranslatableSetting(private val setting: ConfigurationSection, val placeholders: MutableMap<String, String> = HashMap()) {
     private fun <T : Any> getSectionAnnotation(lang: KClass<T>) = lang.findAnnotation<Section>()
-        ?: throw IllegalArgumentException("LanguageSetting doesn't have ${Section::class.simpleName} annotation.")
-
-    private fun getSection(section: Section) = this.getSection(section.name)
+        ?: throw IllegalArgumentException("Class doesn't have ${Section::class.simpleName} annotation.")
 
     fun <T : Any> getSection(lang: KClass<T>) = this.getSection(this.getSectionAnnotation(lang))
 
+    private fun getSection(section: Section) = this.getSection(section.name)
+
     fun getSection(path: String): TranslatableSetting {
-        try {
-            return TranslatableSetting(setting.getConfigurationSection(path)!!, placeholders)
+        return try {
+            TranslatableSetting(setting.getConfigurationSection(path)!!, placeholders)
         } catch (e: KotlinNullPointerException) {
             throw IllegalArgumentException("${setting.name} doesn't contain $path")
         }
