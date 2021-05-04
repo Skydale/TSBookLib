@@ -6,25 +6,24 @@ import java.nio.ByteBuffer
 import java.util.*
 
 object UUIDTag : PersistentDataType<ByteArray, UUID> {
-    override fun getPrimitiveType(): Class<ByteArray> {
-        return ByteArray::class.java
-    }
-
-    override fun getComplexType(): Class<UUID> {
-        return UUID::class.java
-    }
+    override fun getPrimitiveType() = ByteArray::class.java
+    override fun getComplexType() = UUID::class.java
 
     override fun toPrimitive(complex: UUID, context: PersistentDataAdapterContext): ByteArray {
-        val bb = ByteBuffer.wrap(ByteArray(16))
-        bb.putLong(complex.mostSignificantBits)
-        bb.putLong(complex.leastSignificantBits)
-        return bb.array()
+        val buffer = ByteBuffer.wrap(ByteArray(16))
+
+        buffer.putLong(complex.mostSignificantBits)
+        buffer.putLong(complex.leastSignificantBits)
+
+        return buffer.array()
     }
 
     override fun fromPrimitive(primitive: ByteArray, context: PersistentDataAdapterContext): UUID {
-        val bb = ByteBuffer.wrap(primitive)
-        val firstLong = bb.long
-        val secondLong = bb.long
-        return UUID(firstLong, secondLong)
+        val buffer = ByteBuffer.wrap(primitive)
+
+        val first = buffer.long
+        val second = buffer.long
+
+        return UUID(first, second)
     }
 }

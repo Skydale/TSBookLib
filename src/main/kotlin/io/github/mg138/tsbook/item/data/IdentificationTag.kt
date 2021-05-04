@@ -1,59 +1,30 @@
 package io.github.mg138.tsbook.item.data
 
-import com.google.gson.JsonSyntaxException
 import io.github.mg138.tsbook.Book.Companion.gson
 import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
 import org.bukkit.persistence.PersistentDataAdapterContext
 import org.bukkit.persistence.PersistentDataType
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.ObjectOutputStream
 
 object IdentificationTag : PersistentDataType<String, Identification> {
-    override fun getPrimitiveType(): Class<String> {
-        return String::class.java
-    }
+    override fun getPrimitiveType() = String::class.java
+    override fun getComplexType() = Identification::class.java
 
-    override fun getComplexType(): Class<Identification> {
-        return Identification::class.java
-    }
+    override fun toPrimitive(complex: Identification, context: PersistentDataAdapterContext): String {
+        val result = gson.toJson(complex)
 
-    override fun toPrimitive(
-        identification: Identification,
-        persistentDataAdapterContext: PersistentDataAdapterContext
-    ): String {
-        val bos = ByteArrayOutputStream()
-        var result: String? = null
-        try {
-            val oos = ObjectOutputStream(bos)
-            result = gson.toJson(identification)
-            oos.writeObject(result)
-            oos.flush()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            try {
-                bos.close()
-            } catch (e: IOException) {
-                e.printStackTrace()
+        ByteArrayOutputStream().use { bos ->
+            ObjectOutputStream(bos).let {
+                it.writeObject(result)
+                it.flush()
             }
         }
-        assert(result != null)
-        return result!!
+
+        return result
     }
 
-    override fun fromPrimitive(
-        string: String,
-        persistentDataAdapterContext: PersistentDataAdapterContext
-    ): Identification {
-        var result: Identification? = null
-        try {
-            result = gson.fromJson(string, Identification::class.java)
-        } catch (e: JsonSyntaxException) {
-            e.printStackTrace()
-            println("The error string: $string")
-        }
-        assert(result != null)
-        return result!!
+    override fun fromPrimitive(primitive: String, context: PersistentDataAdapterContext): Identification {
+        return gson.fromJson(primitive, Identification::class.java)
     }
 }

@@ -6,31 +6,32 @@ import java.nio.ByteBuffer
 import java.util.*
 
 object UUIDArrayTag : PersistentDataType<ByteArray, Array<UUID>> {
-    override fun getPrimitiveType(): Class<ByteArray> {
-        return ByteArray::class.java
-    }
-
-    override fun getComplexType(): Class<Array<UUID>> {
-        return Array<UUID>::class.java
-    }
+    override fun getPrimitiveType() = ByteArray::class.java
+    override fun getComplexType() = Array<UUID>::class.java
 
     override fun toPrimitive(complex: Array<UUID>, context: PersistentDataAdapterContext): ByteArray {
-        val bb = ByteBuffer.wrap(ByteArray(16 * complex.size))
-        for (uuid in complex) {
-            bb.putLong(uuid.mostSignificantBits)
-            bb.putLong(uuid.leastSignificantBits)
+        val buffer = ByteBuffer.wrap(ByteArray(16 * complex.size))
+
+        complex.forEach {
+            buffer.putLong(it.mostSignificantBits)
+            buffer.putLong(it.leastSignificantBits)
         }
-        return bb.array()
+
+        return buffer.array()
     }
 
     override fun fromPrimitive(primitive: ByteArray, context: PersistentDataAdapterContext): Array<UUID> {
-        val uuids: MutableList<UUID> = ArrayList()
-        val bb = ByteBuffer.wrap(primitive)
-        for (i in 0 until primitive.size / 16) {
-            val firstLong = bb.long
-            val secondLong = bb.long
-            uuids.add(UUID(firstLong, secondLong))
+        val size = primitive.size / 16
+        val uuids: MutableList<UUID> = ArrayList(size)
+
+        val buffer = ByteBuffer.wrap(primitive)
+
+        for (i in 0 until size) {
+            val first = buffer.long
+            val second = buffer.long
+            uuids[i] = UUID(first, second)
         }
+
         return uuids.toTypedArray()
     }
 }
