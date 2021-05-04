@@ -21,11 +21,11 @@ object ItemConfig {
     fun getItemNames(key: String) = this.getAllItemIds().filter { it.sameKey(key) }.map { it.name }
 
     @Throws(IllegalArgumentException::class)
-    fun getItem(id: Identifier) = items[id] ?: throw IllegalArgumentException("$id doesn't exist.")
+    fun getItemWithId(id: Identifier) = items[id] ?: throw IllegalArgumentException("$id doesn't exist.")
 
     @Throws(IllegalArgumentException::class)
-    fun getItem(id: String) = this.getItem(Identifier.PresetKey.item(id))
+    fun getItem(id: String) = this.getItemWithId(Identifier.PresetKey.item(id))
 
     @Throws(IllegalArgumentException::class)
-    fun getUnid(id: String) = this.getItem(Identifier.PresetKey.unid(id)) as UnidentifiedSetting
+    fun getUnid(id: String) = this.getItemWithId(Identifier.PresetKey.unid(id)) as UnidentifiedSetting
 }

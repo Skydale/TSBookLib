@@ -6,14 +6,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 open class ItemBase(protected val setting: ItemSetting, val uuid: UUID) {
-    override fun toString(): String {
-        return "{" +
-                "\n  display: {" +
-                "\n    name: $name," +
-                "\n    lore: $lore" +
-                "\n  }" +
-                "\n}"
-    }
+    override fun toString() = id.toString()
 
     val name = setting.name
     val lore = setting.lore.toMutableList()

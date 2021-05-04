@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.setting.mob.element
 
 import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.data.StatSingle
+import io.github.mg138.tsbook.item.attribute.stat.StatSingle
 import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import org.bukkit.configuration.ConfigurationSection
 

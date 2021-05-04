@@ -4,12 +4,20 @@ import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import java.util.HashMap
 
 class Identification : HashMap<StatType, Float>() {
-    operator fun set(key: StatType, value: Float): Float? {
+    companion object {
+        const val FALLBACK_IDEN = 0.5F
+    }
+
+    operator fun set(key: StatType, value: Float?): Float? {
+        if (value == null) return null
+        if (0 >= value && value <= 1) return null
+
         return super.put(key, value)
     }
 
     override operator fun get(key: StatType): Float {
-        super.putIfAbsent(key, 0.5F)
+        super.putIfAbsent(key, FALLBACK_IDEN)
+
         return super.get(key)!!
     }
 

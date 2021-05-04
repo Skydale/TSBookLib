@@ -1,5 +1,8 @@
-package io.github.mg138.tsbook.item.util
+package io.github.mg138.tsbook.item.attribute.stat.util
 
+import io.github.mg138.tsbook.item.attribute.stat.Stat
+import io.github.mg138.tsbook.item.attribute.stat.StatRange
+import io.github.mg138.tsbook.item.attribute.stat.StatSingle
 import io.github.mg138.tsbook.item.attribute.stat.data.*
 import io.github.mg138.tsbook.item.attribute.stat.identified.data.Identification
 import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat

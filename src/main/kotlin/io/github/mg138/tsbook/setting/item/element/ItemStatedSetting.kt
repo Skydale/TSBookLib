@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.setting.item.element
 
 import io.github.mg138.tsbook.item.attribute.data.Identifier
 import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
-import io.github.mg138.tsbook.item.util.StatFactory
+import io.github.mg138.tsbook.item.attribute.stat.util.StatFactory
 import org.bukkit.configuration.file.YamlConfiguration
 
 class ItemStatedSetting(setting: ItemSetting, val stats: StatMap) : ItemSetting(setting) {

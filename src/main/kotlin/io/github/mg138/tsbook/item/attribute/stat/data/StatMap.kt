@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.item.attribute.stat.data
 
-import io.github.mg138.tsbook.item.attribute.stat.MutableStated
-import io.github.mg138.tsbook.item.attribute.stat.Stated
+import io.github.mg138.tsbook.item.attribute.stat.Stat
 import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
 import java.lang.IllegalArgumentException
 import java.util.*
@@ -9,7 +8,7 @@ import java.util.*
 open class StatMap() : MutableStated {
     protected val map = EnumMap<StatType, Stat>(StatType::class.java)
 
-    constructor(stats: Stated) : this() {
+    constructor(stats: StatMap) : this() {
         this.putAll(stats)
     }
 
@@ -26,12 +25,13 @@ open class StatMap() : MutableStated {
 
     override fun putStat(type: StatType, stat: Stat) = map.put(type, stat)
     override fun remove(type: StatType) = map.remove(type)
-    override fun putAll(stats: Stated) {
+    fun putAll(stats: StatMap) {
         stats.forEach { (type, stat) ->
             this.putStat(type, stat)
         }
     }
-    override fun addAll(stats: Stated) {
+
+    fun addAll(stats: StatMap) {
         stats.forEach { (type, stat) ->
             this.putStat(type, stat + this.getStat(type))
         }
@@ -46,10 +46,11 @@ open class StatMap() : MutableStated {
             }
         } ?: string
     }
+
     open fun translate(type: StatType) = this.getStat(type)
-            ?.applyPlaceholder(type.getFormat())
-            ?.replace("[name]", type.toString())
-            ?.replace("[percentage]", "100%")
+        ?.applyPlaceholder(type.getFormat())
+        ?.replace("[name]", type.toString())
+        ?.replace("[percentage]", "100%")
 
     // Any
 
@@ -68,14 +69,15 @@ open class StatMap() : MutableStated {
     // Iterable
 
     override fun iterator() = object : Iterator<Pair<StatType, Stat>> {
-        val keys = map.keys.iterator()
+        val statMap = this@StatMap
+        val keys = statMap.map.keys.iterator()
 
         override fun hasNext() = keys.hasNext()
 
         override fun next() = keys.next().let { type ->
             getStat(type)?.let {
                 Pair(type, it)
-            } ?: throw IllegalArgumentException("${this@StatMap::class.simpleName} doesn't contain ${type.name}!")
+            } ?: throw IllegalArgumentException("${statMap::class.simpleName} doesn't contain ${type.name}!")
         }
     }
 }

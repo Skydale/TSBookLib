@@ -1,7 +1,6 @@
-package io.github.mg138.tsbook.item.attribute.stat
+package io.github.mg138.tsbook.item.attribute.stat.data
 
-import io.github.mg138.tsbook.item.attribute.stat.data.Stat
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
+import io.github.mg138.tsbook.item.attribute.stat.Stat
 
 interface Stated : Iterable<Pair<StatType, Stat>> {
     fun types(): Set<StatType>
