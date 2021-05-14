@@ -2,7 +2,7 @@ package io.github.mg138.tsbook.entity.effect.preset
 
 import dev.reactant.reactant.core.component.Component
 import io.github.mg138.tsbook.entity.effect.pattern.DamagingEffect
-import io.github.mg138.tsbook.entity.effect.status.StatusType
+import io.github.mg138.tsbook.entity.effect.EffectType
 import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -21,5 +21,5 @@ class Bleeding : DamagingEffect(
         )
     }
 ) {
-    override fun getType() = StatusType.PresetTypes.bleeding
+    override fun getType() = EffectType.PresetTypes.bleeding
 }

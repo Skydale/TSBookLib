@@ -1,15 +1,22 @@
 package io.github.mg138.tsbook.entity.effect.pattern
 
-import io.github.mg138.tsbook.entity.effect.status.EntityStatus
-import io.github.mg138.tsbook.entity.effect.RunningEffect
+import io.github.mg138.tsbook.entity.effect.ActiveEffect
 import io.github.mg138.tsbook.entity.effect.Effect
-import org.bukkit.scheduler.BukkitRunnable
+import io.github.mg138.tsbook.entity.effect.Status
+import io.github.mg138.tsbook.entity.effect.util.EffectManager
+
 
 abstract class FlagEffect : Effect {
-    override fun makeEffect(entityStatus: EntityStatus): RunningEffect {
-        val runnable = object : BukkitRunnable() {
-            override fun run() = this.cancel()
-        }
-        return RunningEffect(runnable, entityStatus.status.duration, 0L)
+    open class ActiveFlagEffect(
+        effect: Effect,
+        status: Status,
+        effectManager: EffectManager
+    ) : ActiveEffect(effect, status.target, status.duration, 0L, effectManager) {
+        override fun tick() = this.deactivate()
+    }
+
+    override fun makeEffect(status: Status, effectManager: EffectManager): ActiveEffect {
+        return ActiveFlagEffect(this, status, effectManager)
     }
 }
+

@@ -2,52 +2,55 @@ package io.github.mg138.tsbook.entity.effect.preset
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook
 import dev.reactant.reactant.core.component.Component
-import io.github.mg138.tsbook.entity.effect.status.EntityStatus
+import io.github.mg138.tsbook.entity.effect.ActiveEffect
+import io.github.mg138.tsbook.entity.effect.util.EffectManager
+import io.github.mg138.tsbook.entity.effect.Status
 import io.github.mg138.tsbook.entity.effect.Effect
-import io.github.mg138.tsbook.entity.effect.RunningEffect
-import io.github.mg138.tsbook.entity.effect.status.StatusType
+import io.github.mg138.tsbook.entity.effect.EffectType
 import io.github.mg138.tsbook.listener.event.damage.DamageHandler
 import io.github.mg138.tsbook.item.attribute.stat.data.StatType
-import org.bukkit.scheduler.BukkitRunnable
+import org.bukkit.entity.LivingEntity
 
 @Component
 class Paralysis : Effect {
-    override fun makeEffect(entityStatus: EntityStatus): RunningEffect {
-        val target = entityStatus.target
-        val status = entityStatus.status
-        val power = status.power
-        val duration = status.duration
+    fun paralysisEffect(entity: LivingEntity, look: WrapperPlayServerEntityLook) {
+        val loc = entity.location
+        look.yaw = (loc.yaw + 0.5f + 360f) % 360
+        look.pitch = loc.pitch
+        look.onGround = entity.isOnGround
+        look.broadcastPacket()
+    }
 
-        val period = 1L
+    override fun makeEffect(status: Status, effectManager: EffectManager): ActiveEffect {
+        return object : ActiveEffect(this, status.target, 0L, 1L, effectManager) {
+            val power = status.power
+            val duration = status.duration
 
-        val look = WrapperPlayServerEntityLook()
-        look.entityID = target.entityId
+            val look = WrapperPlayServerEntityLook().also {
+                it.entityID = entity.entityId
+            }
 
-        val runnable = object : BukkitRunnable() {
             var i = 0L
 
-            override fun run() {
+            override fun tick() {
                 if (i >= duration) {
-                    this.cancel(); return
+                    cancelAndRemove()
+                    return
                 }
 
                 if (i % 4 == 0L) {
-                    if (!DamageHandler.simpleDamage(target, power, StatType.DAMAGE_THUNDER)) {
-                        this.cancel(); return
+                    if (!DamageHandler.simpleDamage(entity, power, StatType.DAMAGE_THUNDER)) {
+                        cancelAndRemove()
+                        return
                     }
                 }
 
-                val loc = target.location
-                look.yaw = (loc.yaw + 0.5f + 360f) % 360
-                look.pitch = loc.pitch
-                look.onGround = target.isOnGround
-                look.broadcastPacket()
+                paralysisEffect(entity, look)
 
                 i += period
             }
         }
-        return RunningEffect(runnable, 0L, period)
     }
 
-    override fun getType() = StatusType.PresetTypes.paralysis
+    override fun getType() = EffectType.PresetTypes.paralysis
 }
