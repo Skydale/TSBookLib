@@ -4,6 +4,7 @@ class ActiveEffects : Iterable<Map.Entry<EffectType, ActiveEffect>> {
     private val map: MutableMap<EffectType, ActiveEffect> = HashMap()
 
     val types = map.keys
+    val effects = map.values
 
     operator fun get(type: EffectType) = map[type]
 
@@ -29,7 +30,7 @@ class ActiveEffects : Iterable<Map.Entry<EffectType, ActiveEffect>> {
     }
 
     fun clear() {
-        map.values.forEach(ActiveEffect::deactivate)
+        effects.forEach(ActiveEffect::deactivate)
         map.clear()
     }
 

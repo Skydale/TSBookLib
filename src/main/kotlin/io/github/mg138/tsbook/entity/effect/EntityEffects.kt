@@ -1,5 +1,6 @@
 package io.github.mg138.tsbook.entity.effect
 
+import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 
 class EntityEffects {
@@ -9,11 +10,19 @@ class EntityEffects {
 
     operator fun get(entity: LivingEntity, type: EffectType) = this[entity][type]
 
-    fun apply(effect: ActiveEffect) = this[effect.entity].apply(effect)
+    fun apply(effect: ActiveEffect) = this[effect.property.target].apply(effect)
 
-    fun has(entity: LivingEntity, type: EffectType) = map[entity]?.has(type) ?: false
+    fun has(entity: Entity, type: EffectType): Boolean {
+        if (entity !is LivingEntity) return false
 
-    fun hasEffects(entity: LivingEntity) = map[entity]?.isNotEmpty() ?: false
+        return map[entity]?.has(type) ?: false
+    }
+
+    fun hasEffects(entity: Entity): Boolean {
+        if (entity !is LivingEntity) return false
+
+        return map[entity]?.isNotEmpty() ?: false
+    }
 
     fun remove(entity: LivingEntity, type: EffectType) = map[entity]?.remove(type)
 

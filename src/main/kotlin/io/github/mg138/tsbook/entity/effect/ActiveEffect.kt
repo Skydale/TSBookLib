@@ -2,15 +2,14 @@ package io.github.mg138.tsbook.entity.effect
 
 import io.github.mg138.tsbook.Book
 import io.github.mg138.tsbook.entity.effect.util.EffectManager
-import org.bukkit.entity.LivingEntity
 import org.bukkit.scheduler.BukkitRunnable
 
 abstract class ActiveEffect(
     val effect: Effect,
-    val entity: LivingEntity,
-    val delay: Long,
+    val property: EffectProperty,
     val period: Long,
-    val effectManager: EffectManager
+    private val delay: Long,
+    private val effectManager: EffectManager
 ) {
     private val runnable = object : BukkitRunnable() {
         override fun run() {
@@ -19,7 +18,7 @@ abstract class ActiveEffect(
 
         override fun cancel() {
             deactivate()
-            effectManager.remove(entity, effectType)
+            effectManager.remove(property.target, effectType)
         }
     }
 

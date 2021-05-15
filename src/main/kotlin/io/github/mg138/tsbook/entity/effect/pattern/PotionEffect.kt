@@ -1,38 +1,47 @@
 package io.github.mg138.tsbook.entity.effect.pattern
 
 import io.github.mg138.tsbook.entity.effect.util.EffectManager
-import io.github.mg138.tsbook.entity.effect.Status
+import io.github.mg138.tsbook.entity.effect.EffectProperty
 import io.github.mg138.tsbook.entity.effect.Effect
 import io.github.mg138.tsbook.entity.effect.ActiveEffect
+import io.github.mg138.tsbook.entity.effect.pattern.active.ActiveFlagEffect
 import org.bukkit.potion.PotionEffectType
 
 abstract class PotionEffect(
     private val potionType: PotionEffectType,
-    private val duration: (Status) -> Int = { 2147483647 },
-    private val amplifier: (Status) -> Int = { 0 },
+    private val amplifier: (EffectProperty) -> Int = { 0 },
     private val ambient: Boolean = false,
     private val particles: Boolean = false,
     private val icon: Boolean = true
 ) : Effect {
+    companion object {
+        private const val duration = 2147483647
+    }
+
     class ActivePotionEffect(
         effect: Effect,
-        status: Status,
+        property: EffectProperty,
         effectManager: EffectManager,
         private val potionType: PotionEffectType
-    ) : FlagEffect.ActiveFlagEffect(effect, status, effectManager) {
+    ) : ActiveFlagEffect(effect, property, effectManager) {
         override fun deactivate() {
             super.deactivate()
-            entity.removePotionEffect(potionType)
+            property.target.removePotionEffect(potionType)
         }
     }
 
-    override fun makeEffect(status: Status, effectManager: EffectManager): ActiveEffect {
-        val target = status.target
-
-        target.addPotionEffect(
-            org.bukkit.potion.PotionEffect(potionType, duration(status), amplifier(status), ambient, particles, icon)
+    override fun makeEffect(property: EffectProperty, effectManager: EffectManager): ActiveEffect {
+        property.target.addPotionEffect(
+            org.bukkit.potion.PotionEffect(
+                potionType,
+                duration,
+                amplifier(property),
+                ambient,
+                particles,
+                icon
+            )
         )
 
-        return ActivePotionEffect(this, status, effectManager, potionType)
+        return ActivePotionEffect(this, property, effectManager, potionType)
     }
 }

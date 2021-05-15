@@ -10,7 +10,7 @@ import org.bukkit.Particle
 class Burning : DamagingEffect(
     StatType.DAMAGE_IGNIS,
     10L,
-    {
+    visualEffect = {
         it.world.spawnParticle(Particle.LAVA, it.location, 6)
     }
 ) {

@@ -12,7 +12,7 @@ import org.bukkit.Particle
 class Bleeding : DamagingEffect(
     StatType.DAMAGE_BLEED,
     7L,
-    {
+    visualEffect = {
         it.world.spawnParticle(
             Particle.BLOCK_DUST,
             it.location,

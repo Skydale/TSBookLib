@@ -9,7 +9,7 @@ import org.bukkit.attribute.Attribute
 @Component
 class Slowness : AttributeModifier(
     Attribute.GENERIC_MOVEMENT_SPEED,
-    { old, status ->
+    modified = { old, status ->
         StatUtil.calculateModifier(old, -1 * status.power)
     }
 ) {
