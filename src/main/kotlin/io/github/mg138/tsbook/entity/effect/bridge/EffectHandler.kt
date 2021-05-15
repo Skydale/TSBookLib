@@ -14,9 +14,9 @@ class EffectHandler(
 ) {
     private val registeredEffects: Map<EffectType, Effect> = effects.associateBy { it.getType() }
 
-    val statusTypes = registeredEffects.keys
+    val effectTypes = registeredEffects.keys
 
-    val statusNames = this.statusTypes.map { it.name }
+    val effectNames = this.effectTypes.map { it.name }
 
     fun effects() = registeredEffects.values
 
