@@ -7,8 +7,8 @@ object ComponentUtil {
     fun replace(
         string: String,
         matchers: Array<String>,
-        whenNotMatch: (BaseComponent, String) -> Unit,
-        whenMatch: (BaseComponent, String) -> Unit
+        fallback: (BaseComponent, String) -> Unit,
+        matched: (BaseComponent, String) -> Unit
     ): BaseComponent {
         val component = TextComponent()
 
@@ -17,14 +17,14 @@ object ComponentUtil {
 
         var i = 0
         while (i < length) {
-            val s = StringUtil.match(i, string, matchers)
+            val s = StringUtil.matches(i, string, matchers)
 
             if (s == null) {
                 buffer.append(string[i])
                 i++
             } else {
-                whenNotMatch(component, buffer.toString())
-                whenMatch(component, s)
+                fallback(component, buffer.toString())
+                matched(component, s)
 
                 buffer.setLength(0)
                 i += s.length
@@ -32,7 +32,7 @@ object ComponentUtil {
         }
 
         if (buffer.isNotEmpty()) {
-            whenNotMatch(component, buffer.toString())
+            fallback(component, buffer.toString())
         }
         return component
     }

@@ -75,5 +75,4 @@ public class WrapperPlayServerWindowItems extends AbstractPacket {
     public void setSlotData(List<ItemStack> value) {
         handle.getItemListModifier().write(0, value);
     }
-
 }

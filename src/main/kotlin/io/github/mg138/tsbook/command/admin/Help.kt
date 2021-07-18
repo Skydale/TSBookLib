@@ -1,8 +1,8 @@
 package io.github.mg138.tsbook.command.admin
 
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.setting.BookConfig.Language.Format.Page.SelectorPos.*
-import io.github.mg138.tsbook.setting.BookConfig.language
+import io.github.mg138.tsbook.config.BookConfig.Language.Format.Page.SelectorPos.*
+import io.github.mg138.tsbook.config.BookConfig.language
 import org.bukkit.command.CommandSender
 
 object Help {

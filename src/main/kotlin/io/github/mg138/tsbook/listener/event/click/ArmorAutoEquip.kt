@@ -1,37 +1,67 @@
 package io.github.mg138.tsbook.listener.event.click
 
-import io.github.mg138.tsbook.item.util.ItemUtil
-import io.github.mg138.tsbook.players.ArcticGlobalDataService
-import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.setting.gui.armor.ArmorGUIConfig
-import io.github.mg138.tsbook.util.MaterialUtil
+import dev.reactant.reactant.core.component.Component
+import dev.reactant.reactant.core.component.lifecycle.LifeCycleHook
+import dev.reactant.reactant.service.spec.server.EventService
+import io.github.mg138.tsbook.item.ItemBase
+import io.github.mg138.tsbook.item.api.ItemManager
+import io.github.mg138.tsbook.player.data.PlayerData
+import io.github.mg138.tsbook.config.gui.armor.ArmorGUIConfig
+import io.github.mg138.tsbook.material.util.MaterialUtil
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.event.Event
-import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
-import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
+import tech.clayclaw.arcticglobal.service.PlayerDataService
 
-object ArmorAutoEquip : Listener {
-    @EventHandler (priority = EventPriority.HIGHEST)
-    fun onRightClick(event: PlayerInteractEvent) {
-        val action = event.action
-        if (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK) {
-            val player = event.player
-            val item = event.item ?: return
-            val instance = ItemUtil.getInstByItem(item) ?: return
+// todo migrate
+/*
+@Component
+class ArmorAutoEquip(
+    private val itemManager: ItemManager,
+    private val dataService: PlayerDataService,
+    private val eventService: EventService
+) : LifeCycleHook {
+    override fun onEnable() {
+        eventService {
+            PlayerInteractEvent::class.observable(EventPriority.LOWEST).subscribe {
+                onRightClick(it)
+            }
+        }
+    }
 
-            event.isCancelled = true
-            event.setUseItemInHand(Event.Result.DENY)
+    private fun onRightClick(event: PlayerInteractEvent) {
+        when (event.action) {
+            Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK -> {
+                val player = event.player
+                val itemStack = event.item ?: return
+                val item = itemManager.get(itemStack) ?: return
 
-            val i = ArmorGUIConfig.getByType(instance.itemType, player)
-            if (i != -1) {
-                ArcticGlobalDataService.inst.edit<PlayerData>(player) { it.equipment[i] = instance }
-                player.inventory.setItemInMainHand(null)
+                event.isCancelled = true
+                event.setUseItemInHand(Event.Result.DENY)
 
-                if (!MaterialUtil.isArmor(item.type)) player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)
+                equipItemInHand(player, item)
+            }
+            else -> Unit
+        }
+    }
+
+    private fun equipItemInHand(player: Player, item: ItemBase) {
+        val i = ArmorGUIConfig.getByType(item.getItemType(), player)
+
+        if (i != -1) {
+            dataService.edit<PlayerData>(player) {
+                it.equipment[i] = item
+            }
+
+            player.inventory.setItemInMainHand(null)
+
+            if (!MaterialUtil.isArmor(item.getMaterial())) {
+                player.playSound(player.location, Sound.ITEM_ARMOR_EQUIP_LEATHER, 1F, 1F)
             }
         }
     }
 }
+*/

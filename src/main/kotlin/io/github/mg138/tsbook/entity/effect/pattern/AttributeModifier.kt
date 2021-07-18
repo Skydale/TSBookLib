@@ -1,36 +1,25 @@
 package io.github.mg138.tsbook.entity.effect.pattern
 
 import io.github.mg138.tsbook.entity.effect.pattern.active.ActiveFlagEffect
-import io.github.mg138.tsbook.entity.effect.util.EffectManager
-import io.github.mg138.tsbook.entity.effect.EffectProperty
+import io.github.mg138.tsbook.entity.effect.api.EffectManager
+import io.github.mg138.tsbook.entity.effect.data.EffectProperty
 import io.github.mg138.tsbook.entity.effect.Effect
 import io.github.mg138.tsbook.entity.effect.ActiveEffect
+import io.github.mg138.tsbook.entity.effect.pattern.active.ActiveAttributeModifier
 import org.bukkit.attribute.Attribute
 import org.bukkit.attribute.AttributeInstance
 
 abstract class AttributeModifier(
-    private val attribute: Attribute,
-    private val modified: (Double, EffectProperty) -> Double
+    private val attribute: Attribute
 ) : Effect {
-    class ActiveAttributeModifier(
-        effect: Effect,
-        property: EffectProperty,
-        effectManager: EffectManager,
-        private val attribute: AttributeInstance,
-        private val old: Double
-    ) : ActiveFlagEffect(effect, property, effectManager) {
-        override fun deactivate() {
-            super.deactivate()
-            attribute.baseValue = old
-        }
-    }
+    abstract fun getModified(old: Double, property: EffectProperty): Double
 
-    override fun makeEffect(property: EffectProperty, effectManager: EffectManager): ActiveEffect {
+    override fun activate(property: EffectProperty, effectManager: EffectManager): ActiveEffect {
         val attribute = property.target.getAttribute(attribute)!!
 
         val old = attribute.baseValue
 
-        attribute.baseValue = modified(old, property)
+        attribute.baseValue = getModified(old, property)
 
         return ActiveAttributeModifier(this, property, effectManager, attribute, old)
     }

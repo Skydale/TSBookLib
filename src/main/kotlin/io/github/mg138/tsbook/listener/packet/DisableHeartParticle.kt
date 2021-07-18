@@ -1,23 +1,27 @@
 package io.github.mg138.tsbook.listener.packet
 
-import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.events.ListenerPriority
-import com.comphenix.protocol.events.PacketAdapter
-import com.comphenix.protocol.events.PacketEvent
-import io.github.mg138.tsbook.Book
+import com.comphenix.packetwrapper.WrapperPlayServerWorldParticles
+import dev.reactant.reactant.core.component.Component
+import dev.reactant.reactant.core.component.lifecycle.LifeCycleHook
+import io.github.mg138.service.reactant.service.PacketService
 import org.bukkit.Particle
 
-object DisableHeartParticle {
-    fun register() {
-        ProtocolLibrary.getProtocolManager().addPacketListener(
-            object : PacketAdapter(Book.inst, ListenerPriority.HIGH, PacketType.Play.Server.WORLD_PARTICLES) {
-                override fun onPacketSending(event: PacketEvent) {
-                    if (event.packet.newParticles.values[0].particle == Particle.DAMAGE_INDICATOR) {
-                        event.isCancelled = true
-                    }
+// todo rewrite
+/*
+@Component
+class DisableHeartParticle(
+    private val packetService: PacketService
+) : LifeCycleHook {
+    override fun onEnable() {
+        packetService.packetAdapterService {
+            WrapperPlayServerWorldParticles.TYPE.onSending { event ->
+                val particle = WrapperPlayServerWorldParticles(event.packet).particle.particle
+
+                if (particle == Particle.DAMAGE_INDICATOR) {
+                    event.isCancelled = true
                 }
             }
-        )
+        }
     }
 }
+ */

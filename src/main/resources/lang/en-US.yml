@@ -151,19 +151,20 @@ attribute:
             CHANCE_LEVITATION:  "[name] &a[stat]% &7([percentage])"
             POWER_LEVITATION:   "[name] &a[stat]s &7([percentage])"
             AFFINITY_ELEMENT:   "[name] &a[stat]% &7([percentage])"
-        indicator:
-            DAMAGE_PHYSICAL: "&f⚔ &6"
-            DAMAGE_TERRA: "&f⛰ &2"
-            DAMAGE_TEMPUS: "&f💨 &e"
-            DAMAGE_IGNIS: "&f🔥 &c"
-            DAMAGE_AQUA: "&f🌊 &b"
-            DAMAGE_LUMEN: "&f✳ &f"
-            DAMAGE_UMBRA: "&7❇ &8"
-            DAMAGE_NONE: "&7"
-            DAMAGE_BLEED: "&f🩸 &4"
-            DAMAGE_TRUE: "&f✨ &f"
-            DAMAGE_THUNDER: "&f⚡ &6"
-            CRITICAL: "&r&f💥 "
+        damage_type:
+            indicator:
+                DAMAGE_PHYSICAL: "&f⚔ &6"
+                DAMAGE_TERRA: "&f⛰ &2"
+                DAMAGE_TEMPUS: "&f💨 &e"
+                DAMAGE_IGNIS: "&f🔥 &c"
+                DAMAGE_AQUA: "&f🌊 &b"
+                DAMAGE_LUMEN: "&f✳ &f"
+                DAMAGE_UMBRA: "&7❇ &8"
+                DAMAGE_NONE: "&7"
+                DAMAGE_BLEED: "&f🩸 &4"
+                DAMAGE_TRUE: "&f✨ &f"
+                DAMAGE_THUNDER: "&f⚡ &6"
+                CRITICAL: "&r&f💥 "
 
 health_indicator:
     title: "[name] &f(&c[health]&7/&c[max_health]&f) [damages]"

@@ -1,9 +1,9 @@
 package io.github.mg138.tsbook.listener.event.damage
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
-import io.github.mg138.tsbook.setting.BookConfig
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
+import io.github.mg138.tsbook.event.BookDamageEvent
+import io.github.mg138.tsbook.config.BookConfig
+import io.github.mg138.tsbook.stat.type.StatType
 import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import org.bukkit.Bukkit
 import org.bukkit.attribute.Attribute
@@ -21,6 +21,26 @@ import java.lang.StringBuilder
 import kotlin.collections.HashMap
 import kotlin.math.roundToInt
 
+/* TODO
+    Map<LivingEntity, BossBar> entities
+    Map<Player, BossBar> players
+    ---
+    onEntityDeath:
+    - get BossBar from entities and remove from all players after <some seconds>
+    - remove Entity from entities
+    ---
+    onDamage:
+    - take BossBar in entities with Entity and update
+    - if damager is Player:
+       - if players has player:
+          - get BossBar from players with player and remove player from it
+       - add player to BossBar
+       - put player and BossBar into players
+    Also: show blank if player doesn't have a BossBar displayed
+ */
+
+// TODO doesn't really need multiple indicators..
+/*
 object HealthIndicator : Listener {
     private val indicators: MutableMap<LivingEntity, BossBar> = HashMap()
     private val removingQueue: MutableMap<Player, BukkitRunnable> = HashMap()
@@ -128,8 +148,9 @@ object HealthIndicator : Listener {
     }
 
     @EventHandler
-    fun onEntityDamage(event: CustomDamageEvent) {
+    fun onEntityDamage(event: BookDamageEvent) {
         val damager = event.damager
         if (damager is Player) showToPlayer(event.entity, damager, event.getDamages())
     }
 }
+ */

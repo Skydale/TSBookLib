@@ -1,6 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.net.URI
 
 group = "io.github.mg138"
 version = "0.0.1"
@@ -25,9 +24,12 @@ tasks.withType<KotlinCompile> {
 
 repositories {
     mavenCentral()
-    maven { url = URI.create("https://hub.spigotmc.org/nexus/content/repositories/snapshots") }
-    maven { url = URI.create("https://oss.sonatype.org/content/repositories/snapshots/") }
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://oss.sonatype.org/content/repositories/central")
 }
+
 
 dependencies {
     compileOnly(kotlin("stdlib-jdk8", kotlinVersion))

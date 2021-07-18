@@ -1,21 +1,24 @@
 package io.github.mg138.tsbook.item
 
-import io.github.mg138.tsbook.item.util.ItemUtil.createItem
-import io.github.mg138.tsbook.setting.item.element.ItemSetting
-import org.bukkit.inventory.ItemStack
+import io.github.mg138.tsbook.item.attribute.ItemType
+import io.github.mg138.tsbook.data.DataContainer
+import io.github.mg138.tsbook.data.DataMap
+import io.github.mg138.tsbook.data.Identifier
+import org.bukkit.Material
 import java.util.*
 
-open class ItemBase(protected val setting: ItemSetting, val uuid: UUID) {
-    override fun toString() = id.toString()
+interface ItemBase : DataContainer {
+    fun getName(): String
+    fun getLore(): MutableList<String>
+    fun getItemId(): Identifier
+    fun getMaterial(): Material
+    fun getModel(): Int
+    fun getUUID(): UUID
+    fun getItemType(): ItemType
 
-    val name = setting.name
-    val lore = setting.lore.toMutableList()
-    val id get() = setting.id
-    val itemType get() = setting.itemType
-    val material get() = setting.material
-    val model get() = setting.model
+    //override fun toString() = "ItemBase(id=$itemId)"
 
-    fun createItem(): ItemStack {
-        return createItem(this)
-    }
+    fun newUUID(): UUID
+
+    override fun getDataMap(): DataMap
 }

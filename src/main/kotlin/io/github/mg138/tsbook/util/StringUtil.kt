@@ -1,17 +1,22 @@
 package io.github.mg138.tsbook.util
 
 object StringUtil {
-    fun match(start: Int, string: String, matchers: Array<String>): String? {
-        val length = string.length
+    fun String.match(start: Int, other: String): Boolean {
+        val length = this.length
 
-        for (matcher in matchers) {
-            val end = matcher.lastIndex
+        for (j in other.indices) {
+            val i = start + j
 
-            for (i in matcher.indices) {
-                if (start + i >= length) break
-                if (matcher[i] != string[start + i]) break
-                if (i >= end) return matcher
+            if (i >= length || this[i] != other[j]) {
+                return false
             }
+        }
+        return true
+    }
+
+    fun matches(start: Int, string: String, matchers: Array<String>): String? {
+        matchers.forEach {
+            if (string.match(start, it)) return it
         }
         return null
     }

@@ -1,29 +1,31 @@
 package io.github.mg138.tsbook.item
 
-import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
-import io.github.mg138.tsbook.item.attribute.stat.data.Stated
-import io.github.mg138.tsbook.setting.item.element.ItemSetting
-import java.util.*
+import io.github.mg138.tsbook.stat.data.StatMap
+import io.github.mg138.tsbook.stat.type.StatType
+import io.github.mg138.tsbook.stat.data.Stated
+import io.github.mg138.tsbook.config.item.element.ItemSetting
 
-open class ItemStated(
-    setting: ItemSetting, uuid: UUID, private val stats: StatMap
-): ItemBase(setting, uuid), Stated {
-    init {
-        putStatsInLore()
-    }
-
+abstract class ItemStated(
+    setting: ItemSetting,
+    private val statMap: StatMap
+) : SimpleItem(setting), Stated {
     private fun putStatsInLore() {
+        val lore = this.getLore()
+
         for (i in lore.indices) {
-            stats.forEach { (type, _) ->
-                lore[i] = stats.applyPlaceholder(lore[i], type)
+            statMap.types().forEach {
+                lore[i] = statMap.applyPlaceholder(lore[i], it)
             }
         }
     }
 
-    override fun getStatOut(type: StatType) = stats.getStatOut(type)
-    override fun getStat(type: StatType) = stats.getStat(type)
-    override fun stats() = stats.stats()
-    override fun types() = stats.types()
-    override fun iterator() = stats.iterator()
+    init {
+        putStatsInLore()
+    }
+
+    override fun getStatResult(type: StatType) = statMap.getStatResult(type)
+    override fun getStat(type: StatType) = statMap.getStat(type)
+    override fun stats() = statMap.stats()
+    override fun types() = statMap.types()
+    override fun iterator() = statMap.iterator()
 }

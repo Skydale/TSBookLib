@@ -1,55 +1,52 @@
 package io.github.mg138.tsbook.command.admin
 
-import io.github.mg138.tsbook.command.util.CommandUtil
-import io.github.mg138.tsbook.command.util.error.CommandEffectError
+/*
+import dev.reactant.reactant.core.component.Component
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.entity.effect.data.StatusType
-import io.github.mg138.tsbook.entity.effect.EffectHandler
-import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.entity.effect.api.EffectManager
+import io.github.mg138.tsbook.entity.effect.data.EffectProperty
+import io.github.mg138.tsbook.player.toPlayer
+import io.github.mg138.tsbook.config.BookConfig
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import java.lang.IllegalArgumentException
 
-object Effect {
+@Component
+class Effect(
+    private val effectManager: EffectManager
+) {
     fun call(sender: CommandSender): Boolean {
         sender.sendMessage(BookConfig.language.commands.feedback.effect)
         return true
     }
 
-    fun call(
-        sender: CommandSender,
-        playerName: String,
-        effectName: String,
-        literalPower: String,
-        literalTicks: String
-    ): Boolean {
-        val player = CommandUtil.getPlayerByName(playerName, sender) ?: return false
-
-        return try {
-            val type = StatusType.valueOf(effectName.toUpperCase())
-            val power = literalPower.toDouble()
-            val ticks = literalTicks.toLong()
-            EffectHandler.apply(type, player, power, ticks)
-            sender.sendMessage(BookConfig.language.messages.effect.applied)
-            true
-        } catch (e: NumberFormatException) {
-            CommandError.shouldPutInteger(sender)
-            false
-        } catch (e: IllegalArgumentException) {
-            CommandError.noSuchOption(sender)
-            false
-        }
+    fun call(sender: CommandSender, player: String, id: String, power: String, ticks: String) = try {
+        player.toPlayer(sender)?.let {
+            call(sender, it, id, power.toDouble(), ticks.toLong())
+        } ?: false
+    } catch (e: NumberFormatException) {
+        CommandError.shouldPutInteger(sender)
+        false
+    } catch (e: IllegalArgumentException) {
+        CommandError.noSuchOption(sender)
+        false
     }
 
-    fun clear(sender: CommandSender, playerName: String): Boolean {
-        val player = CommandUtil.getPlayerByName(playerName, sender) ?: return false
+    fun call(sender: CommandSender, player: Player, type: EffectType, power: Double, ticks: Long): Boolean {
+        effectManager.activate(type, EffectProperty(player, power, ticks))
+        sender.sendMessage(BookConfig.language.messages.effect.applied)
+        return true
+    }
 
-        return try {
-            EffectHandler.removeAll(player)
-            sender.sendMessage(BookConfig.language.messages.effect.cleared)
-            true
-        } catch (e: IllegalArgumentException) {
-            CommandEffectError.noActiveEffect(sender)
-            false
-        }
+    fun clear(sender: CommandSender, playerName: String) =
+        playerName.toPlayer(sender)?.let {
+            clear(sender, it)
+        } ?: false
+
+    fun clear(sender: CommandSender, player: Player): Boolean {
+        effectManager.removeAll(player)
+        sender.sendMessage(BookConfig.language.messages.effect.cleared)
+        return true
     }
 }
+*/

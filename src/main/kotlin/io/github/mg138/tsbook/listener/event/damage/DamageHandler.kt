@@ -1,40 +1,21 @@
 package io.github.mg138.tsbook.listener.event.damage
 
-import io.github.mg138.tsbook.command.admin.DebugMode
-import io.github.mg138.tsbook.entity.effect.EffectHandler
-import io.github.mg138.tsbook.entity.effect.data.StatusType
-import io.github.mg138.tsbook.item.attribute.stat.data.StatMap
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
-import io.github.mg138.tsbook.item.attribute.stat.util.StatTables
-import io.github.mg138.tsbook.item.attribute.stat.util.StatTypes
-import io.github.mg138.tsbook.item.attribute.stat.util.StatUtil
-import io.github.mg138.tsbook.item.attribute.stat.identified.data.IdentifiedStat
-import io.github.mg138.tsbook.item.data.UUIDArrayTag
-import io.github.mg138.tsbook.item.util.ItemUtil
-import io.github.mg138.tsbook.listener.event.damage.utils.CustomDamageEvent
-import io.github.mg138.tsbook.listener.event.damage.utils.DamageIndicator
-import io.github.mg138.tsbook.players.ArcticGlobalDataService
-import io.github.mg138.tsbook.players.data.PlayerData
-import io.github.mg138.tsbook.setting.mob.MobConfig
-import io.github.mg138.tsbook.util.MobTypeUtil
-import io.github.mg138.tsbook.util.RGBUtil.toChatColor
-import io.lumine.xikage.mythicmobs.MythicMobs
-import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper
-import org.bukkit.Bukkit
-import org.bukkit.attribute.Attribute
-import org.bukkit.entity.*
-import org.bukkit.event.entity.EntityDamageByEntityEvent
-import java.util.*
-import kotlin.math.min
-
 //TODO make it prettier :/
-object DamageHandler {
-    val mythicMobHelper: BukkitAPIHelper = MythicMobs.inst().apiHelper
+/*
+class DamageHandler(
+    private val eventService: EventService,
+    mythicMobService: MythicMobService
+) : LifeCycleHook {
+    override fun onDisable() {
+        damageCD.clear()
+    }
+
+    private val mythicHelper = mythicMobService.mythicMobHelper
     private val rand = Random()
     private val damageCD: MutableMap<Player, Long> = HashMap()
 
     private fun debug(player: Player, message: String) {
-        if (DebugMode.hasOption(player, DebugMode.DebugOption.ON_DAMAGE)) {
+        if (DebugMode.has(player, DebugMode.DebugOption.ON_DAMAGE)) {
             player.sendMessage(message)
         }
     }
@@ -43,16 +24,13 @@ object DamageHandler {
         damageCD.remove(player)
     }
 
-    fun unload() {
-        damageCD.clear()
-    }
-
-    fun  damagedByEntity(event: EntityDamageByEntityEvent, defense: StatMap) {
+    /*
+    fun damagedByEntity(event: EntityDamageByEntityEvent, defense: StatMap) {
         val damager = event.damager
 
         when {
-            mythicMobHelper.isMythicMob(damager) -> {
-                MobConfig[mythicMobHelper.getMythicMobInstance(damager).type.internalName]?.let {
+            mythicHelper.isMythicMob(damager) -> {
+                MobConfig[mythicHelper.getMythicMobInstance(damager).type.internalName]?.let {
                     complexDamage(event, it.stats, defense)
                 }
             }
@@ -68,7 +46,7 @@ object DamageHandler {
                     //ItemUtil.getInstByItem(item)?.itemStat?.let { identifiedStats.add(it) }
                 }
                 ArcticGlobalDataService.inst.getData<PlayerData>(damager, PlayerData::class)
-                    //?.equipment?.forEach { _, armor -> armor.itemStat?.let { identifiedStats.add(it) } }
+                //?.equipment?.forEach { _, armor -> armor.itemStat?.let { identifiedStats.add(it) } }
 
                 complexDamage(event, StatUtil.combine(identifiedStats), defense)
             }
@@ -85,7 +63,7 @@ object DamageHandler {
         }
     }
 
-    fun  complexDamage(event: EntityDamageByEntityEvent, stats: StatMap, defense: StatMap) {
+    fun complexDamage(event: EntityDamageByEntityEvent, stats: StatMap, defense: StatMap) {
         val entity = event.entity as LivingEntity
 
         val damager = when (val entityDamager = event.damager) {
@@ -144,7 +122,13 @@ object DamageHandler {
         }
     }
 
-    private fun  damage(damager: LivingEntity, stats: StatMap, defense: StatMap, modifier: Double, event: CustomDamageEvent): Double {
+    private fun damage(
+        damager: LivingEntity,
+        stats: StatMap,
+        defense: StatMap,
+        modifier: Double,
+        event: CustomDamageEvent
+    ): Double {
         val damages = StatUtil.getDamage(stats)
         if (damages.isEmpty()) return 0.0
 
@@ -187,7 +171,7 @@ object DamageHandler {
         return damageSum
     }
 
-    private fun   effect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, damageSum: Double) {
+    private fun effect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, damageSum: Double) {
         val effectChance = StatUtil.getEffectChance(stats)
         if (effectChance.isEmpty()) return
 
@@ -220,20 +204,20 @@ object DamageHandler {
                     }
                     StatType.CHANCE_SLOWNESS -> {
                         val rawPower = effectPower.getStatOut(type)
-                        EffectHandler.apply(
-                            StatusType.SLOWNESS,
+                        EffectManager.apply(
                             entity,
+                            EffectType.SLOWNESS,
                             strikes * rawPower / 100,
                             (strikes * rawPower * 90).toLong()
                         )
                     }
                     StatType.CHANCE_LEVITATION -> {
                         val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.apply(StatusType.LEVITATION, entity, 0.0, ticks.toLong())
+                        if (ticks >= 20) EffectManager.apply(entity, EffectType.LEVITATION, 0.0, ticks.toLong())
                     }
                     StatType.CHANCE_NAUSEOUS -> {
                         val ticks = 20 * strikes * effectPower.getStatOut(type)
-                        if (ticks >= 20) EffectHandler.apply(StatusType.NAUSEOUS, entity, 0.0, ticks.toLong())
+                        if (ticks >= 20) EffectManager.apply(entity, EffectType.NAUSEOUS, 0.0, ticks.toLong())
                     }
                     else -> Unit
                 }
@@ -241,7 +225,7 @@ object DamageHandler {
         }
     }
 
-    private fun   elementalEffect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, modifier: Double) {
+    private fun elementalEffect(damager: LivingEntity, entity: LivingEntity, stats: StatMap, modifier: Double) {
         val elementalDamages = StatUtil.getElementalDamage(stats)
         if (elementalDamages.isEmpty()) return
 
@@ -268,35 +252,39 @@ object DamageHandler {
                     val power = (damage / 8) * strikes
                     val tick = (damage / 6).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.apply(StatusType.BURNING, entity, power, tick)
+                        EffectManager.apply(entity, EffectType.BURNING, power, tick)
                     }
                 }
                 StatType.DAMAGE_PHYSICAL -> {
                     val power = (damage / 12) * strikes
                     val tick = (damage / 14).toLong()
                     if (power > 20 && tick > 10) {
-                        EffectHandler.apply(StatusType.BLEEDING, entity, power, tick)
+                        EffectManager.apply(entity, EffectType.BLEEDING, power, tick)
                     }
                 }
                 StatType.DAMAGE_TEMPUS -> {
                     val power = (damage / 8) * strikes
                     val tick = (600 * (damage / (damage + 1000))).toLong()
                     if (power > 20 && tick > 60) {
-                        EffectHandler.apply(StatusType.PARALYSIS, entity, power, tick)
+                        EffectManager.apply(entity, EffectType.PARALYSIS, power, tick)
                     }
                 }
                 else -> Unit
             }
         }
     }
+     */
+
+    fun simpleDamage(entity: Entity, damage: Double) = simpleDamage(entity, damage, StatType.DAMAGE_NONE, false)
 
     fun simpleDamage(
-        entity: LivingEntity,
+        entity: Entity,
         damage: Double,
-        damageType: StatType = StatType.DAMAGE_NONE,
-        display: Boolean = false
+        damageType: StatType,
+        display: Boolean = true
     ): Boolean {
         if (entity.isDead) return false
+        if (entity !is LivingEntity) return false
         if (damage == 0.0) return true
 
         entity.damage(damage)
@@ -310,3 +298,4 @@ object DamageHandler {
         return true
     }
 }
+ */

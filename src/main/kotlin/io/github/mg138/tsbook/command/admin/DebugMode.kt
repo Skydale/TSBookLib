@@ -1,7 +1,7 @@
 package io.github.mg138.tsbook.command.admin
 
 import io.github.mg138.tsbook.command.util.error.CommandError
-import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.config.BookConfig
 import io.github.mg138.tsbook.util.RGBUtil.toChatColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -16,20 +16,28 @@ object DebugMode {
         }
     }
 
+    private val defaultValue = EnumSet.noneOf(DebugOption::class.java)
+
     private val debugOptions: MutableMap<Player, MutableSet<DebugOption>> = HashMap()
 
-    operator fun get(player: Player) = debugOptions[player]
+    operator fun get(player: Player) = this.debugOptions.computeIfAbsent(player) { this.defaultValue }
 
-    operator fun set(player: Player, debugOption: DebugOption) {
-        this.debugOptions.putIfAbsent(player, EnumSet.noneOf(DebugOption::class.java))
+    fun add(player: Player, option: DebugOption) = this[player].add(option)
 
-        this.debugOptions[player]!!.add(debugOption)
+    fun has(player: Player, option: DebugOption) = this[player].contains(option)
+
+    fun remove(player: Player, option: DebugOption) = this[player].remove(option)
+
+    fun remove(player: Player) = this[player].clear()
+
+    fun toggle(player: Player, option: DebugOption) {
+        if (this.remove(player, option)) {
+            player.sendMessage("&9[Debug] &eDeactivated Debug Option: &f$option".toChatColor())
+        } else {
+            this.add(player, option)
+            player.sendMessage("&9[Debug] &eActivated Debug Option: &f$option".toChatColor())
+        }
     }
-
-    fun hasOption(player: Player, debugOption: DebugOption) = this.debugOptions[player]?.contains(debugOption) ?: false
-
-    fun remove(player: Player, debugOption: DebugOption) = debugOptions[player]?.remove(debugOption)
-    fun remove(player: Player) = debugOptions.remove(player)
 
     fun call(sender: CommandSender): Boolean {
         sender.sendMessage(BookConfig.language.commands.feedback.debug)
@@ -43,34 +51,22 @@ object DebugMode {
         }
 
         if (string == "clear") {
-            debugOptions[sender].let {
-                return when {
-                    it == null || it.isEmpty() -> {
-                        sender.sendMessage("&9[Debug] &eDeactivated &fNothing.".toChatColor())
-                        false
-                    }
-                    else -> {
-                        sender.sendMessage("&9[Debug] &eDeactivated Debug Modes of &f${it}".toChatColor())
-                        this.remove(sender)
-                        true
-                    }
+            this[sender].let {
+                return if (it.isEmpty()) {
+                    sender.sendMessage("&9[Debug] &eDeactivated &fNothing.".toChatColor())
+                    false
+                } else {
+                    sender.sendMessage("&9[Debug] &eDeactivated Debug Options of &f${it}".toChatColor())
+                    // message is sent before actually removing the options,
+                    // because otherwise the list would be empty when the message is sent
+                    this.remove(sender)
+                    true
                 }
             }
         }
 
         return try {
-            val debugOption = DebugOption.valueOf(string)
-            if (hasOption(sender, debugOption)) {
-                this.remove(sender, debugOption)
-                sender.sendMessage(
-                      "&9[Debug] &eDeactivated Debug Mode: &f$string".toChatColor()
-                )
-            } else {
-                this[sender] = debugOption
-                sender.sendMessage(
-                    "&9[Debug] &eActivated Debug Mode: &f$string".toChatColor()
-                )
-            }
+            this.toggle(sender, DebugOption.valueOf(string))
             true
         } catch (e: IllegalArgumentException) {
             CommandError.noSuchOption(sender)

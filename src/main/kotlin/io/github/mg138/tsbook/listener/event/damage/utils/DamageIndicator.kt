@@ -1,7 +1,6 @@
 package io.github.mg138.tsbook.listener.event.damage.utils
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 import org.bukkit.scheduler.BukkitRunnable
@@ -10,6 +9,9 @@ import java.util.*
 import kotlin.math.cos
 import kotlin.math.sin
 
+// TODO use a global runnable
+
+/*
 object DamageIndicator {
     private val indicators: MutableList<ArmorStand> = ArrayList()
 
@@ -33,7 +35,7 @@ object DamageIndicator {
             loc.add(Vector(x * 2, Random().nextDouble() / 2, z * 2)),
             ArmorStand::class.java
         ) { indicator: ArmorStand ->
-            indicators.add(indicator)
+            indicators += indicator
             indicator.isInvulnerable = true
             indicator.isVisible = false
             indicator.setGravity(false)
@@ -75,3 +77,4 @@ object DamageIndicator {
         }.runTaskTimer(Book.inst, 0, 3)
     }
 }
+ */

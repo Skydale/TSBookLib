@@ -1,8 +1,10 @@
 package io.github.mg138.tsbook.entity.effect
 
-import io.github.mg138.tsbook.entity.effect.util.EffectManager
+import io.github.mg138.tsbook.entity.effect.api.EffectManager
+import io.github.mg138.tsbook.entity.effect.data.EffectProperty
 
 interface Effect {
-    fun makeEffect(property: EffectProperty, effectManager: EffectManager): ActiveEffect
-    fun getType(): EffectType
+    val id: String
+
+    fun activate(property: EffectProperty, effectManager: EffectManager): ActiveEffect
 }

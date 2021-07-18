@@ -1,7 +1,8 @@
 package io.github.mg138.tsbook.entity.effect
 
 import io.github.mg138.tsbook.Book
-import io.github.mg138.tsbook.entity.effect.util.EffectManager
+import io.github.mg138.tsbook.entity.effect.api.EffectManager
+import io.github.mg138.tsbook.entity.effect.data.EffectProperty
 import org.bukkit.scheduler.BukkitRunnable
 
 abstract class ActiveEffect(
@@ -18,17 +19,15 @@ abstract class ActiveEffect(
 
         override fun cancel() {
             deactivate()
-            effectManager.remove(property.target, effectType)
+            effectManager.remove(property.target, id)
         }
     }
 
-    val effectType = effect.getType()
+    val id = effect.id
 
     abstract fun tick()
 
     open fun deactivate() {}
-
     fun activate() = runnable.runTaskTimer(Book.inst, delay, period)
-
-    fun cancelAndRemove() = runnable.cancel()
+    fun stop() = runnable.cancel()
 }

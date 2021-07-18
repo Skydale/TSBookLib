@@ -1,6 +1,6 @@
 package io.github.mg138.tsbook.listener.event.inventory.error
 
-import io.github.mg138.tsbook.setting.BookConfig
+import io.github.mg138.tsbook.config.BookConfig
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 

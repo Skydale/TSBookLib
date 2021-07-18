@@ -2,17 +2,18 @@ package io.github.mg138.tsbook.entity.effect.preset
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityLook
 import dev.reactant.reactant.core.component.Component
+import io.github.mg138.tsbook.stat.type.StatType
 import io.github.mg138.tsbook.entity.effect.ActiveEffect
-import io.github.mg138.tsbook.entity.effect.util.EffectManager
-import io.github.mg138.tsbook.entity.effect.EffectProperty
 import io.github.mg138.tsbook.entity.effect.Effect
-import io.github.mg138.tsbook.entity.effect.EffectType
-import io.github.mg138.tsbook.listener.event.damage.DamageHandler
-import io.github.mg138.tsbook.item.attribute.stat.data.StatType
+import io.github.mg138.tsbook.entity.effect.api.EffectManager
+import io.github.mg138.tsbook.entity.effect.data.EffectProperty
 import org.bukkit.entity.LivingEntity
 
+/*
 @Component
 class Paralysis : Effect {
+    override val id = "PARALYSIS"
+
     companion object {
         fun paralysisEffect(entity: LivingEntity, look: WrapperPlayServerEntityLook) {
             val loc = entity.location
@@ -30,6 +31,7 @@ class Paralysis : Effect {
     ) : ActiveEffect(effect, property, 1L, 0L, effectManager) {
         val power = property.power
         val duration = property.duration
+
         val target = property.target
 
         val look = WrapperPlayServerEntityLook().also {
@@ -37,16 +39,15 @@ class Paralysis : Effect {
         }
 
         var i = 0L
-
         override fun tick() {
             if (i >= duration) {
-                cancelAndRemove()
+                stop()
                 return
             }
 
             if (i % 4 == 0L) {
                 if (!DamageHandler.simpleDamage(target, power, StatType.DAMAGE_THUNDER)) {
-                    cancelAndRemove()
+                    stop()
                     return
                 }
             }
@@ -57,9 +58,8 @@ class Paralysis : Effect {
         }
     }
 
-    override fun makeEffect(property: EffectProperty, effectManager: EffectManager): ActiveEffect {
+    override fun activate(property: EffectProperty, effectManager: EffectManager): ActiveEffect {
         return ActiveParalysisEffect(this, property, effectManager)
     }
-
-    override fun getType() = EffectType.PresetTypes.paralysis
 }
+ */
